@@ -1,0 +1,70 @@
+D:\Work\Programming\GPS Tracking\ProtocolDev\ProtocolSandbox\ProtocolSandbox\bin\Debug\ProtocolSandbox.exe
+D:\Work\Programming\GPS Tracking\ProtocolDev\ProtocolSandbox\ProtocolSandbox\bin\Debug\ProtocolSandbox.pdb
+D:\Work\Programming\GPS Tracking\ProtocolDev\ProtocolSandbox\ProtocolSandbox\bin\Debug\ProtocolSandbox.xml
+D:\Work\Programming\GPS Tracking\ProtocolDev\ProtocolSandbox\ProtocolSandbox\obj\x86\Debug\ProtocolSandbox.Resources.resources
+D:\Work\Programming\GPS Tracking\ProtocolDev\ProtocolSandbox\ProtocolSandbox\obj\x86\Debug\ProtocolSandbox.vbproj.GenerateResource.Cache
+D:\Work\Programming\GPS Tracking\ProtocolDev\ProtocolSandbox\ProtocolSandbox\obj\x86\Debug\ProtocolSandbox.exe
+D:\Work\Programming\GPS Tracking\ProtocolDev\ProtocolSandbox\ProtocolSandbox\obj\x86\Debug\ProtocolSandbox.xml
+D:\Work\Programming\GPS Tracking\ProtocolDev\ProtocolSandbox\ProtocolSandbox\obj\x86\Debug\ProtocolSandbox.pdb
+D:\Work\Programming\GPS Tracking\ProtocolDev\ProtocolSandboxMeiligao\ProtocolSandbox\bin\Debug\ProtocolSandbox.exe
+D:\Work\Programming\GPS Tracking\ProtocolDev\ProtocolSandboxMeiligao\ProtocolSandbox\bin\Debug\ProtocolSandbox.pdb
+D:\Work\Programming\GPS Tracking\ProtocolDev\ProtocolSandboxMeiligao\ProtocolSandbox\bin\Debug\ProtocolSandbox.xml
+D:\Work\Programming\GPS Tracking\ProtocolDev\ProtocolSandboxMeiligao\ProtocolSandbox\obj\x86\Debug\ProtocolSandbox.Resources.resources
+D:\Work\Programming\GPS Tracking\ProtocolDev\ProtocolSandboxMeiligao\ProtocolSandbox\obj\x86\Debug\ProtocolSandbox.vbproj.GenerateResource.Cache
+D:\Work\Programming\GPS Tracking\ProtocolDev\ProtocolSandboxMeiligao\ProtocolSandbox\obj\x86\Debug\ProtocolSandbox.exe
+D:\Work\Programming\GPS Tracking\ProtocolDev\ProtocolSandboxMeiligao\ProtocolSandbox\obj\x86\Debug\ProtocolSandbox.xml
+D:\Work\Programming\GPS Tracking\ProtocolDev\ProtocolSandboxMeiligao\ProtocolSandbox\obj\x86\Debug\ProtocolSandbox.pdb
+D:\Work\Programming\GPS Tracking\ProtocolDev\ProtocolSandboxMeitrack\ProtocolSandbox\obj\x86\Debug\ProtocolSandbox.exe
+D:\Work\Programming\GPS Tracking\ProtocolDev\ProtocolSandboxMeitrack\ProtocolSandbox\obj\x86\Debug\ProtocolSandbox.xml
+D:\Work\Programming\GPS Tracking\ProtocolDev\ProtocolSandboxMeitrack\ProtocolSandbox\obj\x86\Debug\ProtocolSandbox.pdb
+D:\Work\Programming\GPS Tracking\ProtocolDev\ProtocolSandboxMeitrack\ProtocolSandbox\bin\Debug\ProtocolSandbox.exe
+D:\Work\Programming\GPS Tracking\ProtocolDev\ProtocolSandboxMeitrack\ProtocolSandbox\bin\Debug\ProtocolSandbox.pdb
+D:\Work\Programming\GPS Tracking\ProtocolDev\ProtocolSandboxMeitrack\ProtocolSandbox\bin\Debug\ProtocolSandbox.xml
+D:\Work\Programming\GPS Tracking\ProtocolDev\ProtocolSandboxMeitrack\ProtocolSandbox\obj\x86\Debug\ProtocolSandbox.Resources.resources
+D:\Work\Programming\GPS Tracking\ProtocolDev\ProtocolSandboxMeitrack\ProtocolSandbox\obj\x86\Debug\ProtocolSandbox.vbproj.GenerateResource.Cache
+D:\Work\Programming\GPS Tracking\ProtocolDev\ProtocolSandboxMeitrackT322\ProtocolSandbox\obj\x86\Debug\ProtocolSandbox.exe
+D:\Work\Programming\GPS Tracking\ProtocolDev\ProtocolSandboxMeitrackT322\ProtocolSandbox\obj\x86\Debug\ProtocolSandbox.xml
+D:\Work\Programming\GPS Tracking\ProtocolDev\ProtocolSandboxMeitrackT322\ProtocolSandbox\obj\x86\Debug\ProtocolSandbox.pdb
+D:\Work\Programming\GPS Tracking\ProtocolDev\ProtocolSandboxMeitrackT322\ProtocolSandbox\bin\Debug\ProtocolSandbox.exe
+D:\Work\Programming\GPS Tracking\ProtocolDev\ProtocolSandboxMeitrackT322\ProtocolSandbox\bin\Debug\ProtocolSandbox.pdb
+D:\Work\Programming\GPS Tracking\ProtocolDev\ProtocolSandboxMeitrackT322\ProtocolSandbox\bin\Debug\ProtocolSandbox.xml
+D:\Work\Programming\GPS Tracking\ProtocolDev\ProtocolSandboxMeitrackT322\ProtocolSandbox\obj\x86\Debug\ProtocolSandbox.Resources.resources
+D:\Work\Programming\GPS Tracking\ProtocolDev\ProtocolSandboxMeitrackT322\ProtocolSandbox\obj\x86\Debug\ProtocolSandbox.vbproj.GenerateResource.Cache
+D:\Work\Programming\GPS Tracking\ProtocolTCPDev\ProtocolSandboxMeitrackT322\ProtocolSandbox\obj\x86\Debug\ProtocolSandbox.exe
+D:\Work\Programming\GPS Tracking\ProtocolTCPDev\ProtocolSandboxMeitrackT322\ProtocolSandbox\obj\x86\Debug\ProtocolSandbox.xml
+D:\Work\Programming\GPS Tracking\ProtocolTCPDev\ProtocolSandboxMeitrackT322\ProtocolSandbox\obj\x86\Debug\ProtocolSandbox.pdb
+D:\Work\Programming\GPS Tracking\ProtocolTCPDev\ProtocolSandboxMeitrackT322\ProtocolSandbox\bin\Debug\ProtocolSandbox.exe
+D:\Work\Programming\GPS Tracking\ProtocolTCPDev\ProtocolSandboxMeitrackT322\ProtocolSandbox\bin\Debug\ProtocolSandbox.pdb
+D:\Work\Programming\GPS Tracking\ProtocolTCPDev\ProtocolSandboxMeitrackT322\ProtocolSandbox\bin\Debug\ProtocolSandbox.xml
+D:\Work\Programming\GPS Tracking\ProtocolTCPDev\ProtocolSandboxMeitrackT322\ProtocolSandbox\obj\x86\Debug\ProtocolSandbox.Resources.resources
+D:\Work\Programming\GPS Tracking\ProtocolTCPDev\ProtocolSandboxMeitrackT322\ProtocolSandbox\obj\x86\Debug\ProtocolSandbox.vbproj.GenerateResource.Cache
+D:\Work\Programming\GPS Tracking\ProtocolTCPDev\ProtocolSandbox\ProtocolSandbox\obj\x86\Debug\ProtocolSandbox.exe
+D:\Work\Programming\GPS Tracking\ProtocolTCPDev\ProtocolSandbox\ProtocolSandbox\obj\x86\Debug\ProtocolSandbox.xml
+D:\Work\Programming\GPS Tracking\ProtocolTCPDev\ProtocolSandbox\ProtocolSandbox\obj\x86\Debug\ProtocolSandbox.pdb
+D:\Work\Programming\GPS Tracking\GPS-server\ProtocolTCPDev\ProtocolSandbox\ProtocolSandbox\obj\x86\Debug\ProtocolSandbox.exe
+D:\Work\Programming\GPS Tracking\GPS-server\ProtocolTCPDev\ProtocolSandbox\ProtocolSandbox\obj\x86\Debug\ProtocolSandbox.xml
+D:\Work\Programming\GPS Tracking\GPS-server\ProtocolTCPDev\ProtocolSandbox\ProtocolSandbox\obj\x86\Debug\ProtocolSandbox.pdb
+D:\Work\Programming\GPS Tracking\GPS-server\ProtocolTCPDev\ProtocolSandbox\ProtocolSandbox\bin\Debug\ProtocolSandbox.exe
+D:\Work\Programming\GPS Tracking\GPS-server\ProtocolTCPDev\ProtocolSandbox\ProtocolSandbox\bin\Debug\ProtocolSandbox.pdb
+D:\Work\Programming\GPS Tracking\GPS-server\ProtocolTCPDev\ProtocolSandbox\ProtocolSandbox\bin\Debug\ProtocolSandbox.xml
+D:\Work\Programming\GPS Tracking\GPS-server\ProtocolTCPDev\ProtocolSandbox\ProtocolSandbox\obj\x86\Debug\ProtocolSandbox.Resources.resources
+D:\Work\Programming\GPS Tracking\GPS-server\ProtocolTCPDev\ProtocolSandbox\ProtocolSandbox\obj\x86\Debug\ProtocolSandbox.vbproj.GenerateResource.Cache
+D:\Work\Programming\GPS Tracking\GPS-server software packages\2.5.8\protocol_dev\ProtocolSandbox\ProtocolSandbox\obj\x86\Debug\ProtocolSandbox.exe
+D:\Work\Programming\GPS Tracking\GPS-server software packages\2.5.8\protocol_dev\ProtocolSandbox\ProtocolSandbox\obj\x86\Debug\ProtocolSandbox.xml
+D:\Work\Programming\GPS Tracking\GPS-server software packages\2.5.8\protocol_dev\ProtocolSandbox\ProtocolSandbox\obj\x86\Debug\ProtocolSandbox.pdb
+D:\Work\Programming\GPS Tracking\GPS-server software packages\2.5.8\protocol_dev\ProtocolSandbox\ProtocolSandbox\bin\Debug\ProtocolSandbox.exe
+D:\Work\Programming\GPS Tracking\GPS-server software packages\2.5.8\protocol_dev\ProtocolSandbox\ProtocolSandbox\bin\Debug\ProtocolSandbox.pdb
+D:\Work\Programming\GPS Tracking\GPS-server software packages\2.5.8\protocol_dev\ProtocolSandbox\ProtocolSandbox\bin\Debug\ProtocolSandbox.xml
+D:\Work\Programming\GPS Tracking\GPS-server software packages\2.5.8\protocol_dev\ProtocolSandbox\ProtocolSandbox\obj\x86\Debug\ProtocolSandbox.Resources.resources
+D:\Work\Programming\GPS Tracking\GPS-server software packages\2.5.8\protocol_dev\ProtocolSandbox\ProtocolSandbox\obj\x86\Debug\ProtocolSandbox.vbproj.GenerateResource.Cache
+D:\Work\Programming\GPS Tracking\GPS-server api\protocol\ProtocolSandbox\ProtocolSandbox\obj\x86\Debug\ProtocolSandbox.exe
+D:\Work\Programming\GPS Tracking\GPS-server api\protocol\ProtocolSandbox\ProtocolSandbox\obj\x86\Debug\ProtocolSandbox.xml
+D:\Work\Programming\GPS Tracking\GPS-server api\protocol\ProtocolSandbox\ProtocolSandbox\obj\x86\Debug\ProtocolSandbox.pdb
+D:\Work\Programming\GPS Tracking\GPS-server api\protocol\ProtocolSandbox\ProtocolSandbox\bin\Debug\ProtocolSandbox.exe
+D:\Work\Programming\GPS Tracking\GPS-server api\protocol\ProtocolSandbox\ProtocolSandbox\bin\Debug\ProtocolSandbox.pdb
+D:\Work\Programming\GPS Tracking\GPS-server api\protocol\ProtocolSandbox\ProtocolSandbox\bin\Debug\ProtocolSandbox.xml
+D:\Work\Programming\GPS Tracking\GPS-server api\protocol\ProtocolSandbox\ProtocolSandbox\obj\x86\Debug\ProtocolSandbox.Resources.resources
+D:\Work\Programming\GPS Tracking\GPS-server api\protocol\ProtocolSandbox\ProtocolSandbox\obj\x86\Debug\ProtocolSandbox.vbproj.GenerateResource.Cache
+D:\GPS Tracking\GPS-server api\protocol\ProtocolSandbox\ProtocolSandbox\obj\x86\Debug\ProtocolSandbox.exe
+D:\GPS Tracking\GPS-server api\protocol\ProtocolSandbox\ProtocolSandbox\obj\x86\Debug\ProtocolSandbox.xml
+D:\GPS Tracking\GPS-server api\protocol\ProtocolSandbox\ProtocolSandbox\obj\x86\Debug\ProtocolSandbox.pdb

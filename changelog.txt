@@ -1,0 +1,933 @@
+*************************
+2016-09-14 Version 2.9.1
+*************************
+Web application
+- Added groups for places (markers, routes and zones) with import and export tools
+- Added objects and places groups to multiselect lists in events, sub accounts and reports
+- Added report generation in PDF format
+- Added possibility to choose which details to show in object panel time (server)/time (position)/status
+- Added object search by IMEI in account object list
+- Added support for custom TMS maps and additional layer settings in CPanel
+- Possibility to enable/disable system languages from CPanel
+- Minor bug fixes
+
+Mobile web application
+- Added possibility to choose which details to show in object panel time (server)/time (position)/status
+- Added object list highlight depending on offline/stopped/moving/engine idle/sos status
+
+Languages
+- Added Chinese language
+- Added Japanese language
+
+Protocols
+- Protocol stability improvements
+- Added BITREK protocol
+- Added TK103 protocol with new port to solve device identification issues, now only ID is used as IMEI without additional 000
+- Updated Queclink protocols with hearbeat message
+- Updated Ruptela protocol
+- Updated Ulbotech protocol
+- Updated ST500 protocol
+- Updated Queclink GL200 protocol
+
+*************************
+2016-08-16 Version 2.9
+*************************
+Web application
+- Added fuel consumption settings which allow to choose fuel consumption source (rates, fuel level and consumption sensor)
+- Added fuel consumption by multiple fuel level sensors
+- Added fuel consumption sensor type
+- Changes in moving, stopped status detection and also added engine idle status with details
+- Added object list highlight depending on offline/stopped/moving/engine idle/sos status
+- Added new event types: stopped, moving and engine idle
+- Added trailer variable to event templates
+- Added no connection icon arrow status
+- Added total values to General information (merged) report
+- Added sensor result preview in sensor properties
+- Sub account and user object multi-selection and multi-delete added in CPanel
+- Added page generator tag settings to CPanel
+- Added Norsk language
+
+Protocols
+- Added protocol for image upload between protocols and web application
+- Added image upload for Fifotrack protocol
+- Added i-Trac A1 protocol http://www.i-trac.cn/product.asp?ClassID=009
+- Added Suntech ST500 protocol
+- Updated Detero protocol
+- Updated IntelliTrac X1 protocol
+- Updated BCE protocol
+- Updated Meiligao protocol
+- Updated iStartek VT600 protocol
+
+HTTP API 1.3 (available for server software customers)
+- Added GPRS and SMS command sending to GPS device using user API
+
+*************************
+2016-07-19 Version 2.8.5
+*************************
+- Added SSL HTTPS support, if you want to use it you shall purchase SSL certificate separately, we do not provide them
+
+Web application
+- Added duration from last event in minutes settings which helps to ignore multiple same events in set period of time
+- Added object status with moving, stopped and offline time details
+- Added min. engine idle speed in km/h which affects engine idle status to object accuracy settings
+- Added zone measurement in acres, hectare, sq meters and kilometers
+- Added area measurement tool
+- Added daylight saving time (DST) user defaults to CPanel
+- Added possibility to choose which page will open (account or CPanel) after Administrator or Manager login
+- Some bug fixes
+
+Mobile web application
+- Added object status with moving, stopped and offline time details
+- Added object control for commands sending to GPS trackers
+
+Protocols
+- Added possibility to enable/disable protocol error writing to log file
+- Added Totem Tech AT09 protocol
+- Added i-Trac protocol http://www.i-trac.cn/product.asp?ClassID=002
+- Added Concox GT300 protocol
+- Added Ruptela extended protocol support
+- Some bug fixes
+
+*************************
+2016-06-06 Version 2.8
+*************************
+Web application
+- Software source codes were converted to use MySQLi, that makes it more stable and faster
+- Support for custom WMS map servers configurable directly from CPanel
+- Custom WMS map servers configuration in CPanel
+- Added map startup position settings, possible options: default, last position and fit objects
+- Added event triggering in/out of routes, now it is possible to set sos, overspeed, door open or any other event just in exact routes
+- Added history route snap to road feature
+- Possibility to create e-mail and SMS templates for different languages
+- Devices which report to server, but are not added to any account log added under name "Unused object list" to CPanel
+- Added protocol and port column to CPanel object list
+- Added daylight saving time (DST) settings to user account
+- Extended object add and edit dialog in CPanel with more options
+- Added user account permission settings to allow or not object editing in CPanel
+- Added use server SMS Gateway to user defaults in CPanel
+- Some bug fixes
+
+Mobile web application
+- Support for custom WMS maps servers configurable directly from CPanel
+- Added map startup position settings, possible options: default, last position and fit objects
+- Added sub account login via URL for mobile application
+
+Protocols
+- Parameter events are now working even if there is no position data
+- Added AGPS protocol
+- Added APK-COM protocol
+- Added Aplicom protocol
+- Added Aquila Track protocol
+- Added AutoFon protocol
+- Added C2STEK protocol
+- Added Careu Ueco protocol
+- Added Detero protocol
+- Added Disha protocol
+- Added Gosafe G1S protocol
+- Added GoTop protocol
+- Added IntelliTrac X1 protocol
+- Added Oigo Telematics protocol
+- Added OKO protocol
+- Added Oner protocol
+- Added Raveon protocol
+- Added Suntech ST600 protocol
+- Added TWIG protocol
+- Added Totem Tech AT07 protocol
+- Added TopTen protocol
+- Added Uniguard protocol
+- Added Unknown 056 protocol
+- Added Unknown HW18 protocol
+- Added Xexun XE watch protocol
+- Updated ATrack protocol
+- Updated Teltonika AT protocol
+- Updated Teltonika FM protocol
+- Updated Teltonika GH protocol
+- Updated Gosafe protocol, now it supports OBDII data
+- Updated VT206 protocol
+- Updated Ulbotech protocol
+
+*************************
+2016-04-28 Version 2.7
+*************************
+Web application
+- From now software comes with all available languages
+- Added support for Mapbox maps
+- Added fast history hide button to history view panel
+- If user account is deactivated user session expires event if user is not logged out
+- Changes in CPanel user account mass email sending tool, which allows to send messages to all or selected user accounts
+- User account and object multiselection support added in CPanel, possibility to delete several user accounts and objects as once
+- GUI changes
+- Minor bug fixes and core preparation for new 3.0 version
+
+Mobile web application
+- Added support for Mapbox maps
+
+HTTP API 1.2 (available for server software customers)
+- Added support for PayPal IPN (Instant payment notifications), this allows PayPal to activate user account object automatically after payment
+- Added command to get address from latitude and longitude using server geocoders
+
+Protocols
+- Demo protocol now can read CSV exported GPS tracks and replay them in demo account as virtual GPS tracker (available for server software customers)
+- Added Geneko Fox protocol
+- Added Navtelecom protocol
+- Added Queclink GV75 protocol
+- Added Ulbotech protocol
+- Added TKSTAR protocol
+- Added Teltonika AT protocol
+- Added KHD protocol
+- Added Gator protocol
+- Added iStartek VT206 protocol
+- Added iStartek VT600 protocol
+- Added Castel OBD protocol
+- Added Castel SAT-802 protocol
+- Added Minova miTrack protocol
+- Added Satellite Solutions protocol
+- Added BS Technotronics protocol
+- Added Unknown STL060 protocol
+- Added Unknown PT3000 protocol
+- Updated Coban protocol
+- Updated Concox GT02 protocol
+- Updated Ruptela protocol
+- Updated Fifotrack protocol
+- Updated Bofan protocol
+- Updated Meiligao protocol
+- Updated Unknown T0024 protocol
+
+*************************
+2016-02-26 Version 2.6
+*************************
+Web application
+- Added RFID and iButton logbook
+- Added RFID and iButton logbook permission settings to sub accounts
+- Added object driver behavior (RAG) report
+- Object passenger list added with import/export tools
+- Driver RFID/iButton changed to Auto assign and Driver assign sensor should be configured to detect drivers by RFID or iButton
+- Trailer Auto assign was added together with Trailer assign sensor to detect trailers by RFID or iButton
+- Trailer settings were extended with RFID and iButton
+- Passenger assign sensor was added to detect passengers by RFID or iButton in RFID and iButton logbook
+- Changes in object control tool which allow to pre-define command templates for GPS device protocols separately
+- Added import/export to objects control templates
+- Added event triggering in/out of zones, now it is possible to set sos, overspeed, door open or any other event just in exact zones
+- Sudden acceleration and braking events were renamed to Harsh acceleration and braking
+- Added Harsh cornering event 
+- Added Connection: Yes event
+- Changed No Connection event to Connection: No
+- Added GPS: Yes event
+- Added GPS: No event
+- Changed Sensor event to Parameter event
+- Added Sensor event, when sensor value depends on pre-defined formula, calibration or percentage configuration
+- Added object history message export to CSV
+- Possibility to turn off odometer and engine hours counters
+- Possibility to set odometer absolute or relative sensor parameter
+- Possibility to set engine hours absolute or relative sensor parameter
+- Object engine idle and sos arrow icons
+- Expanded device icon settings, allows to set arrow color for stops, engine idle, moving and SOS event
+- Added account expiration feature and e-mail template for this notification
+- Possibility to add/remove object to/from several user accounts in CPanel using tags
+- Possibility to add/remove several objects to/from user account in CPanel using tags
+- Possibility to register user accounts without sending email from CPanel
+- Changes in server cleanup system
+- Changes in CPanel tools, which allow to auto execute server clean up services automatically
+- Added CPanel tool which allows to delete database junk records manually and automatically
+- Added permission which allow and disallow history clear from user account
+- Optimizations in event system
+- Added info tab in object settings, which shows all last device location, prameters and protocol information
+- Added paging to object, group, driver, passenger, trailer, event, template and sub account lists
+- Added delete all groups, drivers, passengers, trailers buttons
+- Added History, Reports, RFID and iButton logbook, Object control, Image gallery and Chat user defaults and permisions to all user accounts
+- Added SMS gateway number filter to CPanel
+- GUI changes and improvements
+- Minor bug fixes
+
+Protocols
+- Huge speed improvement between TCP/UDP listeners and database during location uploads
+- Added Digital Systems Tytan protocol
+- Added Orion protocol
+- Added Virus Platinum protocol
+- Added Unknown VT206 protocol
+- Added Unknown G64 protocol
+- Updated BCE J1708 Group parameters
+- Updated Teltonika protocol with harsh acceleration, braking and cornering events from green driving
+
+*************************
+2015-12-10 Version 2.5.9
+*************************
+Web application
+- Updated Leaflet Map library to 0.7.7 version
+- Added object groups import/export
+- Added object drivers import/export
+- Added object trailers import/export
+- Added email and sms template import/export
+- Support for SMS Gateway mobile application, which converts mobile device to SMS Gateway
+- Added HTTP/Mobile application SMS Gateway settings to user account
+- Added HTTP/Mobile application SMS Gateway settings to server CPanel
+- Latitude and longitude is range is checked before saving in CPanel
+- Changes in CPanel with some user default settings
+- Editable login URL from CPanel
+- Object connection timeout added to CPanel
+- Possibility to set Google Maps key from CPanel
+- Added marker custom icons which allow to upload own icons and set them on map as POI
+- Added email and SMS templates to CPanel for default notifications about user registration, account recovery, events and etc.
+- Added logic sensor information report
+- GPS device time adjustment added to accuracy settings
+- Added subject to templates in user account
+- Various bug fixes and improvements
+
+Protocols
+- Added database upload threads, locations in one upload, skip locations if time difference lower settings to GPS-server.exe for custom adjustments depending on server loads
+- Added Fifotrack protocol
+- Added Carrideo protocol
+- Added Unknown T0024 protocol
+- Updated Bofan protocol
+- Updated Calamp protocol
+
+HTTP API 1.1 (available for server software customers)
+- Get object commands which were sent for execution in JSON
+- Get user object list is JSON
+
+*************************
+2015-10-30 Version 2.5.8
+*************************
+Web application
+- Google Traffic map added
+- Google Terrain map added
+- Added Bing geocoder
+- Added object sensors import/export
+- Added object services import/export
+- Possibility to set when event will be triggered during daily time
+- Chat new message sound alert settings
+- Changes in server service which is responsible for scheduled reports generation, now it generates reports up to 15 times faster
+- Possibility to set much higher amount of object tail points - 9999
+- Administrator level changed to super administrator and added administrator level
+- Added currency settings to user account
+- Added fuel cost calculation to history route review list
+- Added fuel cost data items to reports
+- Added street view link to object menu
+- Added address variable to event message templates
+- Added total fuel filling to reports
+- Added total fuel thefts to reports
+- Possibility to set access to sub accounts via URL, which can expire on exact date
+- Added item visibility on map controls
+- Added map setting to CPanel, no need to edit configuration file to enable/disable map or change default map layer, zoom and position
+- Some changes in travel sheet report
+- Added left object panel group visibility and follow checkboxes
+- Various bug fixes and improvements
+
+Mobile web application
+- GUI changes
+- Google Traffic map added
+- Google Terrain map added
+- Added item visibility on map controls
+
+Protocols
+- Added Digital Systems DSF20, DSF21, DSF22 protocol
+- Added Maxepor protocol
+- Added PolGPS1 protocol
+- Updated Atrack protocol
+- Updated Gosafe protocol
+- Updated Jointech protocol
+- Updated Xexun protocol
+- Fixed BCE protocol
+- Fixed Meiligao protocol
+- Fixed some Teltonika protocol issues and also LV-CAN200
+
+Protocol API 1.0 (available for server software customers)
+- Develop protocol on your own, send source code and protocol documentation to info@gps-server.net, we will verify it and integrate into your server
+
+HTTP API 1.0 (available for server software customers)
+- Add/delete user
+- Add/delete object
+- Add/delete object to/from user account
+- Set object activity period
+- Get object last locations in JSON
+- Get object location messages in JSON
+- Location data insertion to database, can be used by GPS device manufacturers or smartphone application developers who look for an easy way to transmit location data to server via HTTP GET
+
+*************************
+2015-09-16 Version 2.5.7
+*************************
+Web application
+- Updated jQuery to 2.1.4 version
+- Updated jQuery UI to 1.11.4 version
+- Updated Leaflet Map library to 0.7.5 version
+- Possibility to set every object separately to use icon or arrow
+- Added temperature sensor
+- Added temperature graph report
+- Added ignition graph report
+- Added sensor graph report
+- Added object information report
+- Changes in fuel consumption rate settings
+- Added fuel cost per liter and galon
+- Extended reports with fuel cost
+- Added possibility to change report data items
+- Driver is extended with possibility to upload photo
+- Possibility to upload custom user icons for objects for every user account
+- E-mail and SMS template editor with global variables
+- Possibility to choose e-mail and SMS templates in event settings
+- Added trailer settings
+- Added trailer information
+- Reports extended with trailer information
+- Added prevention from sending several duplicate commands to device at once
+- Changes in device connection and GPS status
+- Added data points to history track
+
+*************************
+2015-08-25 Version 2.5.5
+*************************
+Web application
+- Possibility to switch between servers from login dialog
+- Added PayPal custom field to CPanel, lets PayPal API to detect payment type
+- Changed way how formula is calculated in sensors, now it is possible to enter formula with all math operators like +-/*()
+- Added sensor option which lets to sent if it will be visible in popups
+- Possibility to send multiple SMS event notifications to phone numbers separated by comma
+- Solved GUI issues under iOS in Safari web browser
+- Solved font issues under iOS web browsers
+- GUI changes in event properties window
+- Added last hour filter
+- Possibility to change tail color and tail points quantity for every object separately
+- A lot of structure changes in database
+- Solved issues with driver detection
+- Added location filter settings
+- Allows to enter up to 2048 character SMS gateway URLs
+- Minor bug fixes
+
+Protocols
+- Rewritten TCP/IP listener from scratch using newer communication technology
+- Changes in GPS-server.exe settings
+- Added location filter settings
+- Possibility to change hour interval when to skip old location data
+- Possibility to disable location printing to console
+- Added Yuwei protocol
+- Added GP106M protocol
+- Updated Coban protocol
+- Updated Meiligao protocol
+- Updated Calamp protocol
+
+Mobile Apps
+- Support for GPS Tracker WP Windows Phone (Mobile application can be downloaded from Windows Phone Store)
+- Support for GPS Tracker iOS (Mobile application is under development and will be available on Apple App Store soon)
+- Support for GPS Tracker BlackBerry (Mobile application is under development and will be available on BlackBerry App World soon)
+
+*************************
+2015-03-04 Version 2.5
+*************************
+Web application
+- Changes in places system, which allow to manage big numbers of zones and markers much faster
+- Changes in sensor type percentage and value with calibration table calculations
+- Added direction arrows to history routes
+- Added history control toolbar which lets to turn off route, arrows, stops and events
+- Added possibility to clear detected sensor cache in accuracy settings
+- Added possibility to change signature of email in CPanel
+- Added possibility to create routes under places for object movement control
+- Added route in and out events
+- Routes can be imported and exported
+- Zone names can be shown instead of addresses in reports
+- Added feature in CPanel which lets to set all user objects to average active date
+- Only super admin which is set in config.php can access "Manage server" in CPanel
+- Database backup e-mail is now set from CPanel
+- Possibility in CPanel to limit number of routes for every user and whole server
+- Added privileges settings for routes to subaccounts
+
+Protocols
+- Added several new Teltonika sensor parameters
+- Added ATrack report id sensor parameter
+- Added Visiontek 87VTU protocol
+- Added Megastek GVT-369 protocol
+- Added Megastek GVT-800 protocol
+- New Queclink GL200 protocol
+- New Queclink GL300 protocol
+- New Queclink GL500 protocol
+- New Queclink GT300 protocol
+- New Queclink GT500 protocol
+- New Queclink GMT100 protocol
+- New Queclink GV55 protocol
+- New Queclink GV65 protocol
+- New Queclink GV300 protocol
+- New Queclink GV500 protocol
+- Updated Topflytech protocol
+- Updated Visiontek 84VTU protocol
+- Updated MiniFinder protocol
+- Updated Meitrack T322 protocol
+
+*************************
+2014-11-24 Version 2.4.5
+*************************
+Web application
+- Added chat for communication with mobile devices running GPS-tracker application
+- Added chat privileges in subaccounts settings
+- Events can be triggered for every week day separately
+- Added object follow tool to use in external application or browser window
+- Last map cluster visibility settings are stored in cookies
+- Higher data compression in real time tracking between server and client (web browser)
+- Faster objects load and search in left panel
+- Faster places load and search in left panel
+- Added nautical miles
+- Added GPS antenna cut event
+- Added Low DC event
+- Added user_access log creation in /logs/ folder
+- Added object_op log creation in /logs/ folder
+- Added log viewer to CPanel
+- Possibility in CPanel to limit number of zones and markers for every user and whole server
+- GUI changes and bug fixes
+- PHPMailer updated to latest version
+
+Mobile application
+- Last map cluster visibility settings are stored in cookies
+- Higher data compression in real time tracking between server and client (web browser)
+- Added nautical miles
+
+Android GPS-server
+- No more application reload on orientation change
+
+Android GPS-tracker
+- Added camera, it allows to make photos and upload to user account with last location (at least 2.3 Android version is needed)
+- Added chat for communication with main account
+- Added location accuracy settings
+- GUI changes
+
+Android GPS-tracker Hidden
+- Added location accuracy settings
+- GUI changes
+
+Protocols
+- Changes in location insertion to database in all protocols
+- Added EELINK protocol
+- Added Xexun XT013 protocol
+- Added Queclink TRS protocol
+- Updated Silicon Techlabs protocol
+- Updated Autoleaders protocol
+- Updated Meitrack protocol
+- Updated Ruptela protocol
+- Fixed some BCE protocol issues
+
+*************************
+2014-09-27 Version 2.4
+*************************
+Web application
+- GUI improvements and design changes in whole application
+- Moved to faster map engine
+- Added Yandex map support
+- Ruler now has modify option
+- Object clustering added
+- Marker clustering added
+- Map control for cluster view enable/disable added
+- Image viewer added which can receive images with location from GPS devices (will be used in new GPS device protocols to receive images)
+- SMS gateway configuration from CPanel
+- Possibility to allow every user separately to use server SMS gateway
+- User can set own SMS gateway in account
+- Object control via SMS
+- Object control via SMS on event
+- Added %IMEI% variable to object control via GPRS and SMS commands
+- Bottom left panel show last server connection and location times
+- Changes in login and session system, improved security
+- Sensor event is triggered even if no GPS signal
+- Realtime tracking and event messages now show message receive time to server
+- If zone name is not visible, mouse hover on zone will show name
+
+Mobile application
+- GUI improvements, which make application faster and more responsive
+- Moved to faster map engine
+- Added Yandex map support
+- Object clustering added
+- Map control for cluster view enable/disable added
+
+Protocols
+- Changes in GlobalSat protocol, TR203/TR206 and TR600 device protocol were separated
+- Added Totem Tech protocol
+- Added MiniFinder protocol
+- Added GalileoSky protocol
+- Added Amwell protocol
+- Added Falcom STEPPIII protocol
+- Added Unknown TK110 protocol
+- Added TelcomIP protocol
+- Added new hearbeat packet time update
+
+*************************
+2014-07-15 Version 2.3.5
+*************************
+Web application
+- Objects now appear/disappear from map using left panel search
+- Geocoder changes, which allow to add different Geocoder systems
+- Added free Nominatim Geocoder support
+- Accuracy improvements in fuel fillings and thefts reports
+- PHPMailer updated to latest version
+- Device responses in ACSII and HEX are received after sending command to device
+- Odometer and engine hours are updated in realtime
+
+Mobile application
+- Fixed issue with history privileges in sub accounts
+
+Protocols
+- UDP protocol listener
+- Ruptela protocol expanded with sensor support
+- Tracer X2 protocol added
+- BCE protocol added
+- Calamp protocol added
+
+*************************
+2014-05-19 Version 2.3.2
+*************************
+Web application
+- Added fuel level report
+- Added service report
+- Added possibility to set service to update "Last service" automatically
+- Rewritten subaccounts system
+- Added history and reports privileges for subaccounts
+- Possibility to change notification period about expiring objects from CPanel
+- CPanel now supports translation and language switching
+- CPanel GUI changes
+- Improved security
+- Bug fixes and optimizations
+
+Protocols
+- Mastrack protocol added
+- Silicon Techlabs protocol added
+- TrackPro protocol added
+- Maestro MicroTracker protocol added
+- Suntech protocol added
+- New Coban protocol with sensors is supported
+- Meitrack AD5 sensor parameter added
+- Teltonika GH protocol fixes
+
+*************************
+2014-04-25 Version 2.3
+*************************
+Web application
+- Added scheduled reports (daily and weekly)
+- Added fuel filling report
+- Added fuel thefts report
+- Added object fuel filling and thefts accuracy settings
+- Added bracelet on/off event
+- Added service event
+- Added sensor calibration table, which allows to calibrate incorrect form fuel tanks, temperature sensor scales and etc.
+- Removed odometer and engine hours expires event and changed with new service tool
+- Added service tool which allows to set various objects maintenance intervals, like oil change, insurance expiry and etc.
+- Added feature which allows to select sound alarm for every event separately
+- Possibility to see location address in bottom left panel (realtime tracking, events and history)
+- Added feature which allows to set odometer calculation source: GPS, Absolute (odo parameter) or Relative (odor parameter)
+- Added feature which allows to set engine hours calculation source: ACC, Absolute (engh parameter) or Relative (enghr parameter)
+- If GPS device sends absolute odometer or engine hours value they are shown in events and history tracks in bottom left panel
+- Added feature which notifies user via e-mail about soon object expiration
+- Added reload button to places
+- Added add object button to object list in left panel
+- Changes in language loading system, if some parts or software are not translated to selected language, no error will be displayed, but English translation is loaded
+- Rewritten zone in/out algorithm for events and reports which is 30% faster than before
+- Clicking on object icon in left panel map zooms automatically
+- Added possibility to enter vehicle VIN number in object settings
+- From now flot graph shows also negative sensor values
+- Added tool tips to all buttons to make GUI more user friendly
+- Added user contacts information to CPanel with possibility to modify it
+- Added possibility to upload logo image files from CPanel
+- Possibility to manage user sub accounts from CPanel
+- Statistics are refreshed every 30 seconds in CPanel
+- Some changes in login dialog
+- Some GUI changes
+- Software now works with Internet Explorer 11 version
+- Bug fixes and optimizations
+
+Mobile application
+- Added event list with paging
+- Added link to desktop version for fast switching
+
+Android GPS-tracker
+- Added bats sensor parameter to monitor if mobile device is plugged to charger or not
+- Some bug fixes
+
+Android GPS-tracker Hidden
+- Added bats sensor parameter to monitor if mobile device is plugged to charger or not
+- Some bug fixes
+
+Protocols
+- Added 64 bit version of protocols.exe application, which is recommended to run if there is more than 1000 objects online
+- Up to 5 times faster location insertion to database on servers with huge amount of objects due to location packaging
+- Added Concox ET100/GT100 protocol
+- Expanded Megastek protocol to support SOS, Shock, Low Battery, Bracelet on/off events
+- Added odometer parameter to Meitrack protocol
+- Added data from buffer support for Visiontek protocol
+
+*************************
+2014-03-11 Version 2.2.7
+*************************
+Web application
+- Added man down event (works if GPS device supports that)
+- Added signal jamming event (works if GPS device supports that)
+- Added possibility to apply formula for value sensor (add, subtract, multiply and divide)
+- Fixed engine hours calculation in history and reports
+- Logic sensors graph is now shown as threshold
+- Mouse on history graph is being tracked in realtime
+- Account session checking and notification about expiry added
+- Added possibility to register RFID card swipes to separate database table
+- Possibility to change history period from CPanel instead of using GPS-server.exe tool
+- Now new object parameters for sensors are detected immediately, no need to reload account
+- Updated jqGrid library to 4.6 version
+- Timezones can be modified in one file and apply changes to whole software
+- Lots of code cleans up and optimizations
+- Bug fixes
+
+Mobile application
+- jQuery Mobile library updated to 1.4.2 version
+- Application rewriten to support new jQuery Mobile version
+- Some application optimizations
+
+Protocols
+- Added Haicom protocol
+- Added Topflytech T8803 Pro and T8806 protocol
+- Added year fix for some GPS device protocols
+- Full sensor support for Teltonika GH protocol
+- Full sensor support for Jointech protocol
+- Fixed Meitrack T322 protocol digital inputs issue
+
+Android GPS-tracker
+- Possibility to control application via web browser using commands, start/stop tracking, change interval, change command check interval
+- Battery level percentage is sent to GPS server and can be added as sensor
+
+Android GPS-tracker Hidden
+- Possibility to control application via web browser using commands, start/stop tracking, change interval, change command check interval
+- Battery level percentage is sent to GPS server and can be added as sensor
+- Fully rewritten application from scratch, more stable and user friendly GUI
+- Added more detailed status information
+- Added unit settings
+- Added clear buffer feature
+
+*************************
+2014-02-12 Version 2.2.5
+*************************
+Web application
+- Reports generation tool was rewritten, now it uses POST method
+- Reports now can be saved as templates for later fast use
+- Possibility to select zones for zone in/out report
+- History/Report route generation script changes, now it's more accurate
+- Added feature which resets odometer or engine hours on event
+- Changed fit objects on map behavior, now it fits only objects which are selected as visible
+- Object visibility and follow settings are stored into cookies to remember last selection status
+- Units now can be also translated using language files
+- Changed style of object control tool
+- /r and /n characters are correctly supported during command sending
+- Improved security from MySQL injection attack
+- Improved object position loading/refresh in accounts with more than 50 objects, it is much faster now
+- Added geocoder cache, this will reduce API calls to geocoder servers and make some address responses faster 
+- Enable/disable SMS sending from CPanel
+- Enable/disable scheduled reports from CPanel (scheduled reports will be added in 2.3 version)
+- Enable/disable geocoder caching from CPanel
+
+Mobile application
+- Menu style was changed
+- Some issues on iOS were fixed
+
+Protocols
+- Expanded GlobalSat protocol to support most of sensors
+- Added SOS and low battery event support for TZoneDigital protocol
+
+Android GPS-tracker
+- Fully rewritten application from scratch, more stable and user friendly GUI
+- Added more detailed status information
+- Added unit settings
+- Added clear buffer feature
+
+*************************
+2014-01-10 Version 2.2.2
+*************************
+Web application
+- Added possibility to resize height of bottom graph and messages panel
+- Added model, plate, driver and speed information to event message
+- Added sudden acceleration and braking events
+- Event e-mails are sent as no reply, to avoid backward e-mail flood if event message is not delivered
+- Multiple e-mail sending on event, limited to 5 e-mails
+- Distance to nearest zone or marker now is shown in left bottom panel
+- Added possibility to import and export places
+- Added possibility to delete all places
+- CPanel Admin and Manager privileges security improvements
+- Updated Flot library to 0.8.2 version
+- Some GUI changes in desktop and mobile version
+- Added version ID checker, to avoid cache clearing after updates
+
+Protocols
+- Added Meitrack T322 protocol
+- Added Meitrack fuel and temperature sensor support
+- Added Xexun rfid support
+
+Server
+- Added tool which makes GPS-server to run as service in more simpler way than before
+
+*************************
+2013-12-02 Version 2.2.1
+*************************
+Web application
+- Reworked object sensors for easier configuration
+- Reworked fuel consumption rate calculation system
+- Engine hours and idle are not shown if ACC sensor is not configured
+- Added tow event (works on devices which have tow event/alarm)
+- Added odometer reaches event
+- Added engine hours reaches event
+- Events are not shown in user account for object which is not activated
+- Added possibility to duplicate objects
+- If same object is added to another user, all settings like fuel rates, accuracy and sensors are moved also automatically
+
+Protocols
+- Added duplicate location message checker, which reduces database size and speeds up history and reports loading
+
+*************************
+2013-11-25 Version 2.2
+*************************
+Web application
+- Added mobile version of tracking application
+- Added possibility to assign ACC (ignition) to any other digital input parameter
+- Added possibility to enable/disable object control via commands for sub account users
+- Added object control (command sending) on event
+- Added possibility to send multiple commands and monitor delivery status of every command
+- Command status now is refreshed automatically every 60 seconds
+- Added nearest zone and marker feature
+- Language files structure was changed to faster and smaller size
+- Added IMEI used at user account column in CPanel
+- Fixed some small bug
+
+Protocols
+- Fixed some data insertion to database issues
+- Added Keson protocol
+- Added Queclink GV500 protocol
+
+*************************
+2013-10-28 Version 2.1.9
+*************************
+Web application
+- Possibility to use multiple geocodder servers
+- Database structure changes
+- Added events reload panel button
+- Added engine hours counter (for devices with ACC parameter)
+- Added engine work and idle data to history and reports (for devices with ACC parameter)
+- Object odometer save issue fixed
+- Now it's shown if object did not leave zone in zone in/out report
+- When object history is cleared, object parameters are also removed from register
+
+*************************
+2013-10-15 Version 2.1.8
+*************************
+Web application
+- Added possbility to send ASCII or HEX command to GPS device
+- Added commands editor
+- Added commands status viewer
+- Changed language files structure
+- Some GUI changes
+
+Server services
+- Added undelivered commands cleaner
+
+Android GPS-tracker
+- Added AGPS support
+- Added location memory. If Internet is lost, application will save location data. Once Internet is available, saved data will be uploaded to server.
+
+*************************
+2013-09-30 Version 2.1.7
+*************************
+Web application
+- Added low battery event
+- Improved route drift filtering
+- Added objects fast menu
+- Added overspeed count into general report
+- Some minor bug fixed and code optimizations
+
+Protocols
+- Added Autoleaders protocol
+
+Server services
+- Added auto database structure backup sending via e-mail
+- Services execute now a bit faster
+
+*************************
+2013-09-03 Version 2.1.6
+*************************
+
+Web application
+- Updated OpenLayers library to 2.13.1 version
+- Updated jQuery library to 2.0.3 version
+- Updated jQuery UI library to 1.10.3 version
+- Updated Flot library to 0.8.1 version
+- Updated jqGrid library to 4.5.2 version
+- Updated qTip library to 2.1.1 version
+- Added history route message viewer
+- GUI theme improvements
+- Fixed sub user list bug
+
+*************************
+2013-08-27 Version 2.1.5
+*************************
+
+Web application
+- Added user contact information form in user settings
+- Added events report
+- Events can be filtered by object name and event name
+- Fixed event viewing in subuser account 
+
+Protocols
+- Added possibility to ban GPS objects using IMEI number
+- Added sensor parameters support for Bofan protocol
+- Added Roadsay protocol
+- Various protocols bug fixes
+
+*************************
+2013-08-13 Version 2.1.4
+*************************
+
+Web application
+- Added stops count to general information report
+- Added new report General information (merged)
+- Added shock event
+- Added power cut event
+- Some bug fixes regarding reports
+
+Protocols
+- Added sensor parameters support for TZone protocol
+- Added Pointer protocol
+
+*************************
+2013-07-30 Version 2.1.3
+*************************
+
+Web application
+- Added accuracy settings which gives possibility to set how stops are detected, using GPS, ACC or GPS + ACC
+- Added accuracy settings which gives possibility to change min. driving speed and min. difference between points
+- Added accuracy settings which helps to eliminate drifting as much as possible if GPS device sends HDOP and GPSLEV values
+- Fixed parameters values during stops
+- Fixed timezone issue in CPanel for objects list
+
+Protocols
+- Added Visiontek protocol
+- Added Flextrack Lommy protocol
+- Added sensor parameters support for Megastek protocol
+- Added sensor parameters support for Meitrack protocol
+- Added sensor parameters support for Unknown TL206 protocol
+
+*************************
+2013-07-08 Version 2.1.2
+*************************
+
+Web application
+- Added history route and reports accuracy settings
+- Object list eye icon now switches on/off all object visibility
+- Object list magnify icon now switches on/off all object follow
+- Places list eye icon now switches on/off all zone and markers visibility
+
+Protocols
+- Added Ruptela protocol
+- Added ATrack ASCII protocol
+- Added Gosafe binary protocol
+- Fixed Coban tracking interval issue
+- Fixed Concox GS503 login message issue
+
+*************************
+2013-06-13 Version 2.1.1
+*************************
+
+Web application
+- Added automatic driver detection via RFID/iButton
+- Added driver name in general reports
+- Added altitude parameter to history graph
+- Tooltips added
+- Added event system message sound alarm
+- Added event system message auto hide on/off
+
+Protocols
+- Added Unknown PG88 protocol
+- Fixed Concox GT06 acc sensor parameter bug
+- Added Concox GT06 power cut off and shock alarm support
+- Fixed Teltonika FM iButton issue

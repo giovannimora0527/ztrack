@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--GPS-server.exe configuration file-->
+<Data>
+  <AutostartServer>False</AutostartServer>
+  <ConsolePrint>True</ConsolePrint>
+  <WriteErrors>False</WriteErrors>
+  <ConsoleWindow>Normal</ConsoleWindow>
+  <ProtocolRestart>120</ProtocolRestart>
+  <UploadThreads>20</UploadThreads>
+  <UploadLocations>5</UploadLocations>
+  <LocationFilter>True</LocationFilter>
+  <SkipLocationsTimeDifference>3</SkipLocationsTimeDifference>
+  <SkipLocationsOlder>72</SkipLocationsOlder>
+</Data>
