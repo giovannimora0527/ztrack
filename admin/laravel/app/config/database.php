@@ -23,7 +23,7 @@ return array(
       | you may use many connections at once using the Database library.
       |
      */
-    'default' => 'mysql',      
+    'default' => 'gs',      
     /*
       |--------------------------------------------------------------------------
       | Database Connections
@@ -45,10 +45,20 @@ return array(
             'database' => __DIR__ . '/../database/production.sqlite',
             'prefix' => '',
         ),
-        'mysql' => array(
+//        'local' => array(
+//            'driver' => 'mysql',
+//            'host' => 'localhost',
+//            'database' => 'ztrack',
+//            'username' => 'root',
+//            'password' => '',
+//            'charset' => 'utf8',
+//            'collation' => 'utf8_unicode_ci',
+//            'prefix' => '',
+//        ),
+        'gs' => array(
             'driver' => 'mysql',
             'host' => 'localhost',
-            'database' => 'sigeri',
+            'database' => 'gs',
             'username' => 'root',
             'password' => '',
             'charset' => 'utf8',

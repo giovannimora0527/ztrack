@@ -1,13 +1,11 @@
-var ufps = angular.module('ufps');
-ufps.service('SessionService', function ($http, $state) {
+var ztrack = angular.module('ztrack');
+ztrack.service('SessionService', function ($http, $state) {
 //    localStorage.clear();
     this.isAuthenticated = false;
-
     this.isLoged = function () {
-
-        if (localStorage['sigeri.authenticated']) {
+        if (localStorage['ztrack.authenticated'] === 'true') {            
             return true;
-        }
+        }        
         return false;
     };
 
@@ -24,22 +22,19 @@ ufps.service('SessionService', function ($http, $state) {
         this.id = null;
         this.user_id = null;
         this.isAuthenticated = false;
-        delete localStorage['sigeri.user_id'];
-        delete localStorage['sigeri.username'];
-        delete localStorage['sigeri.token'];
-        delete localStorage['sigeri.userType'];
-        delete localStorage['sigeri.authenticated'];
-        sessionStorage.clear();
+        delete localStorage['ztrack.user_id'];
+        delete localStorage['ztrack.username'];
+        delete localStorage['ztrack.token'];
+        delete localStorage['ztrack.userType'];
+        delete localStorage['ztrack.authenticated'];        
     };
 
     this.save = function () {
-
-        localStorage['sigeri.user_id'] = this.user_id;
-        localStorage['sigeri.username'] = this.username;
-        localStorage['sigeri.token'] = this.token;
-        localStorage['sigeri.userType'] = this.userType;
-        localStorage['sigeri.authenticated'] = true;
-
+        localStorage['ztrack.user_id'] = this.user_id;
+        localStorage['ztrack.username'] = this.username;
+        localStorage['ztrack.token'] = this.token;
+        localStorage['ztrack.userType'] = this.userType;
+        localStorage['ztrack.authenticated'] = true;
         $http.defaults.headers.common['user'] = this.user_id;
         $http.defaults.headers.common['token'] = this.token;
     };
@@ -48,17 +43,29 @@ ufps.service('SessionService', function ($http, $state) {
         if (this.isLoged()) {
             var info = {};
             info.user = {};
-            info.user.id = localStorage['sigeri.user_id'];
-            info.user.name = localStorage['sigeri.username'];
-            info.token = localStorage['sigeri.token'];
-            info.user.type = localStorage['sigeri.userType'];
+            info.user.id = localStorage['ztrack.user_id'];
+            info.user.name = localStorage['ztrack.username'];
+            info.token = localStorage['ztrack.token'];
+            info.user.type = localStorage['ztrack.userType'];
             this.create(info);
-            $state.go('home');
+            //$state.go('home');
+        } else {
+            
+        }
+    };   
+    
+    this.getInfo = function () {
+        if (this.isLoged()) {
+            var info = {};
+            info.user = {};
+            info.user.id = localStorage['ztrack.userid'];
+            info.user.name = localStorage['ztrack.username'];
+            info.token = localStorage['ztrack.token']; 
+            return info;
         } else {
             
         }
     };    
-
     return this;
 
 });

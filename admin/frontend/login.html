@@ -23,6 +23,8 @@
         <![endif]-->
         <link rel="stylesheet" href="assets/css/ace-rtl.min.css" />
 
+        <link href="build/toastr.css" rel="stylesheet" type="text/css" />
+
         <!--[if lte IE 9]>
           <link rel="stylesheet" href="assets/css/ace-ie.min.css" />
         <![endif]-->
@@ -42,15 +44,10 @@
                     <div class="col-sm-10 col-sm-offset-1">
                         <div class="login-container">
                             <div class="center">
-                                <h1>
-                                    <i class="ace-icon fa fa-map blue"></i>                                  
-                                    <span class="white" id="id-text2">ZTRACK</span>
-                                </h1>
-                                <h4 class="blue" id="id-company-text">&copy; ZModoColombia</h4>
+                                <br><br>
+                                <img src="assets/images/logos/logo.png">                              
                             </div>
-
                             <div class="space-6"></div>
-
                             <div class="position-relative">
                                 <div id="login-box" class="login-box visible widget-box no-border">
                                     <div class="widget-body">
@@ -101,7 +98,7 @@
                                             <div>
                                                 <a href="#" data-target="#forgot-box" class="forgot-password-link">
                                                     <i class="ace-icon fa fa-arrow-left"></i>
-                                                    Olvidó su password
+                                                    ¿Olvidó su contraseña?
                                                 </a>
                                             </div>
                                             <div>
@@ -129,12 +126,12 @@
                                                 <fieldset>
                                                     <label class="block clearfix">
                                                         <span class="block input-icon input-icon-right">
-                                                            <input type="email" class="form-control" placeholder="Email" />
+                                                            <input id="emailregistro" name="emailregistro" type="email" class="form-control" placeholder="Email" />
                                                             <i class="ace-icon fa fa-envelope"></i>
                                                         </span>
                                                     </label>
                                                     <div class="clearfix">
-                                                        <button type="button" class="width-35 pull-right btn btn-sm btn-danger">
+                                                        <button type="button" class="width-35 pull-right btn btn-sm btn-danger" onclick="recuperarContrasena()">
                                                             <i class="ace-icon fa fa-arrow-left"></i>
                                                             <span class="bigger-110">Enviar</span>
                                                         </button>
@@ -232,23 +229,28 @@
                                 </div><!-- /.signup-box -->
                             </div><!-- /.position-relative -->
 
-<!--                            <?php
-			if( isset($_SESSION['ERRMSG_ARR']) && is_array($_SESSION['ERRMSG_ARR']) && count($_SESSION['ERRMSG_ARR']) >0 ) {
-			echo '<ul class="err">';
-			foreach($_SESSION['ERRMSG_ARR'] as $msg) {
-				echo '<li>',$msg,'</li>'; 
-				}
-			echo '</ul>';
-			unset($_SESSION['ERRMSG_ARR']);
-			}
-		?>-->
+                            <!--                            <?php
+                                                    if( isset($_SESSION['ERRMSG_ARR']) && is_array($_SESSION['ERRMSG_ARR']) && count($_SESSION['ERRMSG_ARR']) >0 ) {
+                                                    echo '<ul class="err">';
+                                                    foreach($_SESSION['ERRMSG_ARR'] as $msg) {
+                                                            echo '<li>',$msg,'</li>'; 
+                                                            }
+                                                    echo '</ul>';
+                                                    unset($_SESSION['ERRMSG_ARR']);
+                                                    }
+                                            ?>-->
                         </div>
                     </div><!-- /.col -->
-                </div><!-- /.row -->
+                </div><!-- /.row -->                
             </div><!-- /.main-content -->
+
         </div><!-- /.main-container -->
 
         <!-- basic scripts -->
+
+        <!-- ToastrJS -->
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+        <script src="build/toastr/toastr.js"></script>
 
         <!--[if !IE]> -->
         <script src="assets/js/jquery-2.1.4.min.js"></script>
@@ -259,12 +261,22 @@
 <script src="assets/js/jquery-1.11.3.min.js"></script>
 <![endif]-->
         <script type="text/javascript">
-         if ('ontouchstart' in document.documentElement)
-          document.write("<script src='assets/js/jquery.mobile.custom.min.js'>" + "<" + "/script>");
+                                                            if ('ontouchstart' in document.documentElement)
+                                                                document.write("<script src='assets/js/jquery.mobile.custom.min.js'>" + "<" + "/script>");
         </script>
 
         <!-- inline scripts related to this page -->
         <script type="text/javascript">
+            window.onload = clear();
+
+            function clear() {
+                delete localStorage['ztrack.user_id'];
+                delete localStorage['ztrack.username'];
+                delete localStorage['ztrack.token'];
+                delete localStorage['ztrack.userType'];
+                delete localStorage['ztrack.authenticated'];
+            }
+
             jQuery(function ($) {
                 $(document).on('click', '.toolbar a[data-target]', function (e) {
                     e.preventDefault();
@@ -302,35 +314,6 @@
 
             });
 
-            function volverToLogin() {
-                window.location = "login.html";
-            }
-
-
-            function login() {
-                var nombre = document.getElementById("nombre").value;
-                var password = document.getElementById("password").value;                
-                $.ajax({
-                    url: 'php/login.php',
-                    data: { nombre: nombre, password: password },
-                    dataType: "json",
-                    type: 'POST',                     
-                    success: function (result) {
-                       // console.log("Imprime: " + result[0]["success"]);
-                      if(result[0]["success"] === 'false'){                         
-                          alert("Error: " + result[0]["value"]);
-                      } 
-                      else
-                      {
-                          window.location="index.html";
-                      }
-                      
-                    }
-                });
-            }
-            ;
-
-
             //          Function para mostrar el modal del error
             $("#id-btn-dialog2").on('click', function (e) {
                 e.preventDefault();
@@ -359,25 +342,124 @@
                 });
             }
             );
-    
-    function registrar(){
-        var email = document.getElementById("email").value;
-        var empresa = document.getElementById("empresa").value;
-        var username = document.getElementById("usuario").value;
-        var pass1 = document.getElementById("contrasena1").value;
-        var pass2 = document.getElementById("contrasena2").value;
-        var chk = document.getElementById("check").checked;
-        if(chk){
-          console.log([email, empresa, username, pass1, pass2, chk]); 
-          
-        }
-        else{
-          alert("Debe aceptar los terminos y condiciones para continuar");
-          return;
-        }
-        
-    }
 
+
+            function volverToLogin() {
+                window.location = "login.html";
+            }
+
+
+            function login() {
+                var nombre = document.getElementById("nombre").value;
+                var password = document.getElementById("password").value;
+                $.ajax({
+                    url: 'php/login.php',
+                    data: {nombre: nombre, password: password},
+                    dataType: "json",
+                    type: 'POST',
+                    success: function (result) {
+                        if (result[0]["success"] === 'false') {
+                            toastrMsj(result[0]["value"], "Error", "error");
+                        } else
+                        {
+                            sessionStorage.setItem('sessionId', result[0]["sessionId"]);
+                            save(result[0]); // Creo Session                            
+                        }
+                    }
+                });
+            }
+            ;
+
+            this.save = function (data) {
+                localStorage['ztrack.user_id'] = data.userId;
+                localStorage['ztrack.username'] = data.username;
+                localStorage['ztrack.token'] = data.token;
+                localStorage['ztrack.authenticated'] = true;
+                window.location = 'index.html';
+            };
+
+
+            function registrar() {
+                var email = document.getElementById("email").value;
+                var empresa = document.getElementById("empresa").value;
+                var username = document.getElementById("usuario").value;
+                var pass1 = document.getElementById("contrasena1").value;
+                var pass2 = document.getElementById("contrasena2").value;
+                var chk = document.getElementById("check").checked;
+                if (pass1.toString() !== pass2.toString()) {
+                    toastrMsj("Las contraseñas no coinciden. Intente de nuevo", "Error", "error");
+                    return;
+                }
+                if (chk) {
+                    toastrMsj("Se está realizando la peticion. Espere un momento.", "Info", "warning");
+                    $.ajax({
+                        url: 'php/register.php',
+                        data: {email: email, empresa: empresa, username: username, pass1: pass1, pass2: pass2, chk: chk},
+                        dataType: "json",
+                        type: 'GET',
+                        success: function (result) {
+                            if (result[0]["success"] === 'true') {
+                                toastrMsj(result[0]["value"], "Éxito", "success");
+                                redirToLogin();
+                            } else
+                            {
+                                toastrMsj(result[0]["value"], "Error", "error");
+                            }
+                        }
+                    });
+
+                } else {
+                    toastrMsj("Debe aceptar los terminos y condiciones para continuar", "Error", "error");
+                    return;
+                }
+
+            }
+
+            function redirToLogin() {
+                setTimeout("location.href='login.html'", 5500);
+            }
+
+
+            function recuperarContrasena() {
+                var email = document.getElementById("emailregistro").value;
+                toastrMsj("Se está generando una nueva contrasena. Revise su correo.", "Info", "warning");
+                $.ajax({
+                    url: 'php/newpassword.php',
+                    data: {email: email},
+                    dataType: "json",
+                    type: 'POST',
+                    success: function (result) {
+                        if (result[0]["success"] === 'false') {
+                            toastrMsj(result[0]["value"], "Error", "error");
+                        } else
+                        {
+                            toastrMsj(result[0]["value"], "Éxito", "success");
+                            redirToLogin();
+                        }
+                    }
+                });
+
+            }
+
+            function toastrMsj(mensaje, titulo, $type) {
+                var msg = mensaje;
+                var title = titulo;
+                toastr.options = {
+                    debug: false,
+                    closeButton: $('#closeButton').prop('checked'),
+                    newestOnTop: $('#newestOnTop').prop('checked'),
+                    progressBar: $('#progressBar').prop('checked'),
+                    rtl: $('#rtl').prop('checked'),
+                    positionClass: $('#positionGroup input:radio:checked').val() || 'toast-top-right',
+                    preventDuplicates: $('#preventDuplicates').prop('checked'),
+                    onclick: null,
+                    fadeIn: 200,
+                    fadeOut: 100,
+                    timeOut: 3000,
+                    extendedTimeOut: 3000
+                };
+                toastr[$type](msg, title);
+            }
 
         </script>
     </body>

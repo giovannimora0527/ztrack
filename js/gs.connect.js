@@ -168,9 +168,8 @@ function connectLogout(){
 		url: "func/fn_connect.php",
 		data: data,
 		success: function(result)
-		{	
-		    //window.open (result,'_self',false);		
-			window.open ('index.php','_self',false);
+		{
+                    window.close(sessionStorage.getItem('url'));
 		}
 	});
 }

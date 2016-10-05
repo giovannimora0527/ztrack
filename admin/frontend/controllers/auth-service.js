@@ -1,5 +1,5 @@
-var ufps = angular.module('ufps');
-ufps.factory('AuthService', function ($http, SessionService, $rootScope) {
+var ztrack = angular.module('ztrack');
+ztrack.factory('AuthService', function ($http, SessionService, $rootScope) {
     var authService = {};
 
     authService.login = function (credentials) {

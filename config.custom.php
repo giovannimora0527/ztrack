@@ -1,4 +1,4 @@
-<?
+<?php
 $gsValues['NAME'] = "ZTrack-Zmodo Colombia Security";
 $gsValues['GENERATOR'] = "Zmodo Colombia Security";
 $gsValues['SHOW_ABOUT'] = "false";

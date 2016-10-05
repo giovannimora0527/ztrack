@@ -1,6 +1,6 @@
-var ufps = angular.module('queries-service', []);
+var ztrack = angular.module('queries-service', []);
 
-ufps.factory('QueriesService', function ($http, $rootScope, $q, toastr) {
+ztrack.factory('QueriesService', function ($http, $rootScope, $q, toastr) {
     var queriesService = {};
 
     queriesService.executeRequest = function ($method, $url, $data, $params) {

@@ -1,4 +1,4 @@
-<?
+<?php
 	session_start();
 	
 	// if previous user did not log off, cancel his seesion and start new one
@@ -11,16 +11,17 @@
 	
 	include ('init.php');
 	include ('func/fn_common.php');
-
+       
 	// login via http call, example: login.php?u=admin&p=123456&rm=true&m=false
-	if ($gsValues['LOGIN_VIA_HTTP'] == true)
-	{
-		$username = strtolower($_GET["u"]);
-		$password = $_GET["p"];
-		$remember_me = @$_GET["rm"];
-		$mobile = @$_GET["m"];
+	if (true)
+	{             
+		$username = strtolower($_GET["u"]);              
+		$password = $_GET["p"];                  
+		$remember_me = @$_GET["rm"];                
+		$mobile = @$_GET["m"];               
 		
-		$q = "SELECT * FROM `gs_users` WHERE `username`='".$username."' AND `password`='".md5($password)."' LIMIT 1";
+		$q = "SELECT * FROM `gs_users` WHERE `username`='".$username."' AND `password`='".($password)."' LIMIT 1";
+                echo($q);
 		$r = mysqli_query($ms, $q);
 		
 		if ($row=mysqli_fetch_array($r))
@@ -37,7 +38,7 @@
 				setUserSessionCPanel($row['id']);
 				
 				//write log
-				writeLog('user_access', 'User login via login.php: successful');
+				writeLog('user_access', 'User login via http call: successful');
 				
 				if ($mobile == 'true')
 				{
@@ -46,7 +47,7 @@
 				}
 				else
 				{
-					header('Location: tracking.php');
+					header('Location: tracking2.php');
 					die;
 				}
 			}

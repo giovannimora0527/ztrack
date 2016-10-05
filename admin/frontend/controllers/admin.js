@@ -7,103 +7,108 @@
  * @email giovannimora0527@gmail.com
  * @version 1.1
  */
-var ufps = angular.module('ufps', ['ui.bootstrap', 'ngCookies', 'ui.router', 'kubesoft-directives', 'queries-service', 'formValidationService', 'ngAnimate', 'toastr', 'anchorScrollOffset']);
-ufps.config(['$stateProvider', '$urlRouterProvider', '$httpProvider',
+var ztrack = angular.module('ztrack', ['ui.bootstrap','ngCookies', 'ui.router', 'zmodo-directives', 'queries-service', 'formValidationService', 'toastr', 'anchorScrollOffset']);
+ztrack.config(['$stateProvider', '$urlRouterProvider', '$httpProvider',
     function ($stateProvider, $urlRouterProvider) {
         $urlRouterProvider.otherwise('home');
-        $stateProvider                 
+        $stateProvider
                 .state('home', {
                     url: '/home',
-                    templateUrl: 'frontend/html/home.html',
-                    controller: 'HomeController'                    
-                })
-                .state('admin', {                    
-                    url: '/administrador',
-                    templateUrl: 'frontend/administrador/pages/index.html',
-                    controller: 'AdminController'
-                })
-                .state('admin.home', {
-                    url: '/admin_home',
-                    templateUrl: 'frontend/administrador/pages/home.html',
-                    controller: 'AppController',
+                    templateUrl: 'html/inicio.html',
+                    controller: 'HomeController',
                     onEnter: function (SessionService, $state) {
                         if (!SessionService.isLoged()) {
-                           $state.go('home');
+                           $state.go('salir');
+                        } 
+                        else{
+                          $state.go('principal');  
                         }
                     }
+                })  
+                .state('principal', {                    
+                    url: '/principal',
+                    templateUrl: 'html/home.html',
+                    controller: 'PrincipalController'
                 })
-                .state('admin.home.inicio', {
-                    url: '/inicio',
-                    templateUrl: 'frontend/administrador/pages/inicio.html',
-                    controller: 'InicioController'                    
+                .state('reportesdespachos', {                    
+                    url: '/reportes_despachos',
+                    templateUrl: 'html/repodespachos.html',
+                    controller: 'ReportesController'
                 })
-                .state('admin.home.userprofile', {
-                    url: '/user_profile',
-                    templateUrl: 'frontend/administrador/pages/userprofile.html',
-                    controller: 'InicioController'                    
+                .state('reporteseventos', {                    
+                    url: '/reportes_eventos',
+                    templateUrl: 'html/repoeventos.html',
+                    controller: 'ReportesController'
+                })                
+                .state('reportestiempos', {                    
+                    url: '/reportes_tiempo_en_ruta',
+                    templateUrl: 'html/reptimeruta.html',
+                    controller: 'ReportesController'
                 })
-                .state('admin.home.configprofile', {
-                    url: '/config_profile',
-                    templateUrl: 'frontend/administrador/pages/configprofile.html',
-                    controller: 'InicioController'                    
+                .state('reportesduracion', {                    
+                    url: '/reportes_duracion_en_ruta',
+                    templateUrl: 'html/duracion.html',
+                    controller: 'ReportesController'
                 })
-                .state('admin.home.nofound', {
-                    url: '/no_found_projects',
-                    templateUrl: 'frontend/administrador/paginas/nofoundprojects.html',
-                    controller: 'NoFoundController'                    
+                .state('reportesPC', {                    
+                    url: '/reportes_puntos_control',
+                    templateUrl: 'html/timesPC.html',
+                    controller: 'ReportesController'
                 })
-                .state('admin.home.crearproyecto', {
-                    url: '/crear_proyecto',
-                    templateUrl: 'frontend/administrador/paginas/crearproyecto.html',
-                    controller: 'ProyectoController'                    
+                .state('reportesTFR', {                    
+                    url: '/reportes_tiepo_fuera_ruta',
+                    templateUrl: 'html/timesOutRuta.html',
+                    controller: 'ReportesController'
                 })
-                .state('admin.home.eliminarproyecto', {
-                    url: '/eliminar_proyecto',
-                    templateUrl: 'frontend/administrador/paginas/eliminarproyecto.html',
-                    controller: 'DeleteController'                    
+                .state('reportesdiferencia', {                    
+                    url: '/reportes_tiepo_fuera_ruta',
+                    templateUrl: 'html/diferenciatimes.html',
+                    controller: 'ReportesController'
                 })
-                .state('admin.home.crearcronograma', {
-                    url: '/crear_cronograma',
-                    templateUrl: 'frontend/administrador/paginas/crearcronograma.html',
-                    controller: 'CronogramaController'                    
+                .state('gestiondespachos', {
+                    url: '/gestion_despachos',
+                    templateUrl: 'html/despachos.html',
+                    controller: 'DespachosController'                    
                 })
-                .state('admin.home.editarcronograma', {
-                    url: '/editar_cronograma',
-                    templateUrl: 'frontend/administrador/paginas/editarcronograma.html',
-                    controller: 'CronogramaController'                    
+                .state('gestionconductores', {
+                    url: '/gestions_de_conductores',
+                    templateUrl: 'html/gestionconductores.html',
+                    controller: 'GestionController'                    
                 })
-                .state('admin.home.vercronograma', {
-                    url: '/ver_cronograma',
-                    templateUrl: 'frontend/administrador/paginas/vercronograma.html',
-                    controller: 'CronogramaController'                    
+                .state('gestiongrupos', {
+                    url: '/gestions_de_grupos',
+                    templateUrl: 'html/gestiongrupos.html',
+                    controller: 'GestionController'                    
                 })
+                .state('consultaconductores', {
+                    url: '/consultas',
+                    templateUrl: 'html/conductores.html',
+                    controller: 'ConsultasController'                    
+                })
+                .state('consultavehiculos', {
+                    url: '/consultas',
+                    templateUrl: 'html/vehiculos.html',
+                    controller: 'ConsultasController'                    
+                })
+                .state('consultarutas', {
+                    url: '/consultas',
+                    templateUrl: 'html/rutas.html',
+                    controller: 'ConsultasController'                    
+                })
+                .state('perfil', {
+                    url: '/perfil',
+                    templateUrl: 'html/perfil.html',
+                    controller: 'PerfilController'                    
+                })
+                .state('salir', {
+                    onEnter: function (SessionService) {                        
+                        SessionService.destroy(); 
+                        window.location = "login.html";
+                    }                                     
+                })  
+                
         ;
-    }]).
-//        config(function ($httpProvider) {
-//            var interceptor = function ($q, $injector) {
-//                var success = function (response) {
-//                    return response;
-//                };
-//                var error = function (response) {
-//                    if (response.status === 401) {
-//                        $injector.invoke(function ($http, SessionService) {
-//                            SessionService.destroy();
-//                            SessionService.redirectToLogin();
-//                        });
-//                    } else if (response.status === 403) {
-//                        $injector.invoke(function ($http, SessionService) {
-//                            SessionService.unauthorized();
-//                        });
-//                    }
-//                    return $q.reject(response);
-//                };
-//                return function (promise) {
-//                    return promise.then(success, error);
-//                };
-//            };
-//            $httpProvider.responseInterceptors.push(interceptor);
-//        }).
-factory('myHttpInterceptor', function($q, $injector) {
+    }]).factory('myHttpInterceptor', function($q, $injector) {
   return {
     // optional method
     'request': function(config) {      
@@ -152,7 +157,7 @@ factory('myHttpInterceptor', function($q, $injector) {
                     return $q.reject(response);
                 };
                 return function (promise) {
-                    return promise.then(success, error);
+                    return promise.then("success", error);
                 };  
         return responseOrNewPromise;
       }
@@ -178,7 +183,8 @@ $httpProvider.interceptors.push(function($q, dependency1, dependency2) {
 }).
         run(function ($rootScope, $state, SessionService, $http) {
             $rootScope.$state = $state;
-            $rootScope.url_base = "http://localhost/sigeri/";
+            $rootScope.url_base = "http://localhost/ztrack/";
+//          $rootScope.url_base = "http://localhost/ztrack/"; -> url del servidor - Document_Root
             SessionService.refresh();
         });
         

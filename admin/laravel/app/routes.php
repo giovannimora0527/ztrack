@@ -12,22 +12,12 @@
  */
 
 Route::controller('captcha', 'CaptchaController');
-//Countries Implementation
-Route::controller('paises', 'PaisController');
-//Departamentos
-Route::controller('departamentos', 'DepartamentoController');
-//Ciudades
-Route::controller('ciudades', 'CiudadController');
-//Flag controller
-Route::controller('flags', 'FlagController');
-//User Controller
-Route::controller('users', 'UserController');
-//ProyectoTipo controller
-Route::controller('proyectotipo', 'ProyectoTipoController');
-//Proyecto controller
-Route::controller('proyecto', 'ProyectoController');
-//Session Controller
-Route::controller('session', 'SessionController');
+//Grupos
+Route::controller('grupos', 'GruposController');
+//Rutas
+Route::controller('rutas', 'RutasController');
+//GruposRutas
+Route::controller('gruposrutas', 'GrupoZTrackController');
 
 Route::group(array('before' => 'authenticationFilter'), function() {
 

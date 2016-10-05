@@ -1,4 +1,4 @@
-<?
+<?php
         // disable PHP xdebug module
         if(function_exists('xdebug_disable')) { xdebug_disable(); }
         error_reporting(E_ALL ^ E_DEPRECATED);

@@ -1,11 +1,11 @@
-var ufps = angular.module('utilities-service', []);
+var ztrack = angular.module('utilities-service', []);
 
-ufps.factory('util', function ($http, $rootScope, $q) {
+ztrack.factory('util', function ($http, $rootScope, $q) {
     var utilService = {};
 
     utilService.getItem = function (array, item) {
         for (i = 0; i < array.length; i++) {
-            if (parseInt(array[i].id) == parseInt(item.id)) {
+            if (parseInt(array[i].id) === parseInt(item.id)) {
                 return array[i];
             }
         }

@@ -1,4 +1,4 @@
-<?
+<?php
         // ############################################################
         // All listed setting can be changed only by editing this file
         // Other settings can be changed from CPanel/Manage server
@@ -43,7 +43,7 @@
         // connection to MySQL database
         $gsValues['DB_HOSTNAME'] = '127.0.0.1'; // database host
         $gsValues['DB_PORT']     = '3306'; // database host
-        $gsValues['DB_NAME']	 = 'db'; // database name
+        $gsValues['DB_NAME']	 = 'gs'; // database name
         $gsValues['DB_USERNAME'] = 'root'; // database user name
         $gsValues['DB_PASSWORD'] = ''; // database password
 ?>

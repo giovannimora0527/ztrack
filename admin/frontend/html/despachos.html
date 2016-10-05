@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<div class="page-header">
+    <h1>
+        Gestión de Despachos
+        <small>
+            <i class="ace-icon fa fa-angle-double-right"></i>
+        </small>
+    </h1>
+</div><!-- /.page-header -->
+<div class="row">
+    <div class="col-xs-12">
+        <label>A continuación puede gestionar la información correspondiente a la asignación de grupos a rutas, vehiculos a grupos y despachos.</label>
+        <div class="tabbable">
+            <ul class="nav nav-tabs">
+                <li ng-class="{'active' : activeTab === 1}"><a href="" ng-click="setActiveTab(1)">
+                        <i class="blue fa fa-users bigger-120"></i>
+                        Grupos
+                    </a>
+                </li>
+                <li ng-class="{'active' : activeTab === 2}"><a href="" ng-click="setActiveTab(2)">
+                        <i class="blue fa fa-automobile bigger-120"></i>
+                        Vehículos
+                    </a>
+                </li> 
+                <li ng-class="{'active' : activeTab === 3}"><a href="" ng-click="setActiveTab(3)">
+                        <i class="blue fa fa-users bigger-120"></i>
+                        Conductores
+                    </a>
+                </li>
+                <li ng-class="{'active' : activeTab === 4}"><a href="" ng-click="setActiveTab(4)">
+                        <i class="blue fa fa-clock-o bigger-120"></i>
+                        Despachos
+                    </a>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <!--                Pestaña de grupos a rutas-->
+                <div ng-class="{'tab-pane active': activeTab === 1, 'tab-pane' : activeTab !== 1}">
+                    <div class="container-fluid">
+                        <h3>
+                            Asignación de grupos a rutas
+                        </h3>
+                        <br>
+                        <div class="row">
+                            <label class="control-label border blue">Seleccione el área de asignación</label>
+                            <div>
+                                <div>                                   
+                                    <select class="form-control" ng-model="areaselect.id" ng-change="onChangeSelectedArea()">                                        
+                                        <option value="" selected disabled>Seleccionar</option>
+                                        <option ng-repeat="ar in areas" value="{{ar.id}}">{{ar.name}}</option>
+                                    </select>
+                                </div>                        
+                            </div>
+                        </div> 
+                        <br>
+                        <div class="row">
+                            <table class="table table-bordered table-hover table-responsive table-striped">
+                                <thead>
+                                    <tr>                                
+                                        <th>Lista de Grupos Registrados</th>
+                                        <th>Listado de rutas registradas</th>
+                                        <th>Desde</th>
+                                        <th>Hasta</th>
+                                        <th>Acción</th>                                  
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <select class="form-control" ng-model="gruporuta.grupo" ng-change="gruposelect = true">                                        
+                                                <option value="" selected disabled>Seleccionar</option>
+                                                <option ng-repeat="grupo in grupos" value="{{grupo.group_id}}" ng-selected>{{grupo.group_name}}</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <select class="form-control" ng-model="gruporuta.ruta" ng-change="rutaselect = true">                                           
+                                                <option value="" selected disabled>Seleccionar</option>
+                                                <option ng-repeat="ruta in rutas" value="{{ruta.route_id}}" >{{ruta.route_name}}</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <p class="input-group">
+                                                <input type="text" class="form-control" uib-datepicker-popup="{{format}}" ng-model="gruporuta.fechaini" is-open="popup1.opened" datepicker-options="dateOptions" ng-required="true" close-text="Close" alt-input-formats="altInputFormats" />
+                                                <span class="input-group-btn">
+                                                    <button type="button" class="btn btn-sm btn-primary" ng-click="open1()"><i class="glyphicon glyphicon-calendar"></i></button>
+                                                </span>
+                                            </p>                                    
+                                        </td>
+                                        <td>
+                                            <p class="input-group">
+                                                <input type="text" class="form-control" uib-datepicker-popup="{{format}}" ng-model="gruporuta.fechafin" is-open="popup2.opened" datepicker-options="dateOptions" ng-required="true" close-text="Close" alt-input-formats="altInputFormats" />
+                                                <span class="input-group-btn">
+                                                    <button type="button" class="btn btn-sm btn-primary" ng-click="open2()"><i class="glyphicon glyphicon-calendar"></i></button>
+                                                </span>
+                                            </p>
+                                        </td>
+                                        <td align="center">
+                                            <button type="button" class="btn btn-sm btn-primary" ng-click="asignarGrupos()" ng-disabled="bntdisabled">Asignar</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="row">
+                            <table class="table table-bordered table-hover table-responsive table-striped">
+                                <thead>
+                                    <tr>                                
+                                        <th>Grupo</th>
+                                        <th>Área</th>
+                                        <th>Ruta</th>
+                                        <th>Desde</th>
+                                        <th>Hasta</th> 
+                                        <th>Accion</th> 
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-if="!resultsfound">
+                                        <td colspan="6" align="center">
+                                            <font color="red"><b>No hay resultados disponibles</b></font>
+                                        </td>                                
+                                    </tr>
+                                    <tr ng-if="resultsfound" ng-repeat="gr in gruposrutas">
+                                        <td>
+                                            <label>{{gr.group_name}}</label>  
+                                        </td>
+                                        <td>
+                                            <label>{{gr.area_name}}</label>  
+                                        </td>
+                                        <td>
+                                            <label>{{gr.route_name}}</label>  
+                                        </td>
+                                        <td>
+                                            <label>{{gr.fechaini}}</label>  
+                                        </td>
+                                        <td>
+                                            <label>{{gr.fechafin}}</label>  
+                                        </td> 
+                                        <td align="center">
+                                            <div class="btn-group">
+                                                <button class="btn btn-white btn-sm btn-info btn-bold" title="Editar" data-toggle="modal" ng-click="seleccionarItem(gr.gr_id, gr.group_name, gr.fechaini, gr.fechafin, gr.area_id, gr.area_name)" data-target="#editarGrupoRuta" >
+                                                    <i class="ace-icon fa fa-edit"></i>
+                                                </button> 
+                                                <button class="btn btn-white btn-sm btn-warning btn-bold" title="Eliminar" ng-click="onconfirmdeletegr(gr.gr_id)">
+                                                    <i class="ace-icon fa fa-trash-o bigger-120 orange"></i>
+                                                </button>  
+                                            </div>
+                                        </td> 
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div> 
+                </div>
+                <!--                Pestaña de vehiculos a grupos-->
+                <div ng-class="{'tab-pane active': activeTab === 2, 'tab-pane' : activeTab !== 2}">
+                    <div class="container-fluid">
+                        <h3>
+                            Asignación de vehículos a grupos
+                        </h3>
+                        <table class="table  table-bordered table-hover table-responsive table-striped">
+                            <thead>
+                                <tr>                                
+                                    <th>Lista de Vehículos Registrados</th>
+                                    <th>Listado de Grupos registradas</th>                                
+                                    <th>Acción</th>                                  
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>                                
+                                    <td>
+                                        <select class="form-control" ng-model="asignacion.vehiculo" ng-change="onChangeVehiculos = true">                                           
+                                            <option value="" selected disabled>Seleccionar</option>
+                                            <option ng-repeat="vehiculo in vehiculos" value="{{vehiculo.vehiculo_id}}" >{{vehiculo.vin}}</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select class="form-control" ng-model="asignacion.grupo" ng-change="onChangeGrupos = true" ng-options="grupo.group_name for grupo in grupos| orderBy:'group_name'">                                        
+                                            <option value="" selected disabled>Seleccionar</option>
+                                            <option ng-repeat="grupo in grupos" value="{{grupo.group_id}}" ng-selected>{{grupo.group_name}}</option>
+                                        </select>
+                                    </td>                                
+                                    <td align="center">
+                                        <button type="button" class="btn btn-sm btn-primary" ng-click="asignarVehiculos()">Asignar</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <table class="table table-bordered table-hover table-responsive table-striped">
+                            <thead>
+                                <tr>                                
+                                    <th>#. Vehículo</th>
+                                    <th>Conductor</th>                                    
+                                    <th>Placa</th>
+                                    <th>Grupo</th> 
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-if="!resultsfound1">
+                                    <td colspan="5" align="center">
+                                        <font color="red"><b>No hay resultados disponibles</b></font>
+                                    </td>                                
+                                </tr>                                
+                                <tr ng-if="resultsfound1" ng-repeat="as in asignaciones">
+                                    <td>
+                                        <label>{{as.vin}}</label>  
+                                    </td>
+                                    <td>
+                                        <label>{{ as.driver_name  }}</label>  
+                                    </td>                                    
+                                    <td>
+                                        <label>{{as.plate_number}}</label>  
+                                    </td>
+                                    <td>
+                                        <label>{{as.group_name}}</label>  
+                                    </td> 
+                                    <td align="center">
+                                        <div class="btn-group">
+                                            <button class="btn btn-white btn-sm btn-info btn-bold" title="Editar" data-toggle="modal" ng-click="seleccionarItem2(as.object_id, as.vin, as.group_name, as.driver_name, as.imei, as.driver_phone, as.driver_address)" data-target="#editarVehiculo" >
+                                                <i class="ace-icon fa fa-edit"></i>
+                                            </button> 
+                                            <button class="btn btn-white btn-sm btn-warning btn-bold" title="Eliminar Asignación" ng-click="onconfirmdeletevh(as.object_id)">
+                                                <i class="ace-icon fa fa-chain-broken orange"></i>
+                                            </button>  
+                                        </div> 
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div> 
+                </div> 
+                <!--                Pestaña de conductores a vehiculos-->
+                <div ng-class="{'tab-pane active': activeTab === 3, 'tab-pane' : activeTab !== 3}">
+                    <div class="container-fluid">
+                        <h3>
+                            Asignación de conductores a vehículos
+                        </h3>
+                        <br>                       
+                        <div class="row">
+                            <table class="table table-bordered table-hover table-responsive table-striped">
+                                <thead>
+                                    <tr> 
+                                        <th>Vehiculos</th>
+                                        <th>Conductores</th>                                                                               
+                                        <th>Acción</th>                                  
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <select class="form-control" ng-model="vehiculo.select" ng-options="vh.vin for vh in vehiculos| orderBy:'vin'" ng-change="selectGrupos = true" >                                           
+                                                <option value="" selected disabled>Seleccionar</option>
+                                                <option ng-repeat="vh in vehiculo" value="{{vh.object_id}}" >{{vh.vin}}</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <select class="form-control" ng-model="vehiculo.conductor" ng-change="seleccionaVehiculos = true" >                                        
+                                                <option value="" selected disabled>Seleccionar</option>
+                                                <option ng-repeat="conductor in conductores" value="{{conductor.driver_id}}" ng-selected>{{conductor.driver_name}}</option>
+                                            </select>
+                                        </td>                                        
+                                        <td align="center">
+                                            <button type="button" class="btn btn-sm btn-primary" ng-click="asignarConductor()">Asignar</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="row">
+                            <table class="table table-bordered table-hover table-responsive table-striped">
+                                <thead>
+                                    <tr> 
+                                        <th>Vehículo</th>
+                                        <th>Placa</th>
+                                        <th>Conductor</th>
+                                        <th>Dirección</th>
+                                        <th>Telefono</th>                                         
+                                        <th>Acciones</th>                                         
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-if="!resultsfound3">
+                                        <td colspan="6" align="center">
+                                            <font color="red"><b>No hay resultados disponibles</b></font>
+                                        </td>                                
+                                    </tr>
+                                    <tr ng-if="resultsfound3" ng-repeat="c in asignacionconductores">
+                                        <td>
+                                            <label>{{c.vin}}</label>  
+                                        </td>  
+                                        <td>
+                                            <label>{{c.plate_number}}</label>  
+                                        </td>
+                                        <td>
+                                            <label>{{c.driver_name}}</label>  
+                                        </td>
+                                        <td>
+                                            <label>{{c.driver_address}}</label>  
+                                        </td>
+                                        <td>
+                                            <label>{{c.driver_phone}}</label>  
+                                        </td>                                        
+                                        <td align="center">
+                                            <div class="btn-group">
+                                                <button class="btn btn-white btn-sm btn-info btn-bold" title="Editar" data-toggle="modal" ng-click="seleccionarItem3(c.driver_id, c.driver_name, c.driver_phone, c.driver_address)" data-target="#editarAsignacionConductor" >
+                                                    <i class="ace-icon fa fa-edit"></i>
+                                                </button> 
+                                                <button class="btn btn-white btn-sm btn-warning btn-bold" title="Eliminar" ng-click="onconfirmdeleteasignacion(vh.object_id)">
+                                                    <i class="ace-icon fa fa-trash-o bigger-120 orange"></i>
+                                                </button>  
+                                            </div>
+                                        </td> 
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div> 
+                </div>
+                <!--                Pestaña de Despachos-->
+                <div ng-class="{'tab-pane active': activeTab === 4, 'tab-pane' : activeTab !== 4}">
+                    <div class="container-fluid">
+                        <h3>
+                            Despachos
+                        </h3>
+                        <br>                       
+                        <div class="row">
+
+                        </div>
+                        <div class="row">
+
+                        </div>
+                    </div> 
+                </div>
+            </div>
+        </div>
+        <!-- PAGE CONTENT ENDS -->
+    </div><!-- /.col -->
+</div><!-- /.row -->
+<!-- Modal Edicion Vehiculos -->
+<div id="editarVehiculo" class="bootbox modal fade bootbox-confirm in" tabindex="-1" role="dialog" aria-labelledby="editarVehiculo" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>
+                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Editar Información : <font color="#B40404">#. Vehículo {{item2.name}} </font>                   
+                </h3>
+            </div>
+            <div class="modal-body">                
+                <table class="table table-bordered table-hover table-responsive table-striped">
+                    <tr>
+                        <td>
+                            <label>
+                                <b>
+                                    Conductor
+                                </b>
+                            </label>
+                        </td>
+                        <td>
+                            <label>{{item2.conductor}}</label>
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>
+                                <b>
+                                    Telf. Conductor
+                                </b>
+                            </label>
+                        </td>
+                        <td>
+                            <label>{{item2.telefono}}</label>
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>
+                                <b>
+                                    Dirección
+                                </b>
+                            </label>
+                        </td>
+                        <td>
+                            <label>{{item2.direccion}}</label>
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>
+                                <b>
+                                    Grupo
+                                </b>
+                            </label>
+                        </td>
+                        <td>
+                            <select class="form-control" ng-model="asignacion.grupo" ng-options="grupo.group_name for grupo in grupos| orderBy:'group_name'" ng-change="seleccionaGrupo = true">                                        
+                                <option value="" selected disabled>Seleccionar</option>
+                                <option ng-repeat="grupo in grupos" value="{{grupo.group_id}}" ng-selected>{{grupo.group_name}}</option>
+                            </select>
+                        </td>
+                    </tr> 
+                </table> 
+            </div>
+            <div class="modal-footer">
+                <button data-bb-handler="cancel" type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button> 
+                <button data-bb-handler="confirm" type="button" class="btn btn-primary" ng-click="actualizarvehiculo(item2.id)">Ok</button>
+            </div>            
+        </div>
+    </div>
+</div>
+
+<!-- Modal Edicion Grupos Rutas -->
+<div id="editarGrupoRuta" class="bootbox modal fade bootbox-confirm in" tabindex="-1" role="dialog" aria-labelledby="editarGrupoRuta" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>
+                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Editar Información : <font color="#B40404">Grupo {{item.name}} </font>                   
+                </h3>
+            </div>
+            <div class="modal-body">                
+                <table class="table table-bordered table-hover table-responsive table-striped">
+                    <tr>
+                        <td>
+                            <label>
+                                <b>
+                                    Área
+                                </b>
+                            </label>
+                        </td>
+                        <td colspan="3">
+                            <label>{{item.area_name}}</label>
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>
+                                <b>
+                                    Ruta
+                                </b>
+                            </label>
+                        </td>
+                        <td colspan="3">
+                            <select class="form-control" ng-model="gruporutaedit.ruta" ng-options="ruta.route_name for ruta in rutas| orderBy:'route_name'">                                           
+                                <option value="" selected disabled>Seleccionar</option>
+                                <option ng-repeat="ruta in rutas" value="{{ruta.route_id}}" >{{ruta.route_name}}</option>
+                            </select>
+                        </td>                        
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>
+                                <b>
+                                    Desde Actual  
+                                </b>
+                            </label>
+                        </td>
+                        <td>
+                            <p class="input-group">
+                                <input  class="form-control" ng-model="item.fechaini" disabled/>
+                            </p>                                    
+                        </td>  
+                        <td>
+                            <label>
+                                <b>
+                                    Desde  
+                                </b>
+                            </label>
+                        </td>
+                        <td>
+                            <p class="input-group">                               
+                                <input id="fechafin" type="text" class="form-control" uib-datepicker-popup="{{format}}" ng-model="gruporutaedit.fechaini" is-open="popup3.opened" datepicker-options="dateOptions" ng-required="true" close-text="Close" alt-input-formats="altInputFormats"/>
+                                <span class="input-group-btn">
+                                    <button type="button" class="btn btn-sm btn-primary" ng-click="open3()"><i class="glyphicon glyphicon-calendar"></i></button>
+                                </span>
+                            </p>                                                                
+                        </td> 
+                    </tr>                    
+                    <tr>
+                        <td>
+                            <label>
+                                <b>
+                                    Hasta   
+                                </b>
+                            </label>
+                        </td>
+                        <td>
+                            <p class="input-group">
+                                <input  class="form-control" ng-model="item.fechafin" disabled/>
+                            </p>
+                        </td>
+                        <td>
+                            <label>
+                                <b>
+                                    Hasta   
+                                </b>
+                            </label>
+                        </td>
+                        <td>
+                            <p class="input-group">                               
+                                <input id="fechafin" type="text" class="form-control" uib-datepicker-popup="{{format}}" ng-model="gruporutaedit.fechafin" is-open="popup4.opened" datepicker-options="dateOptions" ng-required="true" close-text="Close" alt-input-formats="altInputFormats"/>
+                                <span class="input-group-btn">
+                                    <button type="button" class="btn btn-sm btn-primary" ng-click="open4()"><i class="glyphicon glyphicon-calendar"></i></button>
+                                </span>
+                            </p>
+                        </td>
+                    </tr>
+                </table> 
+            </div>
+            <div class="modal-footer">
+                <button data-bb-handler="cancel" type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button> 
+                <button data-bb-handler="confirm" type="button" class="btn btn-primary" ng-click="actualizargruporuta(item.id)">Ok</button>
+            </div>
+            <!--      ng-click="editargruporuta(gr.gr_id)-->
+        </div>
+    </div>
+</div>
+
+<div id="editarAsignacionConductor" class="bootbox modal fade bootbox-confirm in" tabindex="-1" role="dialog" aria-labelledby="editarVehiculo" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>
+                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Editar Información : <font color="#B40404">{{item3.name}} </font>                   
+                </h3>
+            </div>
+            <div class="modal-body">                
+                <table class="table table-bordered table-hover table-responsive table-striped">
+                    <tr>
+                        <td>
+                            <label>
+                                <b>
+                                    Conductor
+                                </b>
+                            </label>
+                        </td>
+                        <td>
+                            <label>{{item3.name}}</label>
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>
+                                <b>
+                                    Telf. Conductor
+                                </b>
+                            </label>
+                        </td>
+                        <td>
+                            <label>{{item3.telefono}}</label>
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>
+                                <b>
+                                    Dirección
+                                </b>
+                            </label>
+                        </td>
+                        <td>
+                            <label>{{item3.direccion}}</label>
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>
+                                <b>
+                                    Vehiculo
+                                </b>
+                            </label>
+                        </td>
+                        <td>
+                            <select class="form-control" ng-model="asign.vehiculo" ng-change="selectvehiculo = true">                                        
+                                <option value="" selected disabled>Seleccionar</option>
+                                <option ng-repeat="v in vehiculos" value="{{v.vehiculo_id}}" ng-selected>{{v.vin}}</option>
+                            </select>
+                        </td>
+                    </tr> 
+                </table> 
+            </div>
+            <div class="modal-footer">
+                <button data-bb-handler="cancel" type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button> 
+                <button data-bb-handler="confirm" type="button" class="btn btn-primary" ng-click="actualizarinformacion(item3.id)">Ok</button>
+            </div>            
+        </div>
+    </div>
+</div>
+
+
+

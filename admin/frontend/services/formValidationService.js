@@ -1,5 +1,5 @@
-var ufps = angular.module('formValidationService', []);
-ufps.service("FormValidationService", function () {
+var ztrack = angular.module('formValidationService', []);
+ztrack.service("FormValidationService", function () {
 
     /**
      *  Obtiene el tipo de error presente en el campo de un formulario
