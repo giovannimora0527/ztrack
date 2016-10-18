@@ -1,21 +1,7 @@
 <?php
-// Conectando, seleccionando la base de datos
-$conexion = mysql_connect('localhost', 'root', '')
-        or die('No se pudo conectar: ' . mysql_error());
-//echo 'Connected successfully';
-mysql_select_db('gs') or die('No se pudo seleccionar la base de datos');
+require_once('../php/connection.php');
 ?>
 
-<!--DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Reporte Ztrack Tiempo - Distancia</title>
-<link rel="stylesheet" href="assets/css/bootstrap.min.css"/>
-<link rel="stylesheet" href="assets/css/ace.min1.css" class="ace-main-stylesheet" id="main-ace-style" /> <!-- Mantiene bien la Pagina pero Background pdf
-</head>
-<body>
-<img style="border:0px" src="img/logo.png" /><hr/>-->
 <table class="table table-bordered table-hover table-responsive table-striped">
     <thead>
         <tr>                                
@@ -31,7 +17,9 @@ mysql_select_db('gs') or die('No se pudo seleccionar la base de datos');
         <?php
         // Consulta del Despacho
         //$sql='SELECT hora_salida, imei, latitud, longitud FROM despachos WHERE user_id=1 AND route_id=_GET['selrut'] ORDER by despacho_id'; //<JBT> Colocar el estado_id que indica despachado
-        $sql = 'SELECT hora_salida, imei, latitud, longitud FROM despachos WHERE user_id=1 ORDER by despacho_id';
+        $sql = "SELECT hora_salida, imei, latitud, longitud FROM despachos WHERE user_id= " . $_POST["user_id"]
+                . " AND ruta_id = " . $_POST["ruta_id"]
+                . " ORDER by despacho_id; ";
         $stm = mysql_query($sql);        
         $dif = NULL;
         $dift = NULL;
@@ -112,5 +100,3 @@ mysql_select_db('gs') or die('No se pudo seleccionar la base de datos');
 </table>
 <!--</body>
 </html>-->
-<?php
-mysql_close($conexion);

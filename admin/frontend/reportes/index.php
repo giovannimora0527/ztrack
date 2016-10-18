@@ -1,9 +1,5 @@
 <?php
-// Conectando, seleccionando la base de datos
-$conexion = mysql_connect('localhost', 'root', '')
-        or die('No se pudo conectar: ' . mysql_error());
-//echo 'Connected successfully';
-mysql_select_db('gs') or die('No se pudo seleccionar la base de datos');
+require_once('../php/connection.php');
 ?>
 <body class="no-skin">
     <div class="breadcrumbs ace-save-state" id="breadcrumbs">
@@ -236,10 +232,7 @@ mysql_select_db('gs') or die('No se pudo seleccionar la base de datos');
 <a href="" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
     <i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i>
 </a>
-<?
-//mysql_free_result($stm);
-mysql_close($conexion);
-?>
+
 
 <script type="text/javascript">
     var pdf = '';
@@ -255,7 +248,7 @@ mysql_close($conexion);
         $.ajax({
             type: "post",
             data: { 
-                selrut : id,
+                ruta_id : id,
                 user_id : user_id
             },
             url: "reportes/tiempodis.php",

@@ -258,16 +258,11 @@ ztrack.controller('DespachadoresController', function ($rootScope, $scope, AuthS
                 .then(function (result) {
                     if (result.success) {
                         $scope.estadistica = result.estadistica;
+                        $scope.conductor = result.conductor;
+                        $scope.vueltas = result.vueltas;
                     }
                 });
     };
-    
-    function dismiss($scope, element, attr){
-        console.log("Entroooooooooooo");
-        console.log(element);
-//      element.modal('hide');  
-    };
-    
 
 
 });

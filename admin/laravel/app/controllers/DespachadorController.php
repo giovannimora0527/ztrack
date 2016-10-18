@@ -193,7 +193,7 @@ class DespachadorController extends \BaseController {
                 join gs_user_routes ur ON ur.route_id = d.ruta_id
                 join gs_user_objects uo ON d.imei = uo.imei
                 join gs_user_object_groups ug ON ug.group_id = uo.group_id
-                where d.estado_id = 3               
+                where d.estado_id = 3 ORDER BY d.hora_salida asc              
                  ;";
         $vehiculosdespachados = DB::select($sql);
         return Response::json(array('vehiculosdespachados' => $vehiculosdespachados));
@@ -215,11 +215,7 @@ class DespachadorController extends \BaseController {
                              SELECT MAX( turno )  FROM gs_despacho_temporal
                        );";
         $turno = DB::select($sql_turno);        
-        $turno;
-        
-        //SOLUCION NO INSERTAR UN NUEVO REGISTRO EN DESPACHO TEMPORAL SINO ACTUALIZAR EL CAMPO TURNO (TURNO+1), ESTADO = 4, HORA_LLEGADA
-        //PARA REORDENAR EN EL PANEL DE VEHICULOS DISPONIBLES Y EN PARADERO
-        //DE AQUI PARA ABAJO
+        $turno;        
         try {
             $sql = "update gs_despacho_temporal set "
                     . "turno = " .($turno[0]->turno + 1)
@@ -266,8 +262,9 @@ class DespachadorController extends \BaseController {
                . "JOIN gs_user_routes r ON r.route_id = d.ruta_id "
                . "WHERE d.vehiculo_id = " .$data["object_id"] . ";"
                ;
-       $estadistica = DB::select($sql);
-       return Response::json(array('success' => true, 'estadistica' => $estadistica));
+       $estadistica = DB::select($sql);  
+       $cant = count($estadistica);
+       return Response::json(array('success' => true, 'estadistica' => $estadistica, 'conductor' => $estadistica[0]->driver_name, 'vueltas' => $estadistica[$cant-1]->numero_recorrido));
        
     }
 
