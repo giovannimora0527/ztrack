@@ -47,6 +47,9 @@ if ($errflag) {
     exit();
 }
 
+//Si el usuario que ingresa a la plataforma su empresa_id es 0 representa la cuenta de la empresa
+//Si el usuario tiene este valor diferente significa que es una cuenta adjunta de despachador o de superadmin
+//zmodocolombia, despues valido el rol para redireccionarlo a esa cuenta.
 
 $qry = "SELECT * FROM gs_users WHERE username='$username' AND password='$password'";
 $result = mysql_query($qry);
@@ -57,11 +60,13 @@ if ($result) {
         session_regenerate_id();
         $member = mysql_fetch_assoc($result);
         $_SESSION['SESS_MEMBER_ID'] = $member['id'];
-        $_SESSION['SESS_EMPRESA'] = $member['name'];
+        $_SESSION['SESS_EMPRESA'] = $member['name'];        
         $_SESSION['SESS_USERNAME'] = $member['username'];
+        $_SESSION['SESS_EMPRESA_ID'] = $member['empresa_id'];
+        $_SESSION['SESS_PERFIL_ID'] = $member['profile_id'];
         $_SESSION['SESS_TOKEN'] = generarToken();
         $data = array('success' => true, 'value' => 'Bienvenido', 'userId' => $_SESSION['SESS_MEMBER_ID'], 'nombre' => $_SESSION['SESS_EMPRESA'], 
-                          'username' => $_SESSION['SESS_USERNAME'], 'token' => $_SESSION['SESS_TOKEN']);       
+                          'username' => $_SESSION['SESS_USERNAME'], 'token' => $_SESSION['SESS_TOKEN'], 'perfil' => $_SESSION['SESS_PERFIL_ID'], 'empresaid' => $_SESSION['SESS_EMPRESA_ID']);       
         array_push($json, $data);
     } else {
         //Login falló
@@ -70,7 +75,7 @@ if ($result) {
         if ($errflag) {
             $_SESSION['ERRMSG_ARR'] = $errmsg_arr;
             session_write_close();
-            $data = array('success' => 'false', 'value' => "Fallo inicio de Sesión");
+            $data = array('success' => 'false', 'value' => "Fallo inicio de Sesión. Usuario y/o Contraseña incorrecta.");
             array_push($json, $data);
         }
     }

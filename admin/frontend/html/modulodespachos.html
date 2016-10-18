@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<div class="breadcrumbs ace-save-state" id="breadcrumbs">
+    <ul class="breadcrumb">
+        <li>
+            <i class="menu icon fa fa-home"></i>
+            <a ui-sref="principal">Inicio</a>
+        </li>
+        <li class="active"><font color="#0B0B3B">{{title}}</font></li>
+    </ul><!-- /.breadcrumb -->    
+</div>
+<div class="page-header">
+    <h1>
+        Modulo de Despachos        
+    </h1>
+</div><!-- /.page-header -->
+
+<div class="row">
+    <div class="col-xs-12">
+        <div class="container-fluid">                                  
+            <div class="row">
+                <div class="tabbable">
+                    <ul class="nav nav-tabs">
+                        <li ng-class="{'active' : activeTab === 1}"><a href="" ng-click="setActiveTab(1)">
+                                <i class="blue fa fa-automobile bigger-120"></i>                                            
+                                Llegada de Vehículos                                           
+                            </a>
+                        </li>
+                        <li ng-class="{'active' : activeTab === 2}"><a href="" ng-click="setActiveTab(2)">
+                                <i class="blue fa fa-arrow-right bigger-120"></i>
+                                Despachar Vehículos
+                            </a>
+                        </li>  
+                        <li ng-class="{'active' : activeTab === 3}"><a href="" ng-click="setActiveTab(3)">
+                                <i class="blue fa fa-road bigger-120"></i>
+                                En Ruta
+                            </a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">                                    
+                        <!-- Pestaña de Asignacion dellegada de vehiculos -->
+                        <div ng-class="{'tab-pane active': activeTab === 1, 'tab-pane' : activeTab !== 1}">
+                            <div class="container-fluid">
+                                <h4>
+                                    <font color="#0B0B61">Llegada del vehículo al parqueadero.</font>  
+                                </h4>
+                                <br>                       
+                                <div class="row">                                                
+                                    <div class="container-fluid"> 
+                                        <div class="row"> 
+                                            <div class="col-xs-6"> 
+                                                <label class="control-label">Seleccione la ruta</label>
+                                                <select id="selectruta" class="form-control" ng-model="rutaselect" ng-options="ruta.route_name for ruta in rutas track by ruta.route_name" ng-change="cargarGrupos()">
+                                                    <option value="" disabled selected>Seleccione una opción</option>
+                                                </select>                                                
+                                            </div>                                             
+                                            <div class="col-xs-6"> 
+                                                <label class="control-label">Seleccione el grupo asociado a la ruta</label>
+                                                <select id="selectvehiculos" class="form-control" ng-model="gruposelect" ng-options="grupo.group_name for grupo in grupos track by grupo.group_name">
+                                                    <option value="" disabled selected>Seleccione una opción</option>
+                                                </select>                                                
+                                            </div>
+                                        </div>
+                                        <br>
+                                        <div class="row">
+                                            <div class="col-xs-6">
+                                                <button class="btn btn-default" ng-click="limpiarCampos()">Limpiar</button>  
+                                                <button class="btn btn-primary" ng-click="cargarVehiculos()">Cargar Vehículos</button> 
+                                            </div>
+
+                                        </div> 
+                                        <br>
+                                        <div class="row">                                                        
+                                            <div class="col-xs-12 col-sm-6" align="center">
+                                                <div class="widget-box">
+                                                    <div class="widget-header">
+                                                        <h4>Selección de Vehiculos </h4>
+                                                    </div>
+                                                    <div class="widget-body">
+                                                        <div class="widget-main">
+                                                            <div class="input-group">
+                                                                <select class="form-control" ng-model="vehiculoselect" ng-options="veh.name for veh in vehiculos track by veh.name">
+                                                                    <option value="" disabled selected>Seleccione una opción</option>
+                                                                </select>
+                                                                <span class="input-group-btn">
+                                                                    <button class="btn btn-primary" type="button" ng-click="adicionarVehiculo()">
+                                                                        <i class="ace-icon fa fa-arrow-right bigger-110"></i>                                                       
+                                                                    </button>
+                                                                </span>
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12 col-sm-6" align="center">
+                                                <div class="widget-box">
+                                                    <div class="widget-header">
+                                                        <h4>Vehiculos en Paradero</h4>
+                                                    </div>
+                                                    <div class="widget-body">
+                                                        <div class="widget-container">
+                                                            <div class="dd" id="nestable">
+                                                                <ol class="dd-list">
+                                                                    <li class="dd-item" ng-repeat="it in vehiculosparadero">
+                                                                        <div class="dd-handle">
+                                                                            <i class="pull-left bigger-130 ace-icon fa fa-map-marker blue"></i>
+                                                                            {{it.vehiculo}}
+                                                                            <a href="" ng-click="deleteVehiculo(it)"><i class="pull-right bigger-130 ace-icon fa fa-times blue"></i></a>
+                                                                        </div>
+                                                                    </li>
+                                                                </ol>
+                                                            </div>                                            
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> 
+                        </div>
+                        <div ng-class="{'tab-pane active': activeTab === 2, 'tab-pane' : activeTab !== 2}">
+                            <div class="container-fluid">                               
+                                <h4>
+                                    <font color="#0B0B61">Despacho de Vehículos.</font>  
+                                </h4>
+                                <br>  
+                                <div class="container-fluid">                                        
+                                    <div class="row">
+                                        <div class="col-xs-12 col-sm-6" align="center">
+                                            <div class="widget-box">
+                                                <div class="widget-header">
+                                                    <h4><font color="#0B0B61">Vehiculos en Espera de Despacho</font></h4>
+                                                    <font color="black">Los vehículos se encuentran en espera para ser despachados.</font>
+                                                    <br>* Para poder despachar un vehiculo de clic en el icono 
+                                                    <i class="fa fa-arrow-right"></i>
+                                                    para continuar.                                                    
+                                                </div>
+                                                <div class="widget-body">
+                                                    <div class="widget-container">
+                                                        <div class="dd" id="nestable">
+                                                            <ol class="dd-list">
+                                                                <li class="dd-item" ng-repeat="it in vehiculos">
+                                                                    <div class="dd-handle">
+                                                                        <i class="pull-left bigger-130 ace-icon fa fa-automobile blue"></i>
+                                                                        Turno: {{it.turno}}. {{it.vehiculo}}  / Hora - Llegada: {{it.hora_llegada}}                                                                       
+                                                                        <a href="" data-toggle="modal" data-target="#modalDespachos" ng-click="cargarDatosModal(it)"><i class="pull-right bigger-130 ace-icon fa fa-arrow-right blue"></i></a>
+                                                                    </div>
+                                                                </li>
+                                                            </ol>
+                                                        </div>                                            
+                                                    </div>
+                                                </div>
+                                            </div>  
+                                        </div>
+                                        <div class="col-xs-12 col-sm-6" align="center">
+                                            <div class="widget-box">
+                                                <div class="widget-header">
+                                                    <h4> <font color="#0B0B61">Vehiculos Despachados</font></h4>
+                                                </div>
+                                                <div class="widget-body">
+                                                    <div class="widget-container">
+                                                        <div class="dd" id="nestable">
+                                                            <ol class="dd-list">
+                                                                <li class="dd-item" ng-repeat="it in vehiculosdespachados">
+                                                                    <div class="dd-handle">
+                                                                        <i class="pull-left bigger-130 ace-icon fa fa-automobile blue"></i>
+                                                                        <i class="pull-left bigger-130 ace-icon fa fa-arrow-right blue"></i>
+                                                                        Hora Salida: {{it.hora_salida}} / {{it.name}} / Ruta: {{it.route_name}}
+                                                                        <a href="" data-toggle="modal" data-target="#modalInfo" ng-click="cargarDatosInfo(it)"><i class="pull-right bigger-130 ace-icon fa fa-search blue"></i></a>
+                                                                    </div>
+                                                                </li>
+                                                            </ol>
+                                                        </div>                                            
+                                                    </div>
+                                                </div>
+                                            </div>  
+                                        </div>
+                                    </div>
+                                </div>                               
+                            </div> 
+                        </div>
+                        <div ng-class="{'tab-pane active': activeTab === 3, 'tab-pane' : activeTab2 !== 3}">
+                            <div class="container-fluid">                               
+                                <h4>
+                                    <font color="#0B0B61">Vehiculos En Ruta.</font>  
+                                </h4>
+                                <br>  
+                                <div class="container-fluid">                                        
+                                    <div class="row">                                        
+                                        <div class="col-xs-12 col-sm-6" align="center">
+                                            <div class="widget-box">
+                                                <div class="widget-header">
+                                                    <h4><font color="#0B0B61">Vehiculos en Recorrido</font></h4>
+                                                </div>
+                                                <div class="widget-body">
+                                                    <div class="widget-container">
+                                                        <div class="dd" id="nestable">
+                                                            <ol class="dd-list">
+                                                                <li class="dd-item" ng-repeat="item in vehiculosdespachados">
+                                                                    <div class="dd-handle">
+                                                                        <i class="pull-left bigger-130 ace-icon fa fa-automobile blue"></i>
+                                                                        <i class="pull-left bigger-130 ace-icon fa fa-arrow-right blue"></i>
+                                                                        Hora Salida: {{item.hora_salida}} / {{item.name}} / Ruta: {{item.route_name}}
+                                                                        <a href="" ng-click="registrarLlegada(item)"><i class="pull-right bigger-130 ace-icon fa fa-arrow-right blue"></i></a>
+                                                                    </div>
+                                                                </li>
+                                                            </ol>
+                                                        </div>                                            
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 col-sm-6" align="center">
+                                            <div class="widget-box">
+                                                <div class="widget-header">
+                                                    <h4><font color="#0B0B61">Llegada de Vehículos al paradero</font></h4>
+                                                </div>
+                                                <div class="widget-body">
+                                                    <div class="widget-container">
+                                                        <div class="dd" id="nestable1">
+                                                            <ol class="dd-list">
+                                                                <li class="dd-item" ng-repeat="lleg in llegadavehiculos">
+                                                                    <div class="dd-handle">
+                                                                        <i class="pull-left bigger-130 ace-icon fa fa-automobile blue"></i>
+                                                                        <i class="pull-left bigger-130 ace-icon fa fa-hand-paper-o blue"></i>
+                                                                        Hora Llegada: {{lleg.hora_llegada}} / {{lleg.vehiculo}}
+                                                                        <a href="" ng-click="verInfoLlegada(lleg)" data-toggle="modal" data-target="#modalDetalle"><i class="pull-right bigger-130 ace-icon fa fa-search blue"></i></a>
+                                                                    </div>
+                                                                </li>
+                                                            </ol>
+                                                        </div>                                            
+                                                    </div>
+                                                </div>
+                                            </div>  
+                                        </div>
+                                    </div>
+                                </div>                               
+                            </div> 
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div> 
+        <!-- PAGE CONTENT ENDS -->
+    </div><!-- /.col -->
+</div><!-- /.row -->
+
+<!-- Modal Despachar-->
+<div id="modalDespachos" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Información del despacho del vehiculo: {{vehiculo.name}}</h4>
+            </div>
+            <div class="modal-body">                
+                <table class="table table-bordered table-hover table-responsive table-striped">
+                    <thead>
+                        <tr>
+                            <th>
+                                Turno
+                            </th>
+                            <th>
+                                Hora de Llegada
+                            </th>
+                            <th>
+                                Placa
+                            </th>
+                            <th>
+                                Conductor
+                            </th>
+                            <th>
+                                Teléfono
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                {{vehiculo.turno}} 
+                            </td>
+                            <td>
+                                {{vehiculo.hora_llegada}} 
+                            </td>
+                            <td>
+                                {{vehiculo.placa}} 
+                            </td>
+                            <td>
+                                {{vehiculo.conductor}} 
+                            </td>
+                            <td>
+                                {{vehiculo.telefono}} 
+                            </td>
+                        </tr>                        
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button id="btndespachar" type="button" class="btn btn-primary" ng-click="despachar(vehiculo)"><i class="pull-left bigger-130 ace-icon fa fa-arrow-right"></i>Despachar</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="pull-left bigger-130 ace-icon fa fa-times"></i>Cerrar</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Modal Despacho Info-->
+<div id="modalInfo" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Información del despacho del vehiculo: {{info.name}}</h4>
+            </div>
+            <div class="modal-body">                
+                <table class="table table-bordered table-hover table-responsive table-striped">
+                    <thead>
+                        <tr>
+                            <th>
+                                Vuelta
+                            </th>
+                            <th>
+                                Ruta
+                            </th>
+                            <th>
+                                Hora de Salida
+                            </th>
+                            <th>
+                                Imei
+                            </th>
+                            <th>
+                                Estado
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                {{info.vuelta}} 
+                            </td>
+                            <td>
+                                {{info.route_name}} 
+                            </td>
+                            <td>
+                                {{info.hora_salida}} 
+                            </td>
+                            <td>
+                                {{info.imei}} 
+                            </td>
+                            <td>
+                                {{info.estado}} 
+                            </td>
+                        </tr>                        
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="pull-left bigger-130 ace-icon fa fa-times"></i>Cerrar</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Modal Llegada Estadistica-->
+<div id="modalDetalle" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Información del recorrido del vehículo: {{estadistica.vehiculo}}</h4>
+            </div>
+            <div class="modal-body">  
+                <label>Número de recorridos: </label> {{estadistica.total_vueltas}}
+                <label>Conductor: </label> {{estadistica.driver_name}}
+                <table class="table table-bordered table-hover table-responsive table-striped">
+                    <thead>
+                        <tr>
+                            <th>
+                                Vuelta
+                            </th>
+                            <th>
+                                Ruta
+                            </th>
+                            <th>
+                                Hora de Salida
+                            </th>
+                            <th>
+                                Hora de Llegada
+                            </th>
+                            <th>
+                                Duración del recorrido
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="e in estadistica">
+                            <td>
+                                {{e.numero_recorrido}} 
+                            </td>
+                            <td>
+                                {{e.route_name}} 
+                            </td>
+                            <td>
+                                {{e.hora_salida}} 
+                            </td>
+                            <td>
+                                {{e.hora_llegada}} 
+                            </td>
+                            <td>
+                                {{e.diferencia}} 
+                            </td>
+                        </tr>                        
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="pull-left bigger-130 ace-icon fa fa-times"></i>Cerrar</button>
+            </div>
+        </div>
+
+    </div>
+</div>

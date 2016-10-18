@@ -23,18 +23,8 @@
         <![endif]-->
         <link rel="stylesheet" href="assets/css/ace-rtl.min.css" />
 
-        <link href="build/toastr.css" rel="stylesheet" type="text/css" />
+        <link href="build/toastr.css" rel="stylesheet" type="text/css" />       
 
-        <!--[if lte IE 9]>
-          <link rel="stylesheet" href="assets/css/ace-ie.min.css" />
-        <![endif]-->
-
-        <!-- HTML5shiv and Respond.js for IE8 to support HTML5 elements and media queries -->
-
-        <!--[if lte IE 8]>
-        <script src="assets/js/html5shiv.min.js"></script>
-        <script src="assets/js/respond.min.js"></script>
-        <![endif]-->
     </head>
 
     <body class="login-layout">
@@ -67,7 +57,7 @@
                                                     </label>
                                                     <label class="block clearfix">
                                                         <span class="block input-icon input-icon-right">
-                                                            <input id="password" name="password" type="password" class="form-control" placeholder="Contraseña" />
+                                                            <input id="password" name="password" onkeyup = "if(event.keyCode === 13) login()" type="password" class="form-control" placeholder="Contraseña" />
                                                             <i class="ace-icon fa fa-lock"></i>
                                                         </span>
                                                     </label>
@@ -272,9 +262,11 @@
             function clear() {
                 delete localStorage['ztrack.user_id'];
                 delete localStorage['ztrack.username'];
-                delete localStorage['ztrack.token'];
-                delete localStorage['ztrack.userType'];
-                delete localStorage['ztrack.authenticated'];
+                delete localStorage['ztrack.token'];                
+                delete localStorage['ztrack.authenticated'];                
+                delete localStorage['ztrack.despachador_id'];
+                delete localStorage['ztrack.perfil'];
+                delete localStorage['ztrack.empresa_id'];
             }
 
             jQuery(function ($) {
@@ -370,12 +362,27 @@
             }
             ;
 
-            this.save = function (data) {
-                localStorage['ztrack.user_id'] = data.userId;
-                localStorage['ztrack.username'] = data.username;
+            this.save = function (data) {                 
+                localStorage['ztrack.username'] = data.username;                
                 localStorage['ztrack.token'] = data.token;
                 localStorage['ztrack.authenticated'] = true;
-                window.location = 'index.html';
+                localStorage['ztrack.perfil'] = data.perfil;
+                localStorage['ztrack.empresa_id'] = data.empresaid;                               
+                if(data.perfil === "3"){                    
+                   localStorage['ztrack.user_id'] = data.empresaid; 
+                   localStorage['ztrack.despachador_id'] = data.userId;
+                   window.location = 'index2.html';
+                }                
+                if(data.perfil === "2"){ 
+                   localStorage['ztrack.userlogin'] = data.userId;
+                   localStorage['ztrack.user_id'] = data.empresaid;                    
+                   window.location = 'index.html';                   
+                }
+                if(data.perfil === "1"){                    
+                   localStorage['ztrack.user_id'] = data.userId;
+                   window.location = 'index.html';                   
+                }
+                
             };
 
 

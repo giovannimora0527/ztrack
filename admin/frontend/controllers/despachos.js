@@ -4,13 +4,14 @@
  * and open the template in the editor.
  */
 var ztrack = angular.module('ztrack');
-ztrack.controller('DespachosController', function ($rootScope, $scope, AuthService, SessionService, $state, QueriesService, toastr) {
-
+ztrack.controller('DespachosController', function ($rootScope, $scope, $filter, AuthService, SessionService, $state, QueriesService, toastr) {
+    
+    $scope.title="Despachos";
     cargarAreas();
-    cargarGrupos();
     cargarGruposRutas();
     $scope.areaselect = {};
     $scope.activeTab = 1;
+    $scope.activeTab2 = 5;
     $scope.resultsfound = false;
     $scope.resultsfound2 = false;
     $scope.resultsfound3 = false;
@@ -27,6 +28,8 @@ ztrack.controller('DespachosController', function ($rootScope, $scope, AuthServi
     $scope.rutaselect = false;
     $scope.selectvehiculo = false;
     $scope.asign = {};
+    $scope.areadespachos = {};
+    $scope.despachadores = {};
 
 
     $scope.setActiveTab = function (tab) {
@@ -45,40 +48,38 @@ ztrack.controller('DespachosController', function ($rootScope, $scope, AuthServi
             cargarVehiculos();
             cargarAsignacionesConductores();
         }
+        if(tab === 4){
+//           cargarDespachadores(); 
+        }
     };
-
+    $scope.setActiveTab2 = function (tab) {
+        $scope.activeTab2 = tab;
+        
+    };
     $scope.despacho = {};
     $scope.clear = function () {
         $scope.dt = null;
     };
-
     $scope.toggleMin = function () {
         $scope.minDate = $scope.minDate ? null : new Date();
     };
-
     $scope.toggleMin();
     $scope.maxDate = new Date(2030, 12, 31);
-
     $scope.open1 = function () {
         $scope.popup1.opened = true;
     };
-
     $scope.open2 = function () {
         $scope.popup2.opened = true;
     };
-
     $scope.open3 = function () {
         $scope.popup3.opened = true;
     };
-
     $scope.open4 = function () {
         $scope.popup4.opened = true;
     };
-
     $scope.setDate = function (year, month, day) {
         $scope.dt = new Date(year, month, day);
     };
-
     $scope.idioma = ({
         dateFormat: "dd-mm-yy",
         firstDay: 1,
@@ -91,32 +92,25 @@ ztrack.controller('DespachosController', function ($rootScope, $scope, AuthServi
                 ["Ene", "Feb", "Mar", "Abr", "May", "Jun",
                     "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"]
     });
-
     $scope.dateOptions = {
         formatYear: 'yy',
         language: $scope.idioma
     };
-
     $scope.formats = ['dd-MMMM-yyyy', 'yyyy-MM-dd', 'dd.MM.yyyy', 'shortDate'];
     $scope.format = $scope.formats[1];
     $scope.altInputFormats = ['M!/d!/yyyy'];
-
     $scope.popup1 = {
         opened: false
     };
-
     $scope.popup2 = {
         opened: false
     };
-
     $scope.popup3 = {
         opened: false
     };
-
     $scope.popup4 = {
         opened: false
     };
-
     function cargarGrupos() {
         $params = {
             user_id: localStorage['ztrack.user_id']
@@ -127,18 +121,6 @@ ztrack.controller('DespachosController', function ($rootScope, $scope, AuthServi
                 });
     }
     ;
-
-    $scope.cargarRutas = function () {
-        $params = {
-            user_id: localStorage['ztrack.user_id'],
-            area_id: $scope.areaselect.id
-        };
-        QueriesService.executeRequest('GET', '../laravel/public/rutas/rutasbyid', null, $params)
-                .then(function (result) {
-                    $scope.rutas = result.rutas;
-                });
-    };
-
     function cargarGruposRutas() {
         $params = {
             user_id: localStorage['ztrack.user_id']
@@ -155,7 +137,6 @@ ztrack.controller('DespachosController', function ($rootScope, $scope, AuthServi
                 });
     }
     ;
-
     function cargarAreas() {
         $params = {
             user_id: localStorage['ztrack.user_id']
@@ -166,7 +147,6 @@ ztrack.controller('DespachosController', function ($rootScope, $scope, AuthServi
                 });
     }
     ;
-
     $scope.asignarGrupos = function () {
         if (!$scope.gruposelect) {
             toastr.warning("Debe seleccionar un grupo para poder continuar");
@@ -183,27 +163,37 @@ ztrack.controller('DespachosController', function ($rootScope, $scope, AuthServi
         $params = {
             user_id: localStorage['ztrack.user_id'],
             area_id: $scope.areaselect.id,
-            group_id : $scope.gruporuta.grupo,
-            route_id : $scope.gruporuta.ruta,
-            fechaini : $scope.gruporuta.fechaini,
-            fechafin : $scope.gruporuta.fechafin
+            group_id: $scope.gruporuta.grupo,
+            route_id: $scope.gruporuta.ruta.route_id,
+            fechaini: $scope.gruporuta.fechaini,
+            fechafin: $scope.gruporuta.fechafin
         };
         QueriesService.executeRequest('GET', '../laravel/public/gruposrutas/gruposrutas', null, $params)
                 .then(function (result) {
                     if (result.success) {
                         cargarGruposRutas();
-                    }
-                    else{
+                    } else {
                         toastr.warning(result.mensaje);
                     }
                 });
     };
-
+    function cargarRutas() {
+        $params = {
+            user_id: localStorage['ztrack.user_id'],
+            area_id: $scope.areaselect.id
+        };        
+        QueriesService.executeRequest('GET', '../laravel/public/rutas/rutasbyid', null, $params)
+                .then(function (result) {
+                    $scope.rutas = {};
+                    $scope.rutas = result.rutas;
+                });
+    }
+    ;
     $scope.onChangeSelectedArea = function () {
-        $scope.cargarRutas();
+        cargarRutas();
+        cargarGrupos();
         $scope.bntdisabled = false;
     };
-
     $scope.editargruporuta = function (gr_id) {
         $params = {
             user_id: localStorage['ztrack.user_id'],
@@ -216,7 +206,6 @@ ztrack.controller('DespachosController', function ($rootScope, $scope, AuthServi
                     }
                 });
     };
-
     $scope.onconfirmdeletegr = function (gr_id) {
         var rta = confirm("¿Desea eliminar el registro?");
         if (rta) {
@@ -225,8 +214,6 @@ ztrack.controller('DespachosController', function ($rootScope, $scope, AuthServi
             return;
         }
     };
-
-
     $scope.eliminargruporuta = function (gr_id) {
         $params = {
             user_id: localStorage['ztrack.user_id'],
@@ -239,7 +226,6 @@ ztrack.controller('DespachosController', function ($rootScope, $scope, AuthServi
                     }
                 });
     };
-
     $scope.seleccionarItem = function (gr_id, group_name, fini, ffin, areaid, area_name) {
         $scope.item = {
             id: gr_id,
@@ -250,9 +236,7 @@ ztrack.controller('DespachosController', function ($rootScope, $scope, AuthServi
         };
         $scope.cargarRutasModal(areaid);
         $scope.gruporutaedit = {};
-
     };
-
     $scope.seleccionarItem2 = function (vh_id, placa, groupname, conductor, imei, telefono, direccion) {
         $scope.item2 = {
             id: vh_id,
@@ -272,7 +256,6 @@ ztrack.controller('DespachosController', function ($rootScope, $scope, AuthServi
             direccion: driver_address
         };
     };
-
     $scope.cargarRutasModal = function (area_id) {
         $params = {
             user_id: localStorage['ztrack.user_id'],
@@ -283,7 +266,6 @@ ztrack.controller('DespachosController', function ($rootScope, $scope, AuthServi
                     $scope.rutas = result.rutas;
                 });
     };
-
     $scope.actualizargruporuta = function (id) {
         $params = {
             user_id: localStorage['ztrack.user_id'],
@@ -299,7 +281,6 @@ ztrack.controller('DespachosController', function ($rootScope, $scope, AuthServi
                     }
                 });
     };
-
     function cargarVehiculos() {
         $params = {
             user_id: localStorage['ztrack.user_id']
@@ -310,7 +291,6 @@ ztrack.controller('DespachosController', function ($rootScope, $scope, AuthServi
                 });
     }
     ;
-
     $scope.asignarVehiculos = function () {
         if (!$scope.onChangeVehiculos) {
             toastr.warning("Debe seleccionar un vehiculo para continuar. Intente de nuevo.");
@@ -333,7 +313,6 @@ ztrack.controller('DespachosController', function ($rootScope, $scope, AuthServi
                     }
                 });
     };
-
     function cargarAsignaciones() {
         $params = {
             user_id: localStorage['ztrack.user_id']
@@ -350,7 +329,6 @@ ztrack.controller('DespachosController', function ($rootScope, $scope, AuthServi
                 });
     }
     ;
-
     $scope.onconfirmdeletevh = function (vh_id) {
         var rta = confirm("¿Desea eliminar el registro?");
         if (rta) {
@@ -359,7 +337,6 @@ ztrack.controller('DespachosController', function ($rootScope, $scope, AuthServi
             return;
         }
     };
-
     $scope.eliminarAsignacion = function (vh_id) {
         $params = {
             user_id: localStorage['ztrack.user_id'],
@@ -372,7 +349,6 @@ ztrack.controller('DespachosController', function ($rootScope, $scope, AuthServi
                     }
                 });
     };
-
     $scope.actualizarvehiculo = function (id) {
         if (!$scope.seleccionaGrupo) {
             toastr.warning("Debe seleccionar el grupo para poder continuar. Intente de nuevo.");
@@ -389,7 +365,6 @@ ztrack.controller('DespachosController', function ($rootScope, $scope, AuthServi
                     }
                 });
     };
-
     function cargarConductores() {
         $params = {
             user_id: localStorage['ztrack.user_id']
@@ -423,7 +398,6 @@ ztrack.controller('DespachosController', function ($rootScope, $scope, AuthServi
                     cargarAsignacionesConductores();
                 });
     };
-
     function cargarAsignacionesConductores() {
         $params = {
             user_id: localStorage['ztrack.user_id']
@@ -455,6 +429,59 @@ ztrack.controller('DespachosController', function ($rootScope, $scope, AuthServi
                     cargarAsignacionesConductores();
                 });
     };
+    $scope.onconfirmdeleteasignacion = function (vh_id) {
+        console.log(vh_id);
+        var rta = confirm("¿Desea eliminar el registro?");
+        if (rta) {
+            $scope.eliminarinformacionconductor(vh_id);
+        } else {
+            return;
+        }
+    };
+    $scope.eliminarinformacionconductor = function (id) {
+        $params = {
+            user_id: localStorage['ztrack.user_id'],
+            vehiculo_id: id
+        };
+        QueriesService.executeRequest('GET', '../laravel/public/gruposrutas/deleteinformacionconductores', null, $params)
+                .then(function (result) {
+                    if (result.warning) {
+                        toastr.warning(result.value);
+                        return;
+                    }
+                    cargarAsignacionesConductores();
+                });
+    };
+
+
+    $scope.onChangeSelectedDespachos = function (area_id) {
+        $params = {
+            user_id: localStorage['ztrack.user_id'],
+            area_id: area_id
+        };
+        QueriesService.executeRequest('GET', '../laravel/public/despachos/gruposxrutaid', null, $params)
+                .then(function (result) {
+                    $scope.grupodespachos = result.groups;
+                });
+    };
+
+    $scope.onChangeSelectedGrupos = function (gru_id) {
+        $params = {
+            user_id: localStorage['ztrack.user_id'],
+            group_id: gru_id
+        };
+        QueriesService.executeRequest('GET', '../laravel/public/despachos/vehiculoxgroupid', null, $params)
+                .then(function (result) {
+                    $scope.vehiculosdespachos = result.vehiculos;
+                });
+
+    };
+
+
+
+
+
+
 
 });
 

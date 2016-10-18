@@ -5,7 +5,7 @@
  */
 var ztrack = angular.module('ztrack');
 ztrack.controller('PerfilController', function ($rootScope, $scope, AuthService, SessionService, $state, QueriesService) {   
-  
+   $scope.title = "Perfil de Usuario";
 });
 
 

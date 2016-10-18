@@ -5,7 +5,7 @@
  */
 var ztrack = angular.module('ztrack');
 ztrack.controller('ConsultasController', function ($rootScope, $scope, AuthService, SessionService, $state, QueriesService) {   
-  
+   $scope.title = "Consultas";
 });
 
 

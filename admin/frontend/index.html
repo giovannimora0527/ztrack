@@ -23,13 +23,18 @@
         <script src="assets/js/ace-extra.min.js"></script>
 
         <link rel="stylesheet" href="css/angular-toastr.css" />
-        <link rel="stylesheet" href="css/angular-toastr.min.css" /> 
+        <link rel="stylesheet" href="css/angular-toastr.min.css" />        
+        <link rel="stylesheet" href="https://rawgit.com/esvit/ng-table/master/dist/ng-table.min.css">        
+        <link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
+        <!-- Plugin files -->        
+        <link href="https://cdn.rawgit.com/zhaber/datetimepicker/master/datetimepicker.css" type="text/css" rel="stylesheet">
+
 
     </head>
 
     <body class="no-skin">
-        <div id="navbar" class="navbar navbar-default ace-save-state">
-            <div class="navbar-container ace-save-state" id="navbar-container">
+        <div id="navbar" class="navbar navbar-default">
+            <div class="navbar-container" id="navbar-container">
                 <button type="button" class="navbar-toggle menu-toggler pull-left" id="menu-toggler" data-target="#sidebar">
                     <span class="sr-only">Toggle sidebar</span>
 
@@ -50,10 +55,9 @@
                 <div class="navbar-buttons navbar-header pull-right" role="navigation">
                     <ul class="nav ace-nav">
                         <li class="light-blue dropdown-modal">
-                            <a data-toggle="dropdown" href="#" class="dropdown-toggle">
-                                <img class="nav-user-photo" src="assets/images/avatars/user.jpg" alt="Jason's Photo" />
+                            <a data-toggle="dropdown" href="#" class="dropdown-toggle">                                
                                 <span class="user-info">
-                                    <small>Bienvenido</small>                                    
+                                    <small>Configuración</small>                                    
                                 </span>
                                 <i class="ace-icon fa fa-caret-down"></i>
                             </a>
@@ -66,14 +70,14 @@
                                 </li>
 
                                 <li>
-                                    <a href="profile.html">
+                                    <a ui-sref="perfil">
                                         <i class="ace-icon fa fa-user"></i>
                                         Perfil
                                     </a>
                                 </li>
                                 <li class="divider"></li>
                                 <li>
-                                    <a href="#">
+                                    <a ui-sref="salir">
                                         <i class="ace-icon fa fa-power-off"></i>
                                         Salir
                                     </a>
@@ -85,20 +89,8 @@
             </div><!-- /.navbar-container -->
         </div>
 
-        <div class="main-container ace-save-state" id="main-container">
-            <script type="text/javascript">
-                try {
-                    ace.settings.loadState('main-container')
-                } catch (e) {
-                }
-            </script>
-            <div id="sidebar" class="sidebar responsive ace-save-state">
-                <script type="text/javascript">
-                    try {
-                        ace.settings.loadState('sidebar')
-                    } catch (e) {
-                    }
-                </script>
+        <div class="main-container ace-save-state" id="main-container">            
+            <div id="sidebar" class="sidebar responsive">                
                 <ul class="nav nav-list">
                     <li class="active">
                         <a ui-sref="principal">
@@ -139,13 +131,20 @@
                                 <b class="arrow"></b>
                             </li>
                             <li class="">
-                                <a class="dropdown-toggle">
+                                <a href="" class="dropdown-toggle">
                                     <i class="menu-icon fa fa-road"></i>
                                     Rutas
                                     <b class="arrow fa fa-angle-down"></b>
                                 </a>
                                 <b class="arrow"></b> 
                                 <ul class="submenu">
+                                     <li class="">
+                                        <a ui-sref="reportesgenerales">
+                                            <i class="menu-icon fa fa-clock-o blue"></i>
+                                            General
+                                        </a>
+                                        <b class="arrow"></b>
+                                    </li>
                                     <li class="">
                                         <a ui-sref="reportestiempos">
                                             <i class="menu-icon fa fa-clock-o blue"></i>
@@ -228,25 +227,32 @@
                         <ul class="submenu">
                             <li class="">
                                 <a ui-sref="gestionconductores">
-                                    <i class="menu-icon fa fa-road"></i>
+                                    <i class="menu-icon fa fa-user"></i>
                                     Gestión de Conductores
                                 </a>
                                 <b class="arrow"></b>
                             </li>
                             <li class="">
                                 <a ui-sref="gestiongrupos">
-                                    <i class="menu-icon fa fa-road"></i>
+                                    <i class="menu-icon fa fa-group"></i>
                                     Gestión de Grupos
                                 </a>
                                 <b class="arrow"></b>
                             </li> 
                             <li class="">
                                 <a ui-sref="gestiondespachos">
-                                    <i class="menu-icon fa fa-automobile"></i>
+                                    <i class="menu-icon fa fa-clock-o"></i>
                                     Gestión de Despachos
                                 </a>
                                 <b class="arrow"></b>
-                            </li>                             
+                            </li>  
+                            <li class="">
+                                <a ui-sref="gestiondespachadores">
+                                    <i class="menu-icon fa fa-newspaper-o"></i>
+                                    Gestión de Despachadores
+                                </a>
+                                <b class="arrow"></b>
+                            </li> 
                         </ul>                        
                     </li>
                     <li class="">
@@ -262,24 +268,12 @@
                     <i id="sidebar-toggle-icon" class="ace-icon fa fa-angle-double-left ace-save-state" data-icon1="ace-icon fa fa-angle-double-left" data-icon2="ace-icon fa fa-angle-double-right"></i>
                 </div>
             </div>
-
             <div class="main-content">
-                <div class="main-content-inner">
-                    <div class="breadcrumbs ace-save-state" id="breadcrumbs">
-                        <ul class="breadcrumb">
-                            <li>
-                                <i class="ace-icon fa fa-home home-icon"></i>
-                                <a href="#">Inicio</a>
-                            </li>
-                            <li class="active">Página Principal</li>
-                        </ul><!-- /.breadcrumb -->
-                    </div>
-                    <div class="page-content">
+                <div class="main-content-inner">                    
+                    <div class="page-content">                        
                         <div ui-view>
-
+                            
                         </div>
-
-
                     </div><!-- /.page-content -->
                 </div>
             </div><!-- /.main-content -->
@@ -322,8 +316,8 @@
         <script src="assets/js/jquery-1.11.3.min.js"></script><!--
         <![endif]-->
         <script type="text/javascript">
-                            if ('ontouchstart' in document.documentElement)
-                                document.write("<script src='assets/js/jquery.mobile.custom.min.js'>" + "<" + "/script>");
+                                    if ('ontouchstart' in document.documentElement)
+                                        document.write("<script src='assets/js/jquery.mobile.custom.min.js'>" + "<" + "/script>");
         </script>
         <script src="assets/js/bootstrap.min.js"></script>
 
@@ -346,151 +340,152 @@
 
 
 
+
+
         <!-- inline scripts related to this page -->
         <script type="text/javascript">
-                            jQuery(function ($) {
-                                $('.easy-pie-chart.percentage').each(function () {
-                                    var $box = $(this).closest('.infobox');
-                                    var barColor = $(this).data('color') || (!$box.hasClass('infobox-dark') ? $box.css('color') : 'rgba(255,255,255,0.95)');
-                                    var trackColor = barColor == 'rgba(255,255,255,0.95)' ? 'rgba(255,255,255,0.25)' : '#E2E2E2';
-                                    var size = parseInt($(this).data('size')) || 50;
-                                    $(this).easyPieChart({
-                                        barColor: barColor,
-                                        trackColor: trackColor,
-                                        scaleColor: false,
-                                        lineCap: 'butt',
-                                        lineWidth: parseInt(size / 10),
-                                        animate: ace.vars['old_ie'] ? false : 1000,
-                                        size: size
-                                    });
-                                })
-
-                                $('.sparkline').each(function () {
-                                    var $box = $(this).closest('.infobox');
-                                    var barColor = !$box.hasClass('infobox-dark') ? $box.css('color') : '#FFF';
-                                    $(this).sparkline('html',
-                                            {
-                                                tagValuesAttribute: 'data-values',
-                                                type: 'bar',
+                                    jQuery(function ($) {
+                                        $('.easy-pie-chart.percentage').each(function () {
+                                            var $box = $(this).closest('.infobox');
+                                            var barColor = $(this).data('color') || (!$box.hasClass('infobox-dark') ? $box.css('color') : 'rgba(255,255,255,0.95)');
+                                            var trackColor = barColor = 'rgba(255,255,255,0.95)' ? 'rgba(255,255,255,0.25)' : '#E2E2E2';
+                                            var size = parseInt($(this).data('size')) || 50;
+                                            $(this).easyPieChart({
                                                 barColor: barColor,
-                                                chartRangeMin: $(this).data('min') || 0
+                                                trackColor: trackColor,
+                                                scaleColor: false,
+                                                lineCap: 'butt',
+                                                lineWidth: parseInt(size / 10),
+                                                animate: ace.vars['old_ie'] ? false : 1000,
+                                                size: size
                                             });
-                                });
+                                        })
+
+                                        $('.sparkline').each(function () {
+                                            var $box = $(this).closest('.infobox');
+                                            var barColor = !$box.hasClass('infobox-dark') ? $box.css('color') : '#FFF';
+                                            $(this).sparkline('html',
+                                                    {
+                                                        tagValuesAttribute: 'data-values',
+                                                        type: 'bar',
+                                                        barColor: barColor,
+                                                        chartRangeMin: $(this).data('min') || 0
+                                                    });
+                                        });
 
 
-                                //flot chart resize plugin, somehow manipulates default browser resize event to optimize it!
-                                //but sometimes it brings up errors with normal resize event handlers
-                                $.resize.throttleWindow = false;
-                                var placeholder = $('#piechart-placeholder').css({'width': '90%', 'min-height': '150px'});
+                                        //flot chart resize plugin, somehow manipulates default browser resize event to optimize it!
+                                        //but sometimes it brings up errors with normal resize event handlers
+                                        $.resize.throttleWindow = false;
+                                        var placeholder = $('#piechart-placeholder').css({'width': '90%', 'min-height': '150px'});
 
-                                placeholder.on('plothover', function (event, pos, item) {
-                                    if (item) {
-                                        if (previousPoint !== item.seriesIndex) {
-                                            previousPoint = item.seriesIndex;
-                                            var tip = item.series['label'] + " : " + item.series['percent'] + '%';
-                                            $tooltip.show().children(0).text(tip);
+                                        placeholder.on('plothover', function (event, pos, item) {
+                                            if (item) {
+                                                if (previousPoint !== item.seriesIndex) {
+                                                    previousPoint = item.seriesIndex;
+                                                    var tip = item.series['label'] + " : " + item.series['percent'] + '%';
+                                                    $tooltip.show().children(0).text(tip);
+                                                }
+                                                $tooltip.css({top: pos.pageY + 10, left: pos.pageX + 10});
+                                            } else {
+                                                $tooltip.hide();
+                                                previousPoint = null;
+                                            }
+
+                                        });
+
+                                        $(document).one('ajaxloadstart.page', function (e) {
+                                            $tooltip.remove();
+                                        });
+
+                                        var d1 = [];
+                                        for (var i = 0; i < Math.PI * 2; i += 0.5) {
+                                            d1.push([i, Math.sin(i)]);
                                         }
-                                        $tooltip.css({top: pos.pageY + 10, left: pos.pageX + 10});
-                                    } else {
-                                        $tooltip.hide();
-                                        previousPoint = null;
-                                    }
 
-                                });
+                                        var d2 = [];
+                                        for (var i = 0; i < Math.PI * 2; i += 0.5) {
+                                            d2.push([i, Math.cos(i)]);
+                                        }
 
-                                $(document).one('ajaxloadstart.page', function (e) {
-                                    $tooltip.remove();
-                                });
+                                        var d3 = [];
+                                        for (var i = 0; i < Math.PI * 2; i += 0.2) {
+                                            d3.push([i, Math.tan(i)]);
+                                        }
+                                        $('#recent-box [data-rel="tooltip"]').tooltip({placement: tooltip_placement});
+                                        function tooltip_placement(context, source) {
+                                            var $source = $(source);
+                                            var $parent = $source.closest('.tab-content');
+                                            var off1 = $parent.offset();
+                                            var w1 = $parent.width();
 
-                                var d1 = [];
-                                for (var i = 0; i < Math.PI * 2; i += 0.5) {
-                                    d1.push([i, Math.sin(i)]);
-                                }
-
-                                var d2 = [];
-                                for (var i = 0; i < Math.PI * 2; i += 0.5) {
-                                    d2.push([i, Math.cos(i)]);
-                                }
-
-                                var d3 = [];
-                                for (var i = 0; i < Math.PI * 2; i += 0.2) {
-                                    d3.push([i, Math.tan(i)]);
-                                }
-                                $('#recent-box [data-rel="tooltip"]').tooltip({placement: tooltip_placement});
-                                function tooltip_placement(context, source) {
-                                    var $source = $(source);
-                                    var $parent = $source.closest('.tab-content');
-                                    var off1 = $parent.offset();
-                                    var w1 = $parent.width();
-
-                                    var off2 = $source.offset();
-                                    if (parseInt(off2.left) < parseInt(off1.left) + parseInt(w1 / 2))
-                                        return 'right';
-                                    return 'left';
-                                }
+                                            var off2 = $source.offset();
+                                            if (parseInt(off2.left) < parseInt(off1.left) + parseInt(w1 / 2))
+                                                return 'right';
+                                            return 'left';
+                                        }
 
 
-                                $('.dialogs,.comments').ace_scroll({
-                                    size: 300
-                                });
+                                        $('.dialogs,.comments').ace_scroll({
+                                            size: 300
+                                        });
 
 
-                                //Android's default browser somehow is confused when tapping on label which will lead to dragging the task
-                                //so disable dragging when clicking on label                        
-                                if (ace.vars['touch'] && ace.vars['android']) {
-                                    $('#tasks').on('touchstart', function (e) {
-                                        var li = $(e.target).closest('#tasks li');
-                                        if (li.length === 0)
-                                            return;
-                                        var label = li.find('label.inline').get(0);
-                                        if (label === e.target || $.contains(label, e.target))
-                                            e.stopImmediatePropagation();
+                                        //Android's default browser somehow is confused when tapping on label which will lead to dragging the task
+                                        //so disable dragging when clicking on label                        
+                                        if (ace.vars['touch'] && ace.vars['android']) {
+                                            $('#tasks').on('touchstart', function (e) {
+                                                var li = $(e.target).closest('#tasks li');
+                                                if (li.length === 0)
+                                                    return;
+                                                var label = li.find('label.inline').get(0);
+                                                if (label === e.target || $.contains(label, e.target))
+                                                    e.stopImmediatePropagation();
+                                            });
+                                        }
+
+                                        $('#tasks').sortable({
+                                            opacity: 0.8,
+                                            revert: true,
+                                            forceHelperSize: true,
+                                            placeholder: 'draggable-placeholder',
+                                            forcePlaceholderSize: true,
+                                            tolerance: 'pointer',
+                                            stop: function (event, ui) {
+                                                //just for Chrome!!!! so that dropdowns on items don't appear below other items after being moved
+                                                $(ui.item).css('z-index', 'auto');
+                                            }
+                                        }
+                                        );
                                     });
-                                }
 
-                                $('#tasks').sortable({
-                                    opacity: 0.8,
-                                    revert: true,
-                                    forceHelperSize: true,
-                                    placeholder: 'draggable-placeholder',
-                                    forcePlaceholderSize: true,
-                                    tolerance: 'pointer',
-                                    stop: function (event, ui) {
-                                        //just for Chrome!!!! so that dropdowns on items don't appear below other items after being moved
-                                        $(ui.item).css('z-index', 'auto');
+                                    function goToTrack() {
+                                        var userId = localStorage.getItem('ztrack.user_id');
+                                        $.ajax({
+                                            url: 'php/validate.php',
+                                            data: {userId: userId},
+                                            dataType: "json",
+                                            type: 'POST',
+                                            success: function (result) {
+                                                if (result[0]["success"]) {
+                                                    var url = window.location.origin + "/track/login.php?u=" + result[0]["usuario"] +
+                                                            "&p=" + result[0]["password"] + "&rm=true&m=false";
+                                                    var windows = window.location.origin + "/track/tracking2.php";
+                                                    sessionStorage.setItem('url', windows);
+                                                    window.open(url, '_blank');
+                                                }
+                                            }
+                                        });
                                     }
-                                }
-                                );
-                            });
-
-                            function goToTrack() {
-                                var userId = localStorage.getItem('ztrack.user_id');
-                                $.ajax({
-                                    url: 'php/validate.php',
-                                    data: {userId: userId},
-                                    dataType: "json",
-                                    type: 'POST',
-                                    success: function (result) {
-                                        if (result[0]["success"]) {
-                                            var url = window.location.origin + "/track/login.php?u=" + result[0]["usuario"] +
-                                                    "&p=" + result[0]["password"] + "&rm=true&m=false";
-                                            var windows = window.location.origin + "/track/tracking2.php";
-                                            sessionStorage.setItem('url', windows);
-                                            window.open(url, '_blank');
-                                        }
-                                    }
-                                });
-                            }
-                            ;
+                                    ;
         </script>
 
-        <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.js"></script>
-        <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular-animate.js"></script>
+        <!--        <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.js"></script>-->
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js"></script>
+        <script src="http://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-2.0.1.js"></script>
+        <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular-animate.js"></script>
         <script src="scripts/angular-ui-router.js" type="text/javascript"></script>        
-        <script src="scripts/angular-cookies.min.js"></script>
-        <script src="scripts/ui-bootstrap-tpls-0.11.0.min.js" type="text/javascript"></script>
-
-        <script src="//angular-ui.github.io/bootstrap/ui-bootstrap-tpls-1.1.2.js"></script>
+        <script src="scripts/angular-cookies.min.js"></script>          
 
         <script src="services/utilities-service.js"></script>
         <script src="services/queries-service.js"></script>
@@ -504,25 +499,29 @@
         <script src="administrador/bower_components/raphael/raphael-min.js"></script>
         <script src="administrador/bower_components/morrisjs/morris.min.js"></script>
         <script src="administrador/js/morris-data.js"></script>
-        <script src="administrador/dist/js/sb-admin-2.js"></script>        
+        <script src="administrador/dist/js/sb-admin-2.js"></script> 
+
+        <!--        Controlador maestro de la aplicacion-->
+        <script src="controllers/admin.js"></script> 
 
         <script src="js/angular-toastr.js"></script>
         <script src="js/angular-toastr.min.js"></script>
         <script src="js/angular-toastr.tpls.js"></script>
         <script src="js/angular-toastr.tpls.min.js"></script>
-
-
-
+        <!--        <script src="js/jdatetimepicker.js"></script>-->
+        <script src="js/jdatepicker.js"></script>
 
         <!--    Controladores de la Aplicación-->        
-        <script src="controllers/admin.js"></script> 
+
         <script src="controllers/home.js"></script> 
         <script src="controllers/principal.js"></script>
         <script src="controllers/consultas.js"></script> 
         <script src="controllers/despachos.js"></script>
         <script src="controllers/reportes.js"></script>
         <script src="controllers/gestion.js"></script>
-
+        <script src="controllers/despachador.js"></script>
+        <script src="controllers/conductores.js"></script>
+        <script src="controllers/perfil.js"></script>
         <script src="controllers/auth-service.js"></script>
         <script src="controllers/session-service.js"></script>
 

@@ -15,7 +15,7 @@ class GruposController extends \BaseController {
 
     public function getGrupos() { 
         $user_id = Input::get('user_id');
-        $groups = DB::select('select group_id, group_name from gs_user_object_groups where user_id = ' . $user_id . ' order by group_name asc');        
+        $groups = DB::select('select group_id, group_name from gs_user_object_groups where user_id = ' . $user_id . ' AND group_id <> 0 order by group_name asc');        
         return Response::json(array('grupos' => $groups));
     }
     

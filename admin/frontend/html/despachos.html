@@ -4,6 +4,15 @@ To change this license header, choose License Headers in Project Properties.
 To change this template file, choose Tools | Templates
 and open the template in the editor.
 -->
+<div class="breadcrumbs ace-save-state" id="breadcrumbs">
+    <ul class="breadcrumb">
+        <li>
+            <i class="menu icon fa fa-home"></i>
+            <a ui-sref="principal">Inicio</a>
+        </li>
+        <li class="active"><font color="#0B0B3B">{{title}}</font></li>
+    </ul><!-- /.breadcrumb -->    
+</div>
 <div class="page-header">
     <h1>
         Gestión de Despachos
@@ -78,16 +87,15 @@ and open the template in the editor.
                                             </select>
                                         </td>
                                         <td>
-                                            <select class="form-control" ng-model="gruporuta.ruta" ng-change="rutaselect = true">                                           
-                                                <option value="" selected disabled>Seleccionar</option>
-                                                <option ng-repeat="ruta in rutas" value="{{ruta.route_id}}" >{{ruta.route_name}}</option>
+                                            <select class="form-control" ng-model="gruporuta.ruta" ng-options="ruta.route_name for ruta in rutas track by ruta.route_name" ng-change="rutaselect = true">                                           
+                                                <option value="" selected disabled>Seleccionar</option>                                                
                                             </select>
                                         </td>
                                         <td>
                                             <p class="input-group">
                                                 <input type="text" class="form-control" uib-datepicker-popup="{{format}}" ng-model="gruporuta.fechaini" is-open="popup1.opened" datepicker-options="dateOptions" ng-required="true" close-text="Close" alt-input-formats="altInputFormats" />
                                                 <span class="input-group-btn">
-                                                    <button type="button" class="btn btn-sm btn-primary" ng-click="open1()"><i class="glyphicon glyphicon-calendar"></i></button>
+                                                    <button type="button" class="btn btn-blue btn-primary" ng-click="open1()"><i class="glyphicon glyphicon-calendar"></i></button>
                                                 </span>
                                             </p>                                    
                                         </td>
@@ -95,12 +103,12 @@ and open the template in the editor.
                                             <p class="input-group">
                                                 <input type="text" class="form-control" uib-datepicker-popup="{{format}}" ng-model="gruporuta.fechafin" is-open="popup2.opened" datepicker-options="dateOptions" ng-required="true" close-text="Close" alt-input-formats="altInputFormats" />
                                                 <span class="input-group-btn">
-                                                    <button type="button" class="btn btn-sm btn-primary" ng-click="open2()"><i class="glyphicon glyphicon-calendar"></i></button>
+                                                    <button type="button" class="btn btn-blue btn-primary" ng-click="open2()"><i class="glyphicon glyphicon-calendar"></i></button>
                                                 </span>
                                             </p>
                                         </td>
                                         <td align="center">
-                                            <button type="button" class="btn btn-sm btn-primary" ng-click="asignarGrupos()" ng-disabled="bntdisabled">Asignar</button>
+                                            <button type="button" class="btn btn-primary" ng-click="asignarGrupos()" ng-disabled="bntdisabled">Asignar</button>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -126,19 +134,19 @@ and open the template in the editor.
                                     </tr>
                                     <tr ng-if="resultsfound" ng-repeat="gr in gruposrutas">
                                         <td>
-                                            <label>{{gr.group_name}}</label>  
+                                            {{gr.group_name}}  
                                         </td>
                                         <td>
-                                            <label>{{gr.area_name}}</label>  
+                                            {{gr.area_name}}  
                                         </td>
                                         <td>
-                                            <label>{{gr.route_name}}</label>  
+                                            {{gr.route_name}} 
                                         </td>
                                         <td>
-                                            <label>{{gr.fechaini}}</label>  
+                                            {{gr.fechaini}}  
                                         </td>
                                         <td>
-                                            <label>{{gr.fechafin}}</label>  
+                                            {{gr.fechafin}} 
                                         </td> 
                                         <td align="center">
                                             <div class="btn-group">
@@ -208,16 +216,16 @@ and open the template in the editor.
                                 </tr>                                
                                 <tr ng-if="resultsfound1" ng-repeat="as in asignaciones">
                                     <td>
-                                        <label>{{as.vin}}</label>  
+                                        {{as.vin}}  
                                     </td>
                                     <td>
-                                        <label>{{ as.driver_name  }}</label>  
+                                        {{ as.driver_name}} 
                                     </td>                                    
                                     <td>
-                                        <label>{{as.plate_number}}</label>  
+                                        {{as.plate_number}}
                                     </td>
                                     <td>
-                                        <label>{{as.group_name}}</label>  
+                                        {{as.group_name}}  
                                     </td> 
                                     <td align="center">
                                         <div class="btn-group">
@@ -291,26 +299,26 @@ and open the template in the editor.
                                     </tr>
                                     <tr ng-if="resultsfound3" ng-repeat="c in asignacionconductores">
                                         <td>
-                                            <label>{{c.vin}}</label>  
+                                            {{c.vin}} 
                                         </td>  
                                         <td>
-                                            <label>{{c.plate_number}}</label>  
+                                            {{c.plate_number}} 
                                         </td>
                                         <td>
-                                            <label>{{c.driver_name}}</label>  
+                                            {{c.driver_name}}  
                                         </td>
                                         <td>
-                                            <label>{{c.driver_address}}</label>  
+                                            {{c.driver_address}}  
                                         </td>
                                         <td>
-                                            <label>{{c.driver_phone}}</label>  
+                                            {{c.driver_phone}}  
                                         </td>                                        
                                         <td align="center">
                                             <div class="btn-group">
                                                 <button class="btn btn-white btn-sm btn-info btn-bold" title="Editar" data-toggle="modal" ng-click="seleccionarItem3(c.driver_id, c.driver_name, c.driver_phone, c.driver_address)" data-target="#editarAsignacionConductor" >
                                                     <i class="ace-icon fa fa-edit"></i>
                                                 </button> 
-                                                <button class="btn btn-white btn-sm btn-warning btn-bold" title="Eliminar" ng-click="onconfirmdeleteasignacion(vh.object_id)">
+                                                <button class="btn btn-white btn-sm btn-warning btn-bold" title="Eliminar" ng-click="onconfirmdeleteasignacion(c.object_id)">
                                                     <i class="ace-icon fa fa-trash-o bigger-120 orange"></i>
                                                 </button>  
                                             </div>
@@ -323,18 +331,34 @@ and open the template in the editor.
                 </div>
                 <!--                Pestaña de Despachos-->
                 <div ng-class="{'tab-pane active': activeTab === 4, 'tab-pane' : activeTab !== 4}">
-                    <div class="container-fluid">
-                        <h3>
-                            Despachos
-                        </h3>
-                        <br>                       
-                        <div class="row">
+                    <div class="container-fluid">                        
+                        <div class="tabbable">
+                            <ul class="nav nav-tabs">                                
+                                <li ng-class="{'active' : activeTab2 === 5}"><a href="" ng-click="setActiveTab2(5)">
+                                        <i class="blue fa fa-clock-o bigger-120"></i>
+                                        Asignar Puntos de Control a ruta
+                                    </a>
+                                </li> 
+                                <li ng-class="{'active' : activeTab2 === 6}"><a href="" ng-click="setActiveTab2(6)">
+                                        <i class="blue fa fa-road bigger-120"></i>
+                                        Asignación de tiempos a rutas
+                                    </a>
+                                </li>                                
+                            </ul>
+                            <div class="tab-content">
+                                <!--               Panel de asignacion de despachador a ruta-->                               
+                                <!--                Panel de asignacion de puntos de control a rutas-->
+                                <div ng-class="{'tab-pane active': activeTab2 === 6, 'tab-pane' : activeTab2 !== 6}">
+                                    Panel de asignacion de puntos de control a rutas
+                                </div> 
+                                <!--                Panel de asignacion de tiempos-->
+                                <div ng-class="{'tab-pane active': activeTab2 === 7, 'tab-pane' : activeTab2 !== 7}">
+                                    Panel de asignacion de tiempos a puntos de control
+                                </div>                                
 
-                        </div>
-                        <div class="row">
-
-                        </div>
-                    </div> 
+                            </div>
+                        </div> 
+                    </div>
                 </div>
             </div>
         </div>
@@ -523,7 +547,7 @@ and open the template in the editor.
         </div>
     </div>
 </div>
-
+<!-- Modal Edicion Asignacion del conductor -->
 <div id="editarAsignacionConductor" class="bootbox modal fade bootbox-confirm in" tabindex="-1" role="dialog" aria-labelledby="editarVehiculo" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">

@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<div class="breadcrumbs ace-save-state" id="breadcrumbs">
+    <ul class="breadcrumb">
+        <li>
+            <i class="menu icon fa fa-home"></i>
+            <a ui-sref="principal">Inicio</a>
+        </li>
+        <li class="active"><font color="#0B0B3B">{{title}}</font></li>
+    </ul><!-- /.breadcrumb -->
+</div>
+<div class="page-header">
+    <h1>
+        Modulo de Gestión de Despachadores
+    </h1>
+</div><!-- /.page-header -->
+
+<div class="row">
+    <div class="col-xs-12">
+        <label>A continuación puede gestionar la información correspondiente a la creación y asignación de despachadores al sistema.</label>
+        <div class="tabbable">
+            <ul class="nav nav-tabs">
+                <li ng-class="{'active' : activeTab === 1}"><a href="" ng-click="setActiveTab(1)">
+                        <i class="blue fa fa-users bigger-120"></i>
+                        Nuevo Despachador
+                    </a>
+                </li> 
+                <li ng-class="{
+                        'active'
+                        : activeTab === 2}"><a href="" ng-click="setActiveTab(2)">
+                        <i class="blue fa fa-users bigger-120"></i>
+                        Asignar despachador a ruta.
+                    </a>
+                </li>
+            </ul>
+            <!--            Panel de creacion de despachadores-->
+            <div class="tab-content">
+                <div ng-class="{'tab-pane active' : activeTab === 1, 'tab-pane' : activeTab !== 1}">
+                    <div class="container-fluid">
+                        <label>
+                            Por favor diligencie los campos correspondientes para agregar un despachador al sistema ztrack. Recuerde que los campos marcados con (*) son obligatorios.
+                        </label>
+                        <div align="center">
+                            <form class="form-horizontal" role="form">
+                                <table class="table-bordered table-condensed table-responsive col-md-12">
+                                    <tr>
+                                        <td colspan="4" align="center">
+                                            <h4 class="smaller blue">Datos Personales</h4> 
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-2" align="center">
+                                            <label> Nombres </label> 
+                                        </td>
+                                        <td class="col-md-4">
+                                            <input type="text" placeholder="Nombre Despachador" class="form-control" ng-model="despachador.nombre"/>
+                                        </td>
+                                        <td class="col-md-2" align="center">
+                                            <label> Apellidos </label> 
+                                        </td>
+                                        <td class="col-md-4">
+                                            <input type="text" placeholder="Apellidos Despachador" class="form-control" ng-model="despachador.apellidos"/>
+                                        </td>
+                                    </tr> 
+                                    <tr>                                    
+                                        <td  align="center">
+                                            <label> Dirección </label> 
+                                        </td>
+                                        <td>
+                                            <input type="text"  placeholder="Dirección" class="form-control" ng-model="despachador.direccion"/>
+                                        </td>
+                                        <td  align="center">
+                                            <label> Teléfono o Celular</label> 
+                                        </td>
+                                        <td>
+                                            <input type="text" placeholder="Teléfono" class="form-control" ng-model="despachador.telefono"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="4" align="center">
+                                            <h4 class="smaller blue">Datos de inicio de sesión</h4>
+                                        </td>
+                                    </tr>
+                                    <tr>                                    
+                                        <td  align="center">
+                                            <label>Usuario </label> 
+                                        </td>
+                                        <td>
+                                            <input type="text" placeholder="Nombre de Usuario" class="form-control" ng-model="despachador.username"/>
+                                        </td>
+                                        <td  align="center">
+                                            <label> Contraseña </label> 
+                                        </td>
+                                        <td>
+                                            <input type="password" placeholder="Contraseña" class="form-control" ng-model="despachador.password"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="4" align="center">
+                                            <br><br>
+                                            <div class="btn-group">
+                                                <button type="button" class="btn btn-warning btn-white btn-primary" ng-click="cancelarDespachador()"> 
+                                                    <i class="ace-icon fa fa-times align-top bigger-125"></i>
+                                                    Cancelar
+                                                </button>
+                                                <button type="button" class="btn btn-info btn-white btn-primary" ng-click="guardarDespachador()">
+                                                    <i class="ace-icon fa fa-save align-top bigger-125"></i>
+                                                    Guardar                                                    
+                                                </button>
+                                            </div>                                         
+                                        </td>
+                                    </tr>
+                                </table>                            
+                            </form>
+                        </div>
+                    </div> 
+                </div>
+                <div ng-class="{'tab-pane active' : activeTab === 2, 'tab-pane' : activeTab !== 2}">
+                    <div class="container-fluid">
+                        <label>
+                            Seleccione el despachador y asignelo a una o varias rutas.
+                        </label>
+                        <table class="table table-responsive table-bordered table-striped"> 
+                            <tr>
+                                <td>
+                                    Lista de Despachadores 
+                                </td>
+                                <td>
+                                    <select id="selectDespachador" ng-model="despachadorselect" class="form-control" ng-options="desp.nombre + ' ' + desp.apellido for desp in despachadores track by desp.nombre" onchange="hasSelectedChange()">
+                                        <option value="" disabled selected>Seleccione una opción</option>                                        
+                                    </select> 
+                                </td>
+                            </tr>                          
+                            <tr>
+                                <td>
+                                    Seleccion de Área 
+                                </td>
+                                <td>
+                                    <select class="form-control" ng-model="areaselect.id" ng-change="onChangeSelectedArea()">                                        
+                                        <option value="" selected disabled>Seleccionar</option>
+                                        <option ng-repeat="ar in areas" value="{{ar.id}}">{{ar.name}}</option>
+                                    </select>
+                                </td>
+                            </tr>                             
+                        </table>
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-6" align="center">
+                                <div class="widget-box">
+                                    <div class="widget-header">
+                                        <h4>Selección de Rutas </h4>
+                                    </div>
+                                    <div class="widget-body">
+                                        <div class="widget-main">
+                                            <div class="input-group">
+                                                <select class="form-control" ng-model="rutaselect" ng-options="ruta.route_name for ruta in rutas track by ruta.route_name">
+                                                    <option value="" disabled selected>Seleccione una opción</option>
+                                                </select>
+                                                <span class="input-group-btn">
+                                                    <button class="btn btn-primary" type="button" ng-click="seleccionarRuta()">
+                                                        <i class="ace-icon fa fa-arrow-right bigger-110"></i>                                                       
+                                                    </button>
+                                                </span>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-6" align="center">
+                                <div class="widget-box">
+                                    <div class="widget-header">
+                                        <h4>Rutas Seleccionadas </h4>
+                                    </div>
+                                    <div class="widget-body">                                        
+                                        <div class="widget-container">
+                                            <div class="dd" id="nestable">
+                                                <ol class="dd-list">
+                                                    <li class="dd-item" ng-repeat="it in itemsselected">
+                                                        <div class="dd-handle">
+                                                            <i class="pull-left bigger-130 ace-icon fa fa-map-marker blue"></i>
+                                                            {{it.route_name}}
+                                                            <a href="" ng-click="deleteRuta(it)"><i class="pull-right bigger-130 ace-icon fa fa-times blue"></i></a>
+                                                        </div>
+                                                    </li>
+                                                </ol>
+                                            </div>                                            
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>                            
+                        </div>
+                        <br><br>
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-12" align="right">
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-warning btn-white btn-primary" ng-click="cancelar()" onclick="cancel()"> 
+                                        <i class="ace-icon fa fa-times align-top bigger-125"></i>
+                                        Cancelar
+                                    </button>
+                                    <button type="button" class="btn btn-info btn-white btn-primary" ng-click="asignarRuta()">
+                                        <i class="ace-icon fa fa-save align-top bigger-125"></i>
+                                        Guardar                                                    
+                                    </button>
+
+                                </div>    
+                            </div>
+                        </div>
+                    </div> 
+                </div>
+            </div>
+        </div> <!-- Fin de Tabs -->
+
+    </div><!-- /.col -->
+</div><!-- /.row -->
+<script>
+   function hasSelectedChange(){
+     document.getElementById("selectDespachador").disabled = true; 
+   };
+   
+    function cancel(){
+     document.getElementById("selectDespachador").disabled = false; 
+   };
+</script>

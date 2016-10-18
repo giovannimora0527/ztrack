@@ -7,7 +7,7 @@
  * @email giovannimora0527@gmail.com
  * @version 1.1
  */
-var ztrack = angular.module('ztrack', ['ui.bootstrap','ngCookies', 'ui.router', 'zmodo-directives', 'queries-service', 'formValidationService', 'toastr', 'anchorScrollOffset']);
+var ztrack = angular.module('ztrack', ['ui.bootstrap', 'ngCookies', 'ui.router', 'zmodo-directives', 'queries-service', 'formValidationService', 'toastr', 'anchorScrollOffset']);
 ztrack.config(['$stateProvider', '$urlRouterProvider', '$httpProvider',
     function ($stateProvider, $urlRouterProvider) {
         $urlRouterProvider.otherwise('home');
@@ -65,18 +65,28 @@ ztrack.config(['$stateProvider', '$urlRouterProvider', '$httpProvider',
                     templateUrl: 'html/diferenciatimes.html',
                     controller: 'ReportesController'
                 })
+                .state('reportesgenerales', {                    
+                    url: '/reportes_generales_rutas',
+                    templateUrl: 'reportes/index.php',
+                    controller: 'ReportesController'
+                })
                 .state('gestiondespachos', {
                     url: '/gestion_despachos',
                     templateUrl: 'html/despachos.html',
                     controller: 'DespachosController'                    
                 })
+                .state('gestiondespachadores', {
+                    url: '/gestion_despachadores',
+                    templateUrl: 'html/despachadores.html',
+                    controller: 'AdminDespachosController'                    
+                })
                 .state('gestionconductores', {
-                    url: '/gestions_de_conductores',
+                    url: '/gestion_de_conductores',
                     templateUrl: 'html/gestionconductores.html',
-                    controller: 'GestionController'                    
+                    controller: 'GestionConductorController'                    
                 })
                 .state('gestiongrupos', {
-                    url: '/gestions_de_grupos',
+                    url: '/gestion_de_grupos',
                     templateUrl: 'html/gestiongrupos.html',
                     controller: 'GestionController'                    
                 })
@@ -94,6 +104,11 @@ ztrack.config(['$stateProvider', '$urlRouterProvider', '$httpProvider',
                     url: '/consultas',
                     templateUrl: 'html/rutas.html',
                     controller: 'ConsultasController'                    
+                })
+                .state('modulodespachos', {
+                    url: '/modulo_despachos',
+                    templateUrl: 'html/modulodespachos.html',
+                    controller: 'DespachadoresController'                    
                 })
                 .state('perfil', {
                     url: '/perfil',
@@ -137,55 +152,16 @@ ztrack.config(['$stateProvider', '$urlRouterProvider', '$httpProvider',
     'response': function(response) {
       // do something on success
       return response;
-    },
-
-    // optional method
-   'responseError': function(rejection) {
-      // do something on error
-      if (canRecover(rejection)) {
-        var error = function (response) {
-                    if (response.status === 401) {
-                        $injector.invoke(function ($http, SessionService) {
-                            SessionService.destroy();
-                            SessionService.redirectToLogin();
-                        });
-                    } else if (response.status === 403) {
-                        $injector.invoke(function ($http, SessionService) {
-                            SessionService.unauthorized();
-                        });
-                    }
-                    return $q.reject(response);
-                };
-                return function (promise) {
-                    return promise.then("success", error);
-                };  
-        return responseOrNewPromise;
-      }
-      return $q.reject(rejection);
     }
-  };
-});
 
-$httpProvider.interceptors.push('myHttpInterceptor');
-
-
-// alternatively, register the interceptor via an anonymous factory
-$httpProvider.interceptors.push(function($q, dependency1, dependency2) {
-  return {
-   'request': function(config) {
-       // same as above
-    },
-
-    'response': function(response) {
-       // same as above
-    }
-  };
+   };
 }).
         run(function ($rootScope, $state, SessionService, $http) {
             $rootScope.$state = $state;
             $rootScope.url_base = "http://localhost/ztrack/";
-//          $rootScope.url_base = "http://localhost/ztrack/"; -> url del servidor - Document_Root
+//          $rootScope.url_base = "http://208.11.32.127/ztrack/"; -> url del servidor - Document_Root
             SessionService.refresh();
-        });
+        });        
+        
         
   

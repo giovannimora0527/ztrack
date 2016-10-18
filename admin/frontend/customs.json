@@ -1,0 +1,14 @@
+{
+    "elements": {},
+    "attributes": {
+        "ui-view": {
+            "context": "div"
+        },
+        "modal-visible": {
+            "context": "div"
+        },
+        "ui-sref": {
+            "context": "a"
+        }
+    }
+}

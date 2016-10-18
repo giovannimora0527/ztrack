@@ -25,7 +25,7 @@ class GrupoZTrackController extends \BaseController {
         return Response::json(array('gruposrutas' => $groupsroutes));
     }
 
-//Metodo que sirve para guardar el registro de asignacion de un grupo a una ruta en un intervalo de fecha
+    //Metodo que sirve para guardar el registro de asignacion de un grupo a una ruta en un intervalo de fecha
     public function getGruposrutas() {
         $user_id = Input::get("user_id");
         $area_id = Input::get("area_id");
@@ -34,30 +34,32 @@ class GrupoZTrackController extends \BaseController {
         $fechafin = substr(str_replace('T', ' ', $data['fechafin']), 0, 10);
         $grupo_id = $data['group_id'];
         $ruta_id = $data['route_id'];
-        $sql = "select * from gs_gruposrutas where user_id = " . $user_id;
-        $result = DB::select($sql);
-        if (count($result) > 0) {
-            for ($i = 0; $i < count($result); $i++) {
-                if ($result[$i]->group_id == $data['group_id']) {
-                    return Response::json(array('success' => false, 'mensaje' => "El registro se encuentra asignado a una ruta previa. Intente de nuevo."));
-                }
-            }
-        }
-
+        
+//VALIDACION POR SI SE REQUIERE QUE UN GRUPO SOLO VAYA A UNA SOLA RUTA
+//        $sql = "select * from gs_gruposrutas where user_id = " . $user_id . ";"; 
+//        $result = DB::select($sql);        
+//        if (count($result) > 0) {
+//            for ($i = 0; $i < count($result); $i++) {
+//                if ($result[$i]->group_id == $data['group_id']) {
+//                    return Response::json(array('success' => false, 'mensaje' => "El registro se encuentra asignado a una ruta previa. Intente de nuevo."));
+//                }
+//            }
+//        }        
         $sql = "insert into gs_gruposrutas (user_id, area_id, route_id, group_id, fechaini, fechafin) values(" . intval($user_id) . "," . intval($area_id) . ","
-                . intval($ruta_id) . "," . intval($grupo_id) . ",'" . $fechaini . "','" . $fechafin . "')";
+                . intval($ruta_id) . "," . intval($grupo_id) . ",'" . $fechaini . "','" . $fechafin . "');";
+        
         try {
             DB::beginTransaction();
             DB::insert($sql);
             DB::commit();
             return Response::json(array('success' => true, 'mensaje' => "El registro se ha guardado correctamente"));
         } catch (Exception $e) {
-            return Response::json(array('error' => "No se puede guardar el registro. " + $e, 'error' => true));
-        }
+            return Response::json(array('error' => "No se puede guardar el registro. " . $e, 'error' => true));
+        }        
     }
 
     public function postEliminar() {
-        $grId = Input::get("grId");        
+        $grId = Input::get("grId");
         date_default_timezone_set('America/Bogota');
         $time = time();
         $fecharegistro = date("Y-m-d H:i:s", $time);
@@ -65,15 +67,15 @@ class GrupoZTrackController extends \BaseController {
         $result = DB::select($sql);
         if (count($result) > 0) {
             $sql = "insert into gs_history_gr (fechaborrado, user_id, area_id, route_id, group_id, fechaini, fechafin) "
-                    . "values ('" . $fecharegistro 
-                    ."', " . $result[0]->user_id
-                    .", " . $result[0]->area_id
-                    .", " . $result[0]->route_id
-                    .", " . $result[0]->group_id
-                    .", '" . $result[0]->fechaini
-                    ."', '" . $result[0]->fechafin
+                    . "values ('" . $fecharegistro
+                    . "', " . $result[0]->user_id
+                    . ", " . $result[0]->area_id
+                    . ", " . $result[0]->route_id
+                    . ", " . $result[0]->group_id
+                    . ", '" . $result[0]->fechaini
+                    . "', '" . $result[0]->fechafin
                     . "');";
-        }        
+        }
         DB::insert($sql); // Guardo el registro en la tabla de historial       
 
         $sql = "delete from gs_gruposrutas where gr_id = " . $grId . ";";
@@ -83,7 +85,7 @@ class GrupoZTrackController extends \BaseController {
             DB::commit();
             return Response::json(array('success' => true, 'mensaje' => "El registro se ha eliminado correctamente"));
         } catch (Exception $e) {
-            return Response::json(array('error' => "No se puede eliminar el registro. " + $e, 'error' => true));
+            return Response::json(array('mensaje' => "No se puede eliminar el registro. " . $e, 'error' => true));
         }
     }
 
@@ -128,7 +130,7 @@ class GrupoZTrackController extends \BaseController {
             DB::commit();
             return Response::json(array('success' => true, 'mensaje' => "El registro se ha actualizado correctamente"));
         } catch (Exception $e) {
-            return Response::json(array('error' => "No se puede actualizar el registro. " + $e, 'error' => true));
+            return Response::json(array('mensaje' => "No se puede actualizar el registro. " . $e, 'error' => true));
         }
     }
 
@@ -147,12 +149,30 @@ class GrupoZTrackController extends \BaseController {
             DB::commit();
             return Response::json(array('vehiculos' => $vehiculos));
         } catch (Exception $e) {
-            return Response::json(array('error' => "No tiene vehiculos registrados en el sistema. " + $e, 'error' => true));
+            return Response::json(array('mensaje' => "No tiene vehiculos registrados en el sistema. " . $e, 'error' => true));
         }
     }
 
+    //Metodo que permite la asignacion de vehiculos a grupos registrados en el sistema
     public function postAsignacion() {
         $data = Input::all();
+        //Guardo el registro de auditoria en la tabla historial
+        $sql = "select * from gs_user_objects where object_id = " . $data["vehiculo_id"] . ";";
+        $result = DB::select($sql);
+        if (count($result) > 0) {
+            date_default_timezone_set('America/Bogota');
+            $time = time();
+            $fecharegistro = date("Y-m-d H:i:s", $time);
+            $sql = "insert into gs_history_vehiculos(fecharegistro, object_id, user_id, imei, group_id, driver_id) "
+                    . "values('" . $fecharegistro
+                    . "', " . $result[0]->object_id
+                    . ", " . $result[0]->user_id
+                    . ", '" . $result[0]->imei
+                    . "', " . $result[0]->group_id
+                    . ", " . $result[0]->driver_id
+                    . ");";
+        }
+        DB::insert($sql); // Inserta el registro de auditoria en la tabla historial
         $sql = "update gs_user_objects set group_id = " . $data["group_id"] . " where object_id = " . $data["vehiculo_id"];
         try {
             DB::beginTransaction();
@@ -160,8 +180,8 @@ class GrupoZTrackController extends \BaseController {
             DB::commit();
             return Response::json(array('success' => "true", 'value' => "Registro guardado con exito."));
         } catch (Exception $e) {
-            return Response::json(array('error' => "No se pudo guardar el registro. " + $e, 'error' => true));
-        }
+            return Response::json(array('mensaje' => "No se pudo guardar el registro. " . $e, 'error' => true));
+        }        
     }
 
     public function getAsignaciones() {
@@ -188,20 +208,37 @@ class GrupoZTrackController extends \BaseController {
                 return Response::json(array('success' => false));
             }
         } catch (Exception $e) {
-            return Response::json(array('errormsj' => "No hay resultados disponibles. " + $e, 'error' => true));
+            return Response::json(array('errormsj' => "No hay resultados disponibles. " . $e, 'error' => true));
         }
     }
 
     public function postEliminarasignacion() {
         $data = Input::all();
+        $sql = "select * from gs_user_objects where object_id = " . $data["vehiculo_id"];
+        $result = DB::select($sql);
+        if (count($result) > 0) {
+            date_default_timezone_set('America/Bogota');
+            $time = time();
+            $fecharegistro = date("Y-m-d H:i:s", $time);
+            $sql = "insert into gs_history_vehiculos(fecharegistro, object_id, user_id, imei, group_id, driver_id) "
+                    . "values('" . $fecharegistro
+                    . "', " . $result[0]->object_id
+                    . ", " . $result[0]->user_id
+                    . ", '" . $result[0]->imei
+                    . "', " . $result[0]->group_id
+                    . ", " . $result[0]->driver_id
+                    . ");";
+        }
+        DB::insert($sql); // Inserta el registro de auditoria en la tabla historial
         $sql = "update gs_user_objects set group_id = 0" . " where object_id = " . $data["vehiculo_id"];
+        
         try {
             DB::beginTransaction();
             DB::update($sql);
             DB::commit();
             return Response::json(array('success' => true, 'mensaje' => "El registro se ha desagrupado correctamente"));
         } catch (Exception $e) {
-            return Response::json(array('error' => "No se puede desagrupar el registro. " + $e, 'error' => true));
+            return Response::json(array('mensaje' => "No se puede desagrupar el registro. " . $e, 'error' => true));
         }
     }
 
@@ -217,10 +254,11 @@ class GrupoZTrackController extends \BaseController {
             DB::commit();
             return Response::json(array('conductores' => $conductores));
         } catch (Exception $e) {
-            return Response::json(array('error' => "No tiene conductores registrados. Agregue conductores para poder asignar. " + $e, 'error' => true));
+            return Response::json(array('mensaje' => "No tiene conductores registrados. Agregue conductores para poder asignar. " . $e, 'error' => true));
         }
     }
 
+    //Metodo que realiza la asignacion de un conductor a un vehiculo
     public function getAsignacionconductor() {
         $data = Input::all();
         $sql = "select object_id, driver_id 
@@ -258,8 +296,26 @@ class GrupoZTrackController extends \BaseController {
                 return Response::json(array('warning' => "true", 'value' => "El vehiculo ya tiene un conductor asignado. Para continuar debe desasociar el conductor al vehiculo."));
             }
         }
+        //Guardo el registro de auditoria
+        $sql = "select * from gs_user_objects where object_id = " . $data["vehiculo_id"] . ";";
+        $result = DB::select($sql);
+        if (count($result) > 0) {
+            date_default_timezone_set('America/Bogota');
+            $time = time();
+            $fecharegistro = date("Y-m-d H:i:s", $time);
+            $sql = "insert into gs_history_vehiculos(fecharegistro, object_id, user_id, imei, group_id, driver_id) "
+                    . "values('" . $fecharegistro
+                    . "', " . $result[0]->object_id
+                    . ", " . $result[0]->user_id
+                    . ", '" . $result[0]->imei
+                    . "', " . $result[0]->group_id
+                    . ", " . $result[0]->driver_id
+                    . ");";
+        }
+        DB::insert($sql); // Inserta el registro de auditoria en la tabla historial
     }
 
+    //Metodo que obtiene los registros de conductores asignados a los vehiculos
     public function getAsignacionconductores() {
         $user_id = Input::get("user_id");
         $sql = "SELECT gu.object_id, gu.driver_id, gd.driver_name, gd.driver_address, gd.driver_phone, gd.driver_email, b.vin, b.plate_number
@@ -267,16 +323,16 @@ class GrupoZTrackController extends \BaseController {
                JOIN gs_user_object_drivers gd ON gu.driver_id = gd.driver_id               
                JOIN gs_objects b ON gu.imei = b.imei
                WHERE gu.user_id = " . $user_id
+                . " AND gu.driver_id <> 0"
                 . " ORDER BY b.vin asc;"
         ;
-        $asignaciones = DB::select($sql);
         try {
             DB::beginTransaction();
-            DB::update($sql);
+            $asignaciones = DB::select($sql);
             DB::commit();
             return Response::json(array('asignaciones' => $asignaciones));
         } catch (Exception $e) {
-            return Response::json(array('error' => "No se pudo obtener el registro. " + $e, 'error' => true));
+            return Response::json(array('mensaje' => "No se pudo obtener el registro. " . $e, 'error' => true));
         }
     }
 
@@ -285,7 +341,6 @@ class GrupoZTrackController extends \BaseController {
         //Confirmamos que el vehiculo no tenga una asignacion ya hecha anteriormente, si es asi, obligamos al usuario a desasignarla
         $sql = "update gs_user_objects set driver_id = 0 where driver_id = " . $data["driver_id"] . "";
         DB::update($sql);
-
         $sql = "select object_id, driver_id from gs_user_objects where object_id = " . $data["vehiculo_id"];
         $result = DB::select($sql);
         if (isset($result)) {
@@ -305,6 +360,52 @@ class GrupoZTrackController extends \BaseController {
             } else {
                 return Response::json(array('warning' => "true", 'value' => "El vehiculo ya tiene un conductor asignado. Para continuar debe desasociar el conductor al vehiculo."));
             }
+        }
+        //Guardo el registro de auditoria
+        $sql = "select * from gs_user_objects where object_id = " . $data["vehiculo_id"] . ";";
+        $result = DB::select($sql);
+        if (count($result) > 0) {
+            date_default_timezone_set('America/Bogota');
+            $time = time();
+            $fecharegistro = date("Y-m-d H:i:s", $time);
+            $sql = "insert into gs_history_vehiculos(fecharegistro, object_id, user_id, imei, group_id, driver_id) "
+                    . "values('" . $fecharegistro
+                    . "', " . $result[0]->object_id
+                    . ", " . $result[0]->user_id
+                    . ", '" . $result[0]->imei
+                    . "', " . $result[0]->group_id
+                    . ", " . $result[0]->driver_id
+                    . ");";
+        }
+        DB::insert($sql); // Inserta el registro de auditoria en la tabla historial
+    }
+
+    public function getDeleteinformacionconductores() {
+        $data = Input::all();
+        $sql = "select * from gs_user_objects where object_id = " . $data["vehiculo_id"] . ";";
+        $result = DB::select($sql);
+        if (count($result) > 0) {
+            date_default_timezone_set('America/Bogota');
+            $time = time();
+            $fecharegistro = date("Y-m-d H:i:s", $time);
+            $sql = "insert into gs_history_vehiculos(fecharegistro, object_id, user_id, imei, group_id, driver_id) "
+                    . "values('" . $fecharegistro
+                    . "', " . $result[0]->object_id
+                    . ", " . $result[0]->user_id
+                    . ", '" . $result[0]->imei
+                    . "', " . $result[0]->group_id
+                    . ", " . $result[0]->driver_id
+                    . ");";
+        }
+        DB::insert($sql); // Inserta el registro de auditoria en la tabla historial
+        $sql = "update gs_user_objects set driver_id = 0" . " where object_id = " . $data["vehiculo_id"] . ";";
+        try {
+            DB::beginTransaction();
+            DB::update($sql);
+            DB::commit();
+            return Response::json(array('success' => true, 'mensaje' => "El registro se ha desagrupado correctamente"));
+        } catch (Exception $e) {
+            return Response::json(array('mensaje' => "No se puede desagrupar el registro. " . $e, 'error' => true));
         }
     }
 

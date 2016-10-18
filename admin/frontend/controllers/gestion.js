@@ -5,7 +5,7 @@
  */
 var ztrack = angular.module('ztrack');
 ztrack.controller('GestionController', function ($rootScope, $scope, AuthService, SessionService, $state, QueriesService) {   
-  
+   $scope.title = "Gestión de Grupos";
 });
 
 

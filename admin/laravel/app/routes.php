@@ -19,6 +19,11 @@ Route::controller('rutas', 'RutasController');
 //GruposRutas
 Route::controller('gruposrutas', 'GrupoZTrackController');
 
+//Despachos
+Route::controller('despachos', 'DespachosController');
+//Despachador
+Route::controller('despachador', 'DespachadorController');
+
 Route::group(array('before' => 'authenticationFilter'), function() {
 
     /* En esta sección van todas las funciones que requieren que el usuario se encuentre autenticado */
