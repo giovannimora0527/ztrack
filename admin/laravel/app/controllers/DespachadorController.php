@@ -72,7 +72,7 @@ class DespachadorController extends \BaseController {
         $turno = count($result);
         $turno++;
         date_default_timezone_set('America/Bogota');
-        $time = date('H:i:s', time());
+        $time = date('Y-m-d H:i:s', time());
         try {
             $validacion_sql = "select * from gs_despacho_temporal where object_id = " . $data["vehiculo_id"];
             $validate = DB::select($validacion_sql);
@@ -157,7 +157,7 @@ class DespachadorController extends \BaseController {
        
         //Capturo la hora de salida del evento clic despachar
         date_default_timezone_set('America/Bogota');
-        $time = date('H:i:s', time());
+        $time = date('Y-m-d H:i:s', time());
         $coordenadas = $data["coordenadas"];
         $myArray = explode(',', $coordenadas);
 
@@ -185,7 +185,7 @@ class DespachadorController extends \BaseController {
     }
 
     public function getVehiculosdespachados() {
-        $sql = "select d.despacho_id, d.imei, d.hora_salida, d.user_id, d.numero_recorrido vuelta, 
+        $sql = "select d.despacho_id, d.imei, SUBSTRING(d.hora_salida,11,9) hora_salida, d.user_id, d.numero_recorrido vuelta, 
                 gob.name, e.descripcion estado, d.ruta_id, ur.route_name, uo.object_id, ug.group_id, ug.group_name
                 from despachos d
                 join gs_objects gob ON gob.imei = d.imei
@@ -193,7 +193,8 @@ class DespachadorController extends \BaseController {
                 join gs_user_routes ur ON ur.route_id = d.ruta_id
                 join gs_user_objects uo ON d.imei = uo.imei
                 join gs_user_object_groups ug ON ug.group_id = uo.group_id
-                where d.estado_id = 3 ORDER BY d.hora_salida asc              
+                where d.estado_id = 3 and d.hora_salida>(select CURDATE()) AND d.hora_salida <= (SELECT NOW()) 
+                ORDER BY d.hora_salida asc              
                  ;";
         $vehiculosdespachados = DB::select($sql);
         return Response::json(array('vehiculosdespachados' => $vehiculosdespachados));
@@ -202,7 +203,7 @@ class DespachadorController extends \BaseController {
     public function getLlegadavehiculo() {
         $data = Input::all();
         date_default_timezone_set('America/Bogota');
-        $time = date('H:i:s', time());
+        $time = date('Y-m-d H:i:s', time());
         $sql_update = "update despachos set "
                 . "estado_id = 4"
                 . ", hora_llegada = '" . $time
@@ -252,15 +253,17 @@ class DespachadorController extends \BaseController {
     
     public function getHistorialrecorrido(){
        $data = Input::all(); 
-       $sql = "SELECT d.vehiculo_id, d.numero_recorrido, d.hora_salida, "
-               . "d.hora_llegada, d.ruta_id, r.route_name, obd.driver_name, gob.plate_number placa, gob.name vehiculo, "
+       $sql = "SELECT d.vehiculo_id, d.numero_recorrido, SUBSTRING(d.hora_salida,11,9) hora_salida, "
+               . "SUBSTRING(d.hora_llegada,11,9) hora_llegada, d.ruta_id, r.route_name, obd.driver_name, gob.plate_number placa, gob.name vehiculo, "
                . "TIMEDIFF(d.hora_llegada,d.hora_salida) as diferencia "
                . "FROM despachos d "
                . "JOIN gs_user_objects guo ON guo.object_id = d.vehiculo_id "
                . "JOIN gs_objects gob ON gob.imei = guo.imei "
                . "JOIN gs_user_object_drivers obd ON guo.driver_id = obd.driver_id "
                . "JOIN gs_user_routes r ON r.route_id = d.ruta_id "
-               . "WHERE d.vehiculo_id = " .$data["object_id"] . ";"
+               . "WHERE d.vehiculo_id = " .$data["object_id"] . " "
+               . " and d.hora_salida>(select CURDATE()) AND d.hora_salida <= (SELECT NOW())"
+               . ";"
                ;
        $estadistica = DB::select($sql);  
        $cant = count($estadistica);

@@ -56,6 +56,15 @@ class DespachosController extends \BaseController {
        
     }
     
+    public function getPuntoscontrol(){
+       $data = Input::all();
+       $sql = "select uz.zone_id, uz.zone_name from gs_user_zones uz where uz.user_id =  " .$data["user_id"]
+               . " and uz.group_id = " .$data["area_id"]
+               . ";";
+       $puntoscontrol = DB::select($sql);
+       return Response::json(array('puntoscontrol' => $puntoscontrol));
+    }
+    
     
     
     

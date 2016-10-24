@@ -23,6 +23,11 @@ Route::controller('gruposrutas', 'GrupoZTrackController');
 Route::controller('despachos', 'DespachosController');
 //Despachador
 Route::controller('despachador', 'DespachadorController');
+//Reportes
+Route::controller('reportes', 'ReportesController');
+
+//Pruebas
+Route::controller('pruebas', 'PruebasController');
 
 Route::group(array('before' => 'authenticationFilter'), function() {
 

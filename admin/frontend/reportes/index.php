@@ -1,4 +1,5 @@
 <?php
+//Include database connection details
 require_once('../php/connection.php');
 ?>
 <body class="no-skin">
@@ -83,14 +84,14 @@ require_once('../php/connection.php');
                                             </button>
                                         </td>
                                         <td align="center">
-                                            <button class="btn btn-white btn-info btn-bold" id="cancelar" onClick="cancelarTD()">
-                                                <i class="ace-icon fa fa-times blue"></i>
+                                            <button class="btn btn-white btn-warning btn-bold" id="cancelar" onClick="cancelarTD()">
+                                                <i class="ace-icon fa fa-times orange"></i>
                                                 Cancelar
                                             </button>
                                         </td>	
                                         <td align="center">
-                                            <button type="button" class="btn btn-white btn-info btn-bold" id="pdfgenera"  onClick="generaTD()">
-                                                <i class="ace-icon fa fa-cloud-download bigger-120 blue"></i>
+                                            <button type="button" class="btn btn-white btn-default btn-bold" id="pdfgenera"  onClick="generaTD()">
+                                                <i class="ace-icon fa fa-cloud-download bigger-120 red2"></i>
                                                 PDF
                                             </button>
                                         </td>
@@ -132,8 +133,9 @@ require_once('../php/connection.php');
                                 <tbody>
                                     <tr>
                                         <td align="center">
-                                            <select class="form-control" ng-model="selectruta" ng-options="ruta.route_name for ruta in rutas track by ruta.route_name">
-                                                <option value="" selected disabled>Seleccionar una ruta</option>                                                
+                                            <select id="selrut1" class="form-control">
+                                                <option value="" selected disabled>Seleccionar una ruta</option>   
+                                                <option value="{{ruta.route_id}}" ng-model="selectruta" ng-repeat="ruta in rutas">{{ruta.route_name}}</option>  
                                             </select>
                                         </td>									
                                         <td align="center">
@@ -143,14 +145,14 @@ require_once('../php/connection.php');
                                             </button>
                                         </td>
                                         <td align="center">
-                                            <button class="btn btn-white btn-info btn-bold" id="cancelarPC" onClick="cancelarPC()">
-                                                <i class="ace-icon fa fa-times blue"></i>
+                                            <button class="btn btn-white btn-warning btn-bold" id="cancelarPC" onClick="cancelarPC()">
+                                                <i class="ace-icon fa fa-times orange"></i>
                                                 Cancelar
                                             </button>
                                         </td>	
                                         <td align="center">
-                                            <button type="button" class="btn btn-white btn-info btn-bold" id="pdfgeneraPC"  onClick="generaPC()">
-                                                <i class="ace-icon fa fa-cloud-download bigger-120 blue"></i>
+                                            <button type="button" class="btn btn-white btn-default btn-bold" id="pdfgeneraPC"  onClick="generaPC()">
+                                                <i class="ace-icon fa fa-cloud-download bigger-120 red2"></i>
                                                 PDF
                                             </button>
                                         </td>
@@ -232,8 +234,6 @@ require_once('../php/connection.php');
 <a href="" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
     <i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i>
 </a>
-
-
 <script type="text/javascript">
     var pdf = '';
     var pdfpc = '';
@@ -245,6 +245,7 @@ require_once('../php/connection.php');
     function informeTD() {
         var id = document.getElementById("selrut").value; 
         var user_id = localStorage['ztrack.user_id'];
+        
         $.ajax({
             type: "post",
             data: { 
@@ -273,9 +274,15 @@ require_once('../php/connection.php');
     }
 
     function informePC() {
+        var id = document.getElementById("selrut1").value; 
+        var user_id = localStorage['ztrack.user_id'];
         $.ajax({
             type: "post",
             url: "reportes/pctiemporeal.php",
+            data: { 
+                ruta_id : id,
+                user_id : user_id
+            },
             success: function (apc) {
                 $('#tablaPC').html(apc);                
                 pdfpc = apc;

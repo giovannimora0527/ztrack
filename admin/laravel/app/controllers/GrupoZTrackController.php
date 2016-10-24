@@ -15,14 +15,43 @@ class GrupoZTrackController extends \BaseController {
 
     public function getGruposrutasbyid() {
         $user_id = Input::get('user_id');
-        $sql = "select gr.gr_id, a.group_name area_name, c.route_name , b.group_name, gr.fechaini, gr.fechafin, gr.area_id, gr.route_id from gs_gruposrutas gr "
+        $min = Input::get('min');
+        $max = Input::get('max');        
+        $sqlcount = "select count(gr.gr_id) conteo "
+                . "from gs_gruposrutas gr "
                 . "join gs_user_places_groups a ON (a.group_id = gr.area_id) "
                 . "join gs_user_object_groups b ON (b.group_id = gr.group_id) "
                 . "join gs_user_routes c ON (c.route_id = gr.route_id) "
                 . "where gr.user_id = " . $user_id
                 . " order by gr.fechaini;";
+       
+        $count = DB::select($sqlcount);
+        if ($count[0]->conteo > $max) {
+            $more_results = true;
+            $sql = "select gr.gr_id, a.group_name area_name, c.route_name , b.group_name, gr.fechaini, gr.fechafin, gr.area_id, gr.route_id from gs_gruposrutas gr "
+                    . "join gs_user_places_groups a ON (a.group_id = gr.area_id) "
+                    . "join gs_user_object_groups b ON (b.group_id = gr.group_id) "
+                    . "join gs_user_routes c ON (c.route_id = gr.route_id) "
+                    . "where gr.user_id = " . $user_id
+                    . " order by gr.fechaini "
+                    . " LIMIT " . $min . "," . $max . ";";
+        } else {
+            $more_results = false;
+            $sql = "select gr.gr_id, a.group_name area_name, c.route_name , b.group_name, gr.fechaini, gr.fechafin, gr.area_id, gr.route_id from gs_gruposrutas gr "
+                    . "join gs_user_places_groups a ON (a.group_id = gr.area_id) "
+                    . "join gs_user_object_groups b ON (b.group_id = gr.group_id) "
+                    . "join gs_user_routes c ON (c.route_id = gr.route_id) "
+                    . "where gr.user_id = " . $user_id
+                    . " order by gr.fechaini;";
+        }
+
         $groupsroutes = DB::connection('gs')->select($sql);
-        return Response::json(array('gruposrutas' => $groupsroutes));
+        if (count($groupsroutes) > 0) {            
+            return Response::json(array('success' => true, 'gruposrutas' => $groupsroutes, 'min' => intval($min), 'max' => intval($max), 'count' => $count[0]->conteo,
+                        'moreresults' => $more_results));
+        } else {
+            return Response::json(array('success' => false));
+        }       
     }
 
     //Metodo que sirve para guardar el registro de asignacion de un grupo a una ruta en un intervalo de fecha
@@ -34,7 +63,7 @@ class GrupoZTrackController extends \BaseController {
         $fechafin = substr(str_replace('T', ' ', $data['fechafin']), 0, 10);
         $grupo_id = $data['group_id'];
         $ruta_id = $data['route_id'];
-        
+
 //VALIDACION POR SI SE REQUIERE QUE UN GRUPO SOLO VAYA A UNA SOLA RUTA
 //        $sql = "select * from gs_gruposrutas where user_id = " . $user_id . ";"; 
 //        $result = DB::select($sql);        
@@ -47,7 +76,7 @@ class GrupoZTrackController extends \BaseController {
 //        }        
         $sql = "insert into gs_gruposrutas (user_id, area_id, route_id, group_id, fechaini, fechafin) values(" . intval($user_id) . "," . intval($area_id) . ","
                 . intval($ruta_id) . "," . intval($grupo_id) . ",'" . $fechaini . "','" . $fechafin . "');";
-        
+
         try {
             DB::beginTransaction();
             DB::insert($sql);
@@ -55,7 +84,7 @@ class GrupoZTrackController extends \BaseController {
             return Response::json(array('success' => true, 'mensaje' => "El registro se ha guardado correctamente"));
         } catch (Exception $e) {
             return Response::json(array('error' => "No se puede guardar el registro. " . $e, 'error' => true));
-        }        
+        }
     }
 
     public function postEliminar() {
@@ -142,7 +171,7 @@ class GrupoZTrackController extends \BaseController {
     public function getVehiculos() {
         $user_id = Input::get("user_id");
         $sql = "select gu.object_id vehiculo_id, gu.imei, go.name, go.vin from gs_objects as go, gs_user_objects as gu
-               where gu.imei=go.imei and gu.user_id=" . $user_id . " order by go.vin;";
+               where gu.imei=go.imei and gu.user_id=" . $user_id . " order by go.name;";
         try {
             DB::beginTransaction();
             $vehiculos = DB::select($sql);
@@ -181,12 +210,72 @@ class GrupoZTrackController extends \BaseController {
             return Response::json(array('success' => "true", 'value' => "Registro guardado con exito."));
         } catch (Exception $e) {
             return Response::json(array('mensaje' => "No se pudo guardar el registro. " . $e, 'error' => true));
-        }        
+        }
     }
 
-    public function getAsignaciones() {
+    public function postAsignaciones() {
+        //Acomodar filtros
         $data = Input::all();
-        $sql = "SELECT gob.object_id, gob.imei, gu.name, gu.vin, gu.plate_number, a.group_name, gd.driver_phone, gd.driver_address,
+        $min = Input::get("min");
+        $max = Input::get("max");
+        $hasFiltros = Input::get("hasFiltros");        
+        $sqlcount = "SELECT count(gob.object_id) conteo                
+                FROM gs_user_objects gob 
+                JOIN gs_objects gu ON gu.imei = gob.imei
+                JOIN gs_user_object_groups a ON a.group_id =  gob.group_id
+                LEFT JOIN gs_user_object_drivers gd ON gd.driver_id = gob.driver_id 
+                WHERE gob.user_id = " . $data["user_id"]
+                . " AND gob.group_id <> 0 
+                ORDER BY gu.name asc;";
+        $count = DB::select($sqlcount);
+        $filtroconductor = Input::get("conductor");
+        $filtrovehiculo = Input::get("vehiculo");
+        $filtroplaca = Input::get("placa");
+        $filtrogrupo = Input::get("grupo");
+        $cantfiltros = 0;
+        $filtros = "";
+        if($hasFiltros){
+          if($filtroconductor != ""){
+             if($cantfiltros == 0){
+               $filtros .= " gd.driver_name LIKE '%" . $filtroconductor . "%'";               
+             }
+             else{
+               $filtros .= " AND gd.driver_name LIKE '%" . $filtroconductor . "%'";  
+             }
+             $cantfiltros++; 
+          } 
+          if($filtrovehiculo != ""){
+             if($cantfiltros == 0){
+               $filtros .= " gu.name LIKE '%" . $filtrovehiculo . "%'";               
+             }
+             else{
+               $filtros .= " AND gu.name LIKE '%" . $filtrovehiculo . "%'";  
+             }
+             $cantfiltros++; 
+          } 
+          if($filtroplaca != ""){
+             if($cantfiltros == 0){
+               $filtros .= " gu.plate_number LIKE '%" . $filtroplaca . "%'";                
+             }
+             else{
+               $filtros .= " AND gu.plate_number LIKE '%" . $filtroplaca . "%'";  
+             }
+             $cantfiltros++; 
+          } 
+          if($filtrogrupo != ""){
+             if($cantfiltros == 0){
+               $filtros .= " gob.group_id = " . $filtrogrupo;                
+             }
+             else{
+               $filtros .= " AND gob.group_id = " . $filtrogrupo;  
+             }
+             $cantfiltros++; 
+          } 
+        }  
+               
+        if ($count[0]->conteo > $max) {
+            $more_results = true;
+            $sql = "SELECT gob.object_id, gob.imei, gu.name, gu.vin, gu.plate_number, a.group_name, gd.driver_phone, gd.driver_address,
                 CASE 
                  WHEN gd.driver_name IS NULL THEN 'Sin Conductor'
                   ELSE gd.driver_name 
@@ -197,13 +286,45 @@ class GrupoZTrackController extends \BaseController {
                 LEFT JOIN gs_user_object_drivers gd ON gd.driver_id = gob.driver_id 
                 WHERE gob.user_id = " . $data["user_id"]
                 . " AND gob.group_id <> 0 
-                ORDER BY gu.vin asc;";
+                ORDER BY gu.name asc "
+                . " LIMIT " . $min . "," . $max . ";";
+        } else {
+            $more_results = false;
+            $sql = "SELECT gob.object_id, gob.imei, gu.name, gu.vin, gu.plate_number, a.group_name, gd.driver_phone, gd.driver_address,
+                CASE 
+                 WHEN gd.driver_name IS NULL THEN 'Sin Conductor'
+                  ELSE gd.driver_name 
+                 END AS driver_name
+                FROM gs_user_objects gob 
+                JOIN gs_objects gu ON gu.imei = gob.imei
+                JOIN gs_user_object_groups a ON a.group_id =  gob.group_id
+                LEFT JOIN gs_user_object_drivers gd ON gd.driver_id = gob.driver_id 
+                WHERE gob.user_id = " . $data["user_id"]
+                . " AND gob.group_id <> 0 
+                ORDER BY gu.name asc;";
+        }
+        if($hasFiltros){
+           $sql = "SELECT gob.object_id, gob.imei, gu.name, gu.vin, gu.plate_number, a.group_name, gd.driver_phone, gd.driver_address,
+                CASE 
+                 WHEN gd.driver_name IS NULL THEN 'Sin Conductor'
+                  ELSE gd.driver_name 
+                 END AS driver_name
+                FROM gs_user_objects gob 
+                JOIN gs_objects gu ON gu.imei = gob.imei
+                JOIN gs_user_object_groups a ON a.group_id =  gob.group_id
+                LEFT JOIN gs_user_object_drivers gd ON gd.driver_id = gob.driver_id 
+                WHERE gob.user_id = " . $data["user_id"] . " AND"
+                . $filtros
+                . " ORDER BY gu.name asc "
+                . " LIMIT " . $min . "," . $max . ";";
+        }
         try {
             DB::beginTransaction();
             $asignaciones = DB::select($sql);
             DB::commit();
             if (count($asignaciones) > 0) {
-                return Response::json(array('success' => true, 'asignaciones' => $asignaciones));
+                return Response::json(array('success' => true, 'asignaciones' => $asignaciones, 'min' => intval($min), 'max' => $max - 1, 'count' => $count[0]->conteo,
+                            'moreresults' => $more_results));
             } else {
                 return Response::json(array('success' => false));
             }
@@ -231,7 +352,7 @@ class GrupoZTrackController extends \BaseController {
         }
         DB::insert($sql); // Inserta el registro de auditoria en la tabla historial
         $sql = "update gs_user_objects set group_id = 0" . " where object_id = " . $data["vehiculo_id"];
-        
+
         try {
             DB::beginTransaction();
             DB::update($sql);
@@ -258,18 +379,20 @@ class GrupoZTrackController extends \BaseController {
         }
     }
 
-    //Metodo que realiza la asignacion de un conductor a un vehiculo
+    //Metodo que realiza la asignación de un conductor a un vehiculo
     public function getAsignacionconductor() {
         $data = Input::all();
-        $sql = "select object_id, driver_id 
-                from  gs_user_objects 
-                where  user_id = 1;";
+        //El select se hace con la tabla gs_user_object_drivers verificando el estado
+        $sql = "select estado_id from gs_user_object_drivers where driver_id = " . $data["conductor_id"] . ";";
         $result = DB::select($sql);
         if (count($result) > 0) {
-            for ($i = 0; $i < count($result); $i++) {
-                if ($result[$i]->driver_id == $data["conductor_id"]) {
-                    return Response::json(array('warning' => "true", 'value' => "El conductor ya tiene un vehiculo asignado"));
-                }
+            switch ($result["0"]->estado_id) {
+                case 2: {
+                        return Response::json(array('warning' => "true", 'value' => "El conductor se encuentra asignado a un vehículo previamente. Intente de nuevo."));
+                    }
+                case 4: {
+                        return Response::json(array('warning' => "true", 'value' => "El conductor se encuentra en estado suspendido."));
+                    }
             }
         }
         //Confirmamos que el vehiculo no tenga una asignacion ya hecha anteriormente, si es asi, obligamos al usuario a desasignarla
@@ -280,57 +403,92 @@ class GrupoZTrackController extends \BaseController {
                 return Response::json(array('warning' => "true", 'value' => "Debe seleccionar otro vehiculo diferente al que ya esta asignado. Intente de nuevo."));
             }
             if ($result[0]->driver_id == 0) {
-                
-            }
-            if ($result[0]->driver_id == 0) {
                 $sql = "update gs_user_objects set driver_id = " . $data["conductor_id"] . " where object_id = " . $data["vehiculo_id"] . "";
                 try {
                     DB::beginTransaction();
                     DB::update($sql);
                     DB::commit();
+                    //Guardo el registro de auditoria
+                    $sql = "select * from gs_user_objects where object_id = " . $data["vehiculo_id"] . ";";
+                    $result = DB::select($sql);
+                    if (count($result) > 0) {
+                        date_default_timezone_set('America/Bogota');
+                        $time = time();
+                        $fecharegistro = date("Y-m-d H:i:s", $time);
+                        $sql = "insert into gs_history_vehiculos(fecharegistro, object_id, user_id, imei, group_id, driver_id) "
+                                . "values('" . $fecharegistro
+                                . "', " . $result[0]->object_id
+                                . ", " . $result[0]->user_id
+                                . ", '" . $result[0]->imei
+                                . "', " . $result[0]->group_id
+                                . ", " . $result[0]->driver_id
+                                . ");";
+                    }
+                    DB::insert($sql); // Inserta el registro de auditoria en la tabla historial                  
+                    //Se cambia el estado del conductor a asignado cuyo valor estado_id = 2 
+                    $sql = "update gs_user_object_drivers set estado_id = 2 where driver_id = " . $data["conductor_id"] . ";";
+                    DB::beginTransaction();
+                    DB::update($sql);
+                    DB::commit();
                     return Response::json(array('success' => "true", 'value' => "Registro guardado con exito."));
                 } catch (Exception $e) {
-                    return Response::json(array('mensaje' => "No se pudo guardar el registro. " + $e, 'error' => true));
+                    return Response::json(array('mensaje' => "No se pudo guardar el registro. " . $e, 'error' => true));
                 }
             } else {
                 return Response::json(array('warning' => "true", 'value' => "El vehiculo ya tiene un conductor asignado. Para continuar debe desasociar el conductor al vehiculo."));
             }
         }
-        //Guardo el registro de auditoria
-        $sql = "select * from gs_user_objects where object_id = " . $data["vehiculo_id"] . ";";
-        $result = DB::select($sql);
-        if (count($result) > 0) {
-            date_default_timezone_set('America/Bogota');
-            $time = time();
-            $fecharegistro = date("Y-m-d H:i:s", $time);
-            $sql = "insert into gs_history_vehiculos(fecharegistro, object_id, user_id, imei, group_id, driver_id) "
-                    . "values('" . $fecharegistro
-                    . "', " . $result[0]->object_id
-                    . ", " . $result[0]->user_id
-                    . ", '" . $result[0]->imei
-                    . "', " . $result[0]->group_id
-                    . ", " . $result[0]->driver_id
-                    . ");";
-        }
-        DB::insert($sql); // Inserta el registro de auditoria en la tabla historial
     }
 
     //Metodo que obtiene los registros de conductores asignados a los vehiculos
     public function getAsignacionconductores() {
         $user_id = Input::get("user_id");
-        $sql = "SELECT gu.object_id, gu.driver_id, gd.driver_name, gd.driver_address, gd.driver_phone, gd.driver_email, b.vin, b.plate_number
+        $min = Input::get("min");
+        $max = Input::get("max");
+        $more_results = false;
+        $sqlcount = "SELECT count(gu.object_id) conteo
                FROM gs_user_objects gu 
                JOIN gs_user_object_drivers gd ON gu.driver_id = gd.driver_id               
                JOIN gs_objects b ON gu.imei = b.imei
                WHERE gu.user_id = " . $user_id
                 . " AND gu.driver_id <> 0"
-                . " ORDER BY b.vin asc;"
-        ;
+                . " ORDER BY b.name asc"
+                . ";";
+        $count = DB::select($sqlcount);
+        if ($count[0]->conteo > $max) {
+            $more_results = true;
+            $sql = "SELECT gu.object_id, b.name, gu.driver_id, gd.driver_name, gd.driver_address, gd.driver_phone, gd.driver_email, b.vin, b.plate_number
+               FROM gs_user_objects gu 
+               JOIN gs_user_object_drivers gd ON gu.driver_id = gd.driver_id               
+               JOIN gs_objects b ON gu.imei = b.imei
+               WHERE gu.user_id = " . $user_id
+                    . " AND gu.driver_id <> 0"
+                    . " ORDER BY b.name asc"
+                    . " LIMIT " . $min . "," . $max
+                    . ";"
+            ;
+        } else {
+            $sql = "SELECT gu.object_id, b.name, gu.driver_id, gd.driver_name, gd.driver_address, gd.driver_phone, gd.driver_email, b.vin, b.plate_number
+               FROM gs_user_objects gu 
+               JOIN gs_user_object_drivers gd ON gu.driver_id = gd.driver_id               
+               JOIN gs_objects b ON gu.imei = b.imei
+               WHERE gu.user_id = " . $user_id
+                    . " AND gu.driver_id <> 0"
+                    . " ORDER BY b.name asc"
+                    . ";"
+            ;
+        }
+
         try {
             DB::beginTransaction();
             $asignaciones = DB::select($sql);
             DB::commit();
-            return Response::json(array('asignaciones' => $asignaciones));
+            if (count($asignaciones) > 0) {
+                return Response::json(array('success' => true, 'asignaciones' => $asignaciones, 'min' => intval($min), 'max' => $max - 1, 'count' => $count[0]->conteo,
+                            'moreresults' => $more_results));
+            } else {
+                return Response::json(array('success' => false));
+            }
         } catch (Exception $e) {
             return Response::json(array('mensaje' => "No se pudo obtener el registro. " . $e, 'error' => true));
         }
@@ -408,5 +566,7 @@ class GrupoZTrackController extends \BaseController {
             return Response::json(array('mensaje' => "No se puede desagrupar el registro. " . $e, 'error' => true));
         }
     }
+
+  
 
 }

@@ -71,7 +71,6 @@ and open the template in the editor.
                                                 <button class="btn btn-default" ng-click="limpiarCampos()">Limpiar</button>  
                                                 <button class="btn btn-primary" ng-click="cargarVehiculos()">Cargar Vehículos</button> 
                                             </div>
-
                                         </div> 
                                         <br>
                                         <div class="row">                                                        
@@ -144,6 +143,9 @@ and open the template in the editor.
                                                 </div>
                                                 <div class="widget-body">
                                                     <div class="widget-container">
+                                                        <div ng-if="!hayvehiculos">
+                                                            <label><font color="#DF0101">No hay vehiculos en espera. Todos estan en Ruta.</font></label>
+                                                        </div>
                                                         <div class="dd" id="nestable">
                                                             <ol class="dd-list">
                                                                 <li class="dd-item" ng-repeat="it in vehiculos">
@@ -166,6 +168,9 @@ and open the template in the editor.
                                                 </div>
                                                 <div class="widget-body">
                                                     <div class="widget-container">
+                                                        <div ng-if="!hayvehiculosdespachados">
+                                                            <label><font color="#DF0101">No hay vehiculos despachados. Todos están en Paradero.</font></label>
+                                                        </div>
                                                         <div class="dd" id="nestable">
                                                             <ol class="dd-list">
                                                                 <li class="dd-item" ng-repeat="it in vehiculosdespachados">
@@ -201,6 +206,9 @@ and open the template in the editor.
                                                 </div>
                                                 <div class="widget-body">
                                                     <div class="widget-container">
+                                                        <div ng-if="!hayvehiculosdespachados">
+                                                            <label><font color="#DF0101">No hay vehiculos en ruta. Todos están en Paradero.</font></label>
+                                                        </div>
                                                         <div class="dd" id="nestable">
                                                             <ol class="dd-list">
                                                                 <li class="dd-item" ng-repeat="item in vehiculosdespachados">
@@ -224,6 +232,9 @@ and open the template in the editor.
                                                 </div>
                                                 <div class="widget-body">
                                                     <div class="widget-container">
+                                                        <div ng-if="!hayvehiculosllegada">
+                                                            <label><font color="#DF0101">No hay vehiculos en el paradero. Todos están en Recorrido.</font></label>
+                                                        </div>
                                                         <div class="dd" id="nestable1">
                                                             <ol class="dd-list">
                                                                 <li class="dd-item" ng-repeat="lleg in llegadavehiculos">
