@@ -234,4 +234,3 @@ ztrack.config(['$stateProvider', '$urlRouterProvider', '$httpProvider',
 //          $rootScope.url_base = "http://208.11.32.127/ztrack/"; -> url del servidor - Document_Root
             SessionService.refresh();
         });
-
