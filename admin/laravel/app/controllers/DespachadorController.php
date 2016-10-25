@@ -138,7 +138,7 @@ class DespachadorController extends \BaseController {
         $info_vehiculo = DB::select($sql);
         return Response::json(array('vehiculo' => $info_vehiculo[0]));
     }
-
+    //Funcion que permite despachar vehiculos y registrarlos en la tabla despachos
     public function getDespachovehiculo() {
         $data = Input::all();
         $update_sql = "update gs_despacho_temporal set "
@@ -160,9 +160,12 @@ class DespachadorController extends \BaseController {
         $time = date('Y-m-d H:i:s', time());
         $coordenadas = $data["coordenadas"];
         $myArray = explode(',', $coordenadas);
+        
+        $sql_despachador_info = "select * from gs_info_despachador where user_id = " .  $data["user_id"] . ";";
+        $info = DB::select($sql_despachador_info);
 
-        $sql_insert = "insert into despachos(vehiculo_id, latitud, longitud,"
-                . " ruta_id, imei, hora_salida, estado_id, user_id, numero_recorrido) values("
+        $sql_insert = "insert into despachos(vehiculo_id, latitud, longitud, ruta_id, imei, hora_salida, estado_id, user_id, "
+                . "numero_recorrido) values("
                 . $data["object_id"]
                 . ", '" . $myArray[0]
                 . "', '" . $myArray[1]
@@ -170,7 +173,7 @@ class DespachadorController extends \BaseController {
                 . ", '" . $data["imei"]
                 . "', '" . $time
                 . "', 3"
-                . ", " . $data["user_id"]
+                . ", " . $info["id"] // Se cambia el id -> para el nuevo registro se usa el id del despachador 
                 . ", " . $num_vuelta
                 . ");";
         try {
@@ -185,6 +188,9 @@ class DespachadorController extends \BaseController {
     }
 
     public function getVehiculosdespachados() {
+        $data = Input::all();
+        $sql_despachador_info = "select * from gs_info_despachador where user_id = " .  $data["user_id"] . ";";
+        $info = DB::select($sql_despachador_info);        
         $sql = "select d.despacho_id, d.imei, SUBSTRING(d.hora_salida,11,9) hora_salida, d.user_id, d.numero_recorrido vuelta, 
                 gob.name, e.descripcion estado, d.ruta_id, ur.route_name, uo.object_id, ug.group_id, ug.group_name
                 from despachos d
@@ -194,8 +200,8 @@ class DespachadorController extends \BaseController {
                 join gs_user_objects uo ON d.imei = uo.imei
                 join gs_user_object_groups ug ON ug.group_id = uo.group_id
                 where d.estado_id = 3 and d.hora_salida>(select CURDATE()) AND d.hora_salida <= (SELECT NOW()) 
-                ORDER BY d.hora_salida asc              
-                 ;";
+                and d.user_id = " . $info["id"] 
+                . " ORDER BY d.hora_salida asc;";  // Error esta que no estoy mandando el ID del despachador.... Sugerencia: el dministrador debe ver los despachos
         $vehiculosdespachados = DB::select($sql);
         return Response::json(array('vehiculosdespachados' => $vehiculosdespachados));
     }
