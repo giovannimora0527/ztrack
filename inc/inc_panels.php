@@ -55,61 +55,61 @@
 		    </li>-->
 		<? } ?>
 		
-		<li>
-<!--			<a class="help_btn" href="<? echo $gsValues['URL_HELP']; ?>" target="_blank" title="<? echo $la['HELP']; ?>">
+<!--		<li>
+			<a class="help_btn" href="<? echo $gsValues['URL_HELP']; ?>" target="_blank" title="<? echo $la['HELP']; ?>">
 			    <img src="theme/images/help.png" border="0"/>
-			</a>-->
-		</li>
+			</a>
+		</li>-->
 		<li>
 			<a class="settings_btn" href="#" onclick="settingsOpen();" title="<? echo $la['SETTINGS']; ?>">
 			    <img src="theme/images/settings.png" border="0"/>
 			</a>
 		</li>
 		<li>
-<!--			<a class="fit_btn" href="#" onclick="fitObjectsOnMap();" title="<? echo $la['FIT_OBJECTS_ON_MAP']; ?>">
+			<a class="fit_btn" href="#" onclick="fitObjectsOnMap();" title="<? echo $la['FIT_OBJECTS_ON_MAP']; ?>">
 			    <img src="theme/images/zoom_fit.png" border="0"/>
-			</a>-->
+			</a>
 		</li>
-		<li>
-<!--			<a id="top_panel_button_ruler" class="ruler_btn" href="#" onclick="utilsRuler();" title="<? echo $la['RULER']; ?>">
+<!--		<li>
+			<a id="top_panel_button_ruler" class="ruler_btn" href="#" onclick="utilsRuler();" title="<? echo $la['RULER']; ?>">
 			    <img src="theme/images/ruler.png" border="0"/>
-			</a>-->
-		</li>
-		<li>
-<!--			<a id="top_panel_button_area" class="area_btn" href="#" onclick="utilsArea();" title="<? echo $la['MEASURE_AREA']; ?>">
+			</a>
+		</li>-->
+<!--		<li>
+			<a id="top_panel_button_area" class="area_btn" href="#" onclick="utilsArea();" title="<? echo $la['MEASURE_AREA']; ?>">
 			    <img src="theme/images/area.png" border="0"/>
-			</a>-->
-		</li>
+			</a>
+		</li>-->
 		<li>
-<!--			<a class="point_btn" href="#" onclick="$('#dialog_show_point').dialog('open');" title="<? echo $la['SHOW_POINT']; ?>">
+			<a class="point_btn" href="#" onclick="$('#dialog_show_point').dialog('open');" title="<? echo $la['SHOW_POINT']; ?>">
 			    <img src="theme/images/point.png" border="0"/>
-			</a>-->
+			</a>
 		</li>
-		<li>
-<!--			<a class="search_btn" href="#" onclick="$('#dialog_address_search').dialog('open');" title="<? echo $la['ADDRESS_SEARCH']; ?>">
+<!--		<li>
+			<a class="search_btn" href="#" onclick="$('#dialog_address_search').dialog('open');" title="<? echo $la['ADDRESS_SEARCH']; ?>">
 			    <img src="theme/images/search.png" border="0"/>
-			</a>-->
-		</li>
+			</a>
+		</li>-->
 		<li>
-<!--			<a class="report_btn" href="#" onclick="historyReportsOpen();" title="<? echo $la['REPORTS']; ?>">
+			<a class="report_btn" href="#" onclick="historyReportsOpen();" title="<? echo $la['REPORTS']; ?>">
 			    <img src="theme/images/report.png" border="0"/>
-			</a>-->
+			</a>
 		</li>
-		<li>
-<!--			<a class="report_btn" href="#" onclick="rilogbookOpen();" title="<? echo $la['RFID_AND_IBUTTON_LOGBOOK']; ?>">
+<!--		<li>
+			<a class="report_btn" href="#" onclick="rilogbookOpen();" title="<? echo $la['RFID_AND_IBUTTON_LOGBOOK']; ?>">
 			    <img src="theme/images/logbook.png" border="0"/>
-			</a>-->
-		</li>
-		<li>
-<!--			<a class="cmd_btn" href="#" id="top_panel_button_object_control" onclick="cmdOpen();" title="<? echo $la['OBJECT_CONTROL']; ?>">
+			</a>
+		</li>-->
+<!--		<li>
+			<a class="cmd_btn" href="#" id="top_panel_button_object_control" onclick="cmdOpen();" title="<? echo $la['OBJECT_CONTROL']; ?>">
 			    <img src="theme/images/cmd.png" border="0"/>
-			</a>-->
-		</li>
-		<li>
-<!--			<a class="gallery_btn" href="#" onclick="imgOpen();" title="<? echo $la['IMAGE_GALLERY']; ?>">
+			</a>
+		</li>-->
+<!--		<li>
+			<a class="gallery_btn" href="#" onclick="imgOpen();" title="<? echo $la['IMAGE_GALLERY']; ?>">
 			    <img src="theme/images/gallery.png" border="0"/>
-			</a>-->
-		</li>
+			</a>
+		</li>-->
 		<li>
 			<a class="chat_btn" href="#" onclick="chatOpen();" title="<? echo $la['CHAT']; ?>">
 			    <img class="float-left" src="theme/images/chat.png" border="0"/>

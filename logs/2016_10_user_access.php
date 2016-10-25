@@ -23,3 +23,15 @@ header('Content-Type:text/plain');
 [2016-10-08 19:41:54] ::1 [1]admin - User login via http call: successful
 [2016-10-13 20:32:09] ::1 [1]admin - User login via http call: successful
 [2016-10-15 18:26:25] ::1 [1]admin - User login via http call: successful
+[2016-10-19 15:24:59] ::1 [1]admin - User login via http call: successful
+[2016-10-19 21:54:47] ::1 [1]admin - User login via http call: successful
+[2016-10-19 22:28:17] ::1 [1]admin - User login via http call: successful
+[2016-10-19 22:56:57] ::1 [1]admin - User login via http call: successful
+[2016-10-19 22:58:21] ::1 [1]admin - User login via http call: successful
+[2016-10-19 23:10:29] ::1 [1]admin - User login via http call: successful
+[2016-10-20 00:01:58] ::1 [1]admin - User login via http call: successful
+[2016-10-20 15:58:44] ::1 [1]admin - User login via http call: successful
+[2016-10-20 16:09:06] ::1 [1]admin - User login via http call: successful
+[2016-10-20 16:32:51] ::1 [1]admin - User login via http call: successful
+[2016-10-20 22:11:03] ::1 [1]admin - User login via http call: successful
+[2016-10-21 17:03:55] ::1 [1]admin - User login via http call: successful

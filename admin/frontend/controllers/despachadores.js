@@ -5,10 +5,11 @@
  */
 var ztrack = angular.module('ztrack');
 ztrack.controller('DespachadoresController', function ($rootScope, $scope, AuthService, SessionService, $state, QueriesService, toastr) {
-    $scope.title = "Despachos";    
+    $scope.title = "Despachos";
     $scope.activeTab = 1;
     $scope.despachador = {};
     cargarRutas();
+    $scope.hayvehiculos;
 
     $scope.setActiveTab = function (tab) {
         $scope.activeTab = tab;
@@ -169,13 +170,19 @@ ztrack.controller('DespachadoresController', function ($rootScope, $scope, AuthS
         QueriesService.executeRequest('GET', '../laravel/public/despachador/allvehiculos', null, $params)
                 .then(function (result) {
                     $scope.vehiculos = result.vehiculosparadero;
+                    if ($scope.vehiculos.length === 0) {
+                        $scope.hayvehiculos = false;
+                    } else {
+                        $scope.hayvehiculos = true;
+                    }
                 });
     }
 
-    $scope.cargarDatosModal = function (it) {        
+    $scope.cargarDatosModal = function (it) {
         $params = {
             vehiculo_id: it.object_id
         };
+        document.getElementById("btndespachar").disabled = false;
         QueriesService.executeRequest('GET', '../laravel/public/despachador/infovehiculo', null, $params)
                 .then(function (result) {
                     $scope.vehiculo = result.vehiculo;
@@ -196,9 +203,8 @@ ztrack.controller('DespachadoresController', function ($rootScope, $scope, AuthS
                 .then(function (result) {
                     if (result.success) {
                         cargarAllVehiculos();
-                        cargarVehiculosDespachados(); 
-                        document.getElementById("btndespachar").disabled = false;
-                        toastr.success("Vehículo despachado con éxito.","OK");
+                        cargarVehiculosDespachados();
+                        toastr.success("Vehículo despachado con éxito.", "OK");
                     }
                 });
     };
@@ -210,6 +216,11 @@ ztrack.controller('DespachadoresController', function ($rootScope, $scope, AuthS
         QueriesService.executeRequest('GET', '../laravel/public/despachador/vehiculosdespachados', null, $params)
                 .then(function (result) {
                     $scope.vehiculosdespachados = result.vehiculosdespachados;
+                    if ($scope.vehiculosdespachados.length === 0) {
+                        $scope.hayvehiculosdespachados = false;
+                    } else {
+                        $scope.hayvehiculosdespachados = true;
+                    }
                 });
     }
 
@@ -245,6 +256,11 @@ ztrack.controller('DespachadoresController', function ($rootScope, $scope, AuthS
                 .then(function (result) {
                     if (result.success) {
                         $scope.llegadavehiculos = result.llegadavehiculos;
+                        if ($scope.llegadavehiculos.length === 0) {
+                            $scope.hayvehiculosllegada = false;
+                        } else {
+                            $scope.hayvehiculosllegada = true;
+                        }
                     }
                 });
     }

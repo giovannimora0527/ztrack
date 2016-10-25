@@ -3,20 +3,20 @@ ztrack.service('SessionService', function ($http, $state) {
 //    localStorage.clear();
     this.isAuthenticated = false;
     this.isLoged = function () {
-        if (localStorage['ztrack.authenticated'] === 'true') {            
-            return true;
-        }        
-        return false;
+        if (localStorage['ztrack.authenticated'] === undefined) {           
+            return false;
+        } 
+        return true;
     };
 
-    this.create = function (info) {
-        this.isAuthenticated = true;
-        this.user_id = info.user.id;
-        this.token = info.token;
-        this.username = info.user.name;
-        this.userType = info.user.type;
-        this.save();
-    };
+//    this.create = function (info) {
+//        this.isAuthenticated = true;
+//        this.user_id = info.user.id;
+//        this.token = info.token;
+//        this.username = info.user.name;
+//        this.userType = info.user.type;
+//        this.save();
+//    };
 
     this.destroy = function () {
         this.id = null;
@@ -26,7 +26,7 @@ ztrack.service('SessionService', function ($http, $state) {
         delete localStorage['ztrack.username'];
         delete localStorage['ztrack.token'];
         delete localStorage['ztrack.userType'];
-        delete localStorage['ztrack.authenticated'];        
+        delete localStorage['ztrack.authenticated'];      
     };
 
     this.save = function () {
@@ -47,7 +47,7 @@ ztrack.service('SessionService', function ($http, $state) {
             info.user.name = localStorage['ztrack.username'];
             info.token = localStorage['ztrack.token'];
             info.user.type = localStorage['ztrack.userType'];
-            this.create(info);
+//            this.create(info);
             //$state.go('home');
         } else {
             

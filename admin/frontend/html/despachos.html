@@ -15,10 +15,7 @@ and open the template in the editor.
 </div>
 <div class="page-header">
     <h1>
-        Gestión de Despachos
-        <small>
-            <i class="ace-icon fa fa-angle-double-right"></i>
-        </small>
+        Gestión de Despachos        
     </h1>
 </div><!-- /.page-header -->
 <div class="row">
@@ -159,6 +156,18 @@ and open the template in the editor.
                                             </div>
                                         </td> 
                                     </tr>
+                                    <tr ng-if="paginationtab1">                                    
+                                        <td colspan="6" align="center">
+                                            <div class="btn-group">
+                                                <button id="btnant" class="btn btn-white btn-sm btn-info btn-bold" title="Anterior" ng-click="paginationtab1ant()">
+                                                    <i class="ace-icon fa fa-arrow-left"></i>
+                                                </button>                                            
+                                                <button id="btnsig" class="btn btn-white btn-sm btn-warning btn-bold" title="Siguiente" ng-click="paginationtab1sig()">
+                                                    <i class="ace-icon fa fa-arrow-right bigger-120 orange"></i>
+                                                </button>  
+                                            </div>
+                                        </td>                                
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -183,7 +192,7 @@ and open the template in the editor.
                                     <td>
                                         <select class="form-control" ng-model="asignacion.vehiculo" ng-change="onChangeVehiculos = true">                                           
                                             <option value="" selected disabled>Seleccionar</option>
-                                            <option ng-repeat="vehiculo in vehiculos" value="{{vehiculo.vehiculo_id}}" >{{vehiculo.vin}}</option>
+                                            <option ng-repeat="vehiculo in vehiculos" value="{{vehiculo.vehiculo_id}}" >{{vehiculo.name}}</option>
                                         </select>
                                     </td>
                                     <td>
@@ -213,10 +222,35 @@ and open the template in the editor.
                                     <td colspan="5" align="center">
                                         <font color="red"><b>No hay resultados disponibles</b></font>
                                     </td>                                
-                                </tr>                                
+                                </tr> 
+                                <tr> 
+                                    <td>
+                                        <input id="numvehiculo" type="text" ng-model="filtros.vehiculo" type="text" class="form-control">
+                                    </td>
+                                    <td>
+                                        <input id="conductor" type="text" ng-model="filtros.conductor" type="text" class="form-control" >
+                                    </td>                                    
+                                    <td>
+                                        <input id="placa" type="text" ng-model="filtros.placa" type="text" class="form-control" >
+                                    </td>
+                                    <td>
+                                        <select class="form-control" ng-model="filtros.grupo">                                        
+                                            <option value="" selected disabled>Seleccionar</option>
+                                            <option ng-repeat="grupo in grupos" value="{{grupo.group_id}}" ng-selected>{{grupo.group_name}}</option>
+                                        </select>
+                                    </td> 
+                                    <td  align="center">
+                                        <button class="btn btn-white btn-sm btn-warning btn-bold" title="Filtrar" ng-click="filtrar()">
+                                            <i class="ace-icon fa fa-search orange"></i>
+                                        </button> 
+                                        <button class="btn btn-white btn-sm btn-success btn-bold" title="Limpiar Filtro" ng-click="limpiarFiltros()">
+                                            <i class="ace-icon fa fa-eraser blue"></i>
+                                        </button>
+                                    </td>
+                                </tr>
                                 <tr ng-if="resultsfound1" ng-repeat="as in asignaciones">
                                     <td>
-                                        {{as.vin}}  
+                                        {{as.name}}  
                                     </td>
                                     <td>
                                         {{ as.driver_name}} 
@@ -237,6 +271,18 @@ and open the template in the editor.
                                             </button>  
                                         </div> 
                                     </td>
+                                </tr>
+                                <tr ng-if="paginationtab2">                                    
+                                    <td colspan="6" align="center">
+                                        <div class="btn-group">
+                                            <button id="btnant" class="btn btn-white btn-sm btn-info btn-bold" title="Anterior" ng-click="paginationtab2ant()">
+                                                <i class="ace-icon fa fa-arrow-left"></i>
+                                            </button>                                            
+                                            <button id="btnsig" class="btn btn-white btn-sm btn-warning btn-bold" title="Siguiente" ng-click="paginationtab2sig()">
+                                                <i class="ace-icon fa fa-arrow-right bigger-120 orange"></i>
+                                            </button>  
+                                        </div>
+                                    </td>                                
                                 </tr>
                             </tbody>
                         </table>
@@ -279,9 +325,9 @@ and open the template in the editor.
                                 </tbody>
                             </table>
                         </div>
-                        <div class="row">
+                        <div class="row">                            
                             <table class="table table-bordered table-hover table-responsive table-striped">
-                                <thead>
+                                <thead>                                    
                                     <tr> 
                                         <th>Vehículo</th>
                                         <th>Placa</th>
@@ -296,10 +342,10 @@ and open the template in the editor.
                                         <td colspan="6" align="center">
                                             <font color="red"><b>No hay resultados disponibles</b></font>
                                         </td>                                
-                                    </tr>
+                                    </tr>                                    
                                     <tr ng-if="resultsfound3" ng-repeat="c in asignacionconductores">
                                         <td>
-                                            {{c.vin}} 
+                                            {{c.name}} 
                                         </td>  
                                         <td>
                                             {{c.plate_number}} 
@@ -323,6 +369,19 @@ and open the template in the editor.
                                                 </button>  
                                             </div>
                                         </td> 
+                                    </tr> 
+                                    <!-- Fila para la paginacion-->                                    
+                                    <tr ng-if="paginationtab3">
+                                        <td colspan="6" align="center">
+                                            <div class="btn-group">
+                                                <button id="btnant" class="btn btn-white btn-sm btn-info btn-bold" title="Anterior" ng-click="paginationtab3ant()">
+                                                    <i class="ace-icon fa fa-arrow-left"></i>
+                                                </button> 
+                                                <button id="btnsig" class="btn btn-white btn-sm btn-warning btn-bold" title="Siguiente" ng-click="paginationtab3sig()">
+                                                    <i class="ace-icon fa fa-arrow-right bigger-120 orange"></i>
+                                                </button>  
+                                            </div>
+                                        </td>                                
                                     </tr>
                                 </tbody>
                             </table>
@@ -336,7 +395,7 @@ and open the template in the editor.
                             <ul class="nav nav-tabs">                                
                                 <li ng-class="{'active' : activeTab2 === 5}"><a href="" ng-click="setActiveTab2(5)">
                                         <i class="blue fa fa-clock-o bigger-120"></i>
-                                        Asignar Puntos de Control a ruta
+                                        Asignar Puntos de Control a Ruta
                                     </a>
                                 </li> 
                                 <li ng-class="{'active' : activeTab2 === 6}"><a href="" ng-click="setActiveTab2(6)">
@@ -345,15 +404,75 @@ and open the template in the editor.
                                     </a>
                                 </li>                                
                             </ul>
-                            <div class="tab-content">
-                                <!--               Panel de asignacion de despachador a ruta-->                               
-                                <!--                Panel de asignacion de puntos de control a rutas-->
-                                <div ng-class="{'tab-pane active': activeTab2 === 6, 'tab-pane' : activeTab2 !== 6}">
-                                    Panel de asignacion de puntos de control a rutas
-                                </div> 
+                            <div class="tab-content">                                                             
+                                <!-- Panel de asignacion de puntos de control a rutas-->
+                                <div ng-class="{'tab-pane active': activeTab2 === 5, 'tab-pane' : activeTab2 !== 5}">                                    
+                                    <div class="container-fluid">
+                                        <div class="row">
+                                            <label>Panel de asignación de puntos de control a rutas</label><br>                                            
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-xs-12 col-sm-6">
+                                                <label class="control-label border blue">Seleccione el área de asignación</label>
+                                            </div>  
+                                            <div class="col-xs-12 col-sm-6">
+                                                <label class="control-label border blue">Seleccione la ruta.</label>
+                                            </div>                                             
+                                        </div>
+                                        <div class="row"> 
+                                            <div class="col-xs-12 col-sm-6">
+                                                <select class="form-control" ng-model="areaselect.id" ng-change="onChangeareaPC()">                                        
+                                                    <option value="" selected disabled>Seleccionar</option>
+                                                    <option ng-repeat="ar in areas" value="{{ar.id}}">{{ar.name}}</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-xs-12 col-sm-6">
+                                                <select class="form-control" ng-model="rutaselect" ng-options="ruta.route_name for ruta in rutas track by ruta.route_name">                                        
+                                                    <option value="" selected disabled>Seleccionar</option>
+                                                </select>
+                                            </div>
+                                        </div><br></div><br>
+                                    <div class="row">
+                                        <div class="row col-xs-12 col-sm-12" align="right">
+                                            <div class="col-xs-12">
+                                                <button class="btn btn-default btn-sm" ng-click="limpiarCampos()">
+                                                    <i class="ace-icon fa fa-eraser bigger-110"></i>Limpiar</button>                                                  
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 col-sm-12" align="center">
+                                            <div class="widget-box">
+                                                <div class="widget-header">
+                                                    <h4>Selección de Puntos de Control </h4>
+                                                </div> 
+                                                <div class="widget-body">
+                                                    <div class="col-xs-12 col-sm-6" align="center">
+                                                        <div class="input-group">
+                                                            <select class="form-control" ng-model="ptocontrolselect" ng-options="pto.zone_name for pto in puntoscontrol track by pto.zone_name">
+                                                                <option value="" disabled selected>Seleccione una opción</option>
+                                                            </select>
+                                                            <span class="input-group-btn">
+                                                                <button class="btn btn-primary" type="button" ng-click="adicionarPtoControlRuta()">
+                                                                    <i class="ace-icon fa fa-arrow-right bigger-110"></i>                                                       
+                                                                </button>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-6" align="center">
+                                                        <div class="input-group">
+
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>                                                                    
+                                </div>                                
                                 <!--                Panel de asignacion de tiempos-->
-                                <div ng-class="{'tab-pane active': activeTab2 === 7, 'tab-pane' : activeTab2 !== 7}">
-                                    Panel de asignacion de tiempos a puntos de control
+                                <div ng-class="{'tab-pane active': activeTab2 === 6, 'tab-pane' : activeTab2 !== 6}">
+                                    <div class="container-fluid">
+                                        <label>Panel de asignación de tiempos a puntos de control</label>
+                                    </div>
                                 </div>                                
 
                             </div>

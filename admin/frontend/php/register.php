@@ -71,7 +71,8 @@ if ($isregister == false) {
     $pass_encrypted = md5($pass1);
     $pass_encrypted2 = md5($pass2);
     $emailcorporativo = "ztrackregistro@zmodocolombia.com";
-    $qry = "INSERT INTO gs_users (name, username, password, email, active, dt_reg, privileges, profile_id) VALUES('$empresa','$username', '$pass_encrypted', '$email','$active','$date_red','$privilegies', 1);";
+    $qry = "INSERT INTO gs_users (name, username, password, email, active, dt_reg, privileges, obj_edit, profile_id) VALUES("
+            . "'$empresa','$username', '$pass_encrypted', '$email','$active','$date_red','$privilegies','true', 1);";
     
     $result = mysql_query($qry);
     $json = array();

@@ -5,8 +5,8 @@
  */
 var ztrack = angular.module('ztrack');
 ztrack.controller('DespachosController', function ($rootScope, $scope, $filter, AuthService, SessionService, $state, QueriesService, toastr) {
-    
-    $scope.title="Despachos";
+
+    $scope.title = "Despachos";
     cargarAreas();
     cargarGruposRutas();
     $scope.areaselect = {};
@@ -29,32 +29,54 @@ ztrack.controller('DespachosController', function ($rootScope, $scope, $filter, 
     $scope.selectvehiculo = false;
     $scope.asign = {};
     $scope.areadespachos = {};
-    $scope.despachadores = {};
-
+    $scope.despachadores = {};   
+    var min = 0;
+    var max = 10;
+    $scope.maxcount = 0;
+    $scope.paginationtab2 = false;
+    $scope.pag = 1;
+    $scope.firstcharge = false;
+    $scope.hasFiltrosTab2 = false;
+    $scope.hasFiltrosTab2 = false;
+    $scope.filtros = {
+        placa : "",
+        vehiculo: "",
+        conductor : ""
+    };
 
     $scope.setActiveTab = function (tab) {
         $scope.activeTab = tab;
         if (tab === 1) {
             cargarAreas();
             cargarGrupos();
+            min = 0;
+            max = 10;
+            $scope.maxcount = 0;
             cargarGruposRutas();
         }
         if (tab === 2) {
+            cargarGrupos();
             cargarVehiculos();
+            min = 0;
+            max = 10;
+            $scope.maxcount = 0;
             cargarAsignaciones();
         }
         if (tab === 3) {
             cargarConductores();
             cargarVehiculos();
+            min = 0;
+            max = 10;
+            $scope.maxcount = 0;
             cargarAsignacionesConductores();
         }
-        if(tab === 4){
-//           cargarDespachadores(); 
+        if (tab === 4) {
+            cargarAreas();
         }
     };
     $scope.setActiveTab2 = function (tab) {
         $scope.activeTab2 = tab;
-        
+
     };
     $scope.despacho = {};
     $scope.clear = function () {
@@ -123,17 +145,32 @@ ztrack.controller('DespachosController', function ($rootScope, $scope, $filter, 
     ;
     function cargarGruposRutas() {
         $params = {
-            user_id: localStorage['ztrack.user_id']
+            user_id: localStorage['ztrack.user_id'],
+            min: 0,
+            max: 10
         };
+        if ($scope.firstcharge) {
+            $params = {
+                user_id: localStorage['ztrack.user_id'],
+                min: min,
+                max: max
+            };
+        }
         QueriesService.executeRequest('GET', '../laravel/public/gruposrutas/gruposrutasbyid', null, $params)
                 .then(function (result) {
                     $scope.gruposrutas = result.gruposrutas;
-                    if (result.gruposrutas.length > 0) {
+                    if (result.success) {
+                        $scope.gruposrutas = result.gruposrutas;
                         $scope.resultsfound = true;
+                        $scope.paginationtab1 = result.moreresults;
+                        $scope.minlabel = min;
+                        $scope.maxlabel = max;
+                        $scope.maxcount = parseInt(result.count);
                     } else {
                         $scope.resultsfound = false;
+                        $scope.paginationtab1 = false;
                     }
-
+                    $scope.firstcharge = true;
                 });
     }
     ;
@@ -181,7 +218,7 @@ ztrack.controller('DespachosController', function ($rootScope, $scope, $filter, 
         $params = {
             user_id: localStorage['ztrack.user_id'],
             area_id: $scope.areaselect.id
-        };        
+        };
         QueriesService.executeRequest('GET', '../laravel/public/rutas/rutasbyid', null, $params)
                 .then(function (result) {
                     $scope.rutas = {};
@@ -313,17 +350,53 @@ ztrack.controller('DespachosController', function ($rootScope, $scope, $filter, 
                     }
                 });
     };
+
+    $scope.filtrar = function() {        
+        if(($scope.filtros.placa === "") && ($scope.filtros.vehiculo === "") && ($scope.filtros.conductor === "")){
+          toastr.warning("No se puede realizar la búsqueda. No hay filtros asociados. Intente de Nuevo","Advertencia");
+        } 
+        else{
+          $scope.hasFiltrosTab2=true;            
+        }
+        cargarAsignaciones(); 
+    };
+        
+
     function cargarAsignaciones() {
-        $params = {
-            user_id: localStorage['ztrack.user_id']
-        };
-        QueriesService.executeRequest('GET', '../laravel/public/gruposrutas/asignaciones', null, $params)
+        if ($scope.hasFiltrosTab2) {
+            $params = {
+                user_id: localStorage['ztrack.user_id'],
+                min: min,
+                max: max,
+                filtros: $scope.filtros,
+                hasFiltros: true
+            };
+        }
+        else{
+            $params = {
+                user_id: localStorage['ztrack.user_id'],
+                min: min,
+                max: max               
+            };  
+        }
+        console.log($params);
+        QueriesService.executeRequest('POST', '../laravel/public/gruposrutas/asignaciones', $scope.filtros, $params)
                 .then(function (result) {
                     if (result.success) {
                         $scope.asignaciones = result.asignaciones;
                         $scope.resultsfound1 = true;
+                        $scope.paginationtab2 = result.moreresults;
+                        $scope.minlabel = min;
+                        $scope.maxlabel = max;
+                        $scope.maxcount = parseInt(result.count);
+                        if ($scope.maxcount > max) {
+                            $scope.paginationtab2 = true;
+                        } else {
+                            $scope.paginationtab2 = false;
+                        }
                     } else {
                         $scope.resultsfound1 = false;
+                        $scope.paginationtab2 = false;
                     }
 
                 });
@@ -400,15 +473,57 @@ ztrack.controller('DespachosController', function ($rootScope, $scope, $filter, 
     };
     function cargarAsignacionesConductores() {
         $params = {
-            user_id: localStorage['ztrack.user_id']
+            user_id: localStorage['ztrack.user_id'],
+            min: min,
+            max: max
         };
         QueriesService.executeRequest('GET', '../laravel/public/gruposrutas/asignacionconductores', null, $params)
                 .then(function (result) {
-                    $scope.asignacionconductores = result.asignaciones;
-                    $scope.resultsfound3 = true;
+                    if (result.success) {
+                        $scope.asignacionconductores = result.asignaciones;
+                        $scope.resultsfound3 = true;
+                        $scope.paginationtab3 = result.moreresults;
+                        $scope.minlabel = min;
+                        $scope.maxlabel = max;
+                        $scope.maxcount = parseInt(result.count);
+                        if ($scope.maxcount > max) {
+                            $scope.paginationtab3 = true;
+                        } else {
+                            $scope.paginationtab3 = false;
+                        }
+                    } else {
+                        $scope.resultsfound3 = false;
+                        $scope.paginationtab3 = false;
+                    }
+
                 });
     }
 
+    $scope.paginationtab3ant = function () {
+        if ($scope.minlabel === 0) {
+            toastr.warning("Ya se encuentra en la primera página de los resultados", "Advertencia");
+            return;
+        }
+        if ((min - 10) <= 0) {
+            min = 0;
+        } else {
+            min = ((min) - 10);
+        }
+        max = (max - 10);
+        $scope.pag = $scope.pag - 1;
+        cargarAsignacionesConductores();
+    };
+
+    $scope.paginationtab3sig = function () {
+        if ($scope.maxlabel > parseInt($scope.maxcount)) {
+            toastr.warning("Ya se encuentra en la última página de los resultados", "Advertencia");
+            return;
+        }
+        min = max;
+        max = (max) + 10;
+        $scope.pag = $scope.pag + 1;
+        cargarAsignacionesConductores();
+    };
 
     $scope.actualizarinformacion = function (id) {
         if (!$scope.selectvehiculo) {
@@ -430,7 +545,6 @@ ztrack.controller('DespachosController', function ($rootScope, $scope, $filter, 
                 });
     };
     $scope.onconfirmdeleteasignacion = function (vh_id) {
-        console.log(vh_id);
         var rta = confirm("¿Desea eliminar el registro?");
         if (rta) {
             $scope.eliminarinformacionconductor(vh_id);
@@ -478,9 +592,69 @@ ztrack.controller('DespachosController', function ($rootScope, $scope, $filter, 
     };
 
 
+    $scope.onChangeareaPC = function () {
+        $params = {
+            user_id: localStorage['ztrack.user_id'],
+            area_id: $scope.areaselect.id
+        };
+        QueriesService.executeRequest('GET', '../laravel/public/despachos/puntoscontrol', null, $params)
+                .then(function (result) {
+                    $scope.puntoscontrol = result.puntoscontrol;
+                    cargarRutas();
+                });
+    };
 
+    $scope.paginationtab2ant = function () {
+        if ($scope.minlabel === 0) {
+            toastr.warning("Ya se encuentra en la primera página de los resultados", "Advertencia");
+            return;
+        }
+        if ((min - 10) <= 0) {
+            min = 0;
+        } else {
+            min = ((min) - 10);
+        }
+        max = (max - 10);
+        $scope.pag = $scope.pag - 1;
+        cargarAsignaciones();
+    };
 
+    $scope.paginationtab2sig = function () {
+        if ($scope.maxlabel > parseInt($scope.maxcount)) {
+            toastr.warning("Ya se encuentra en la última página de los resultados", "Advertencia");
+            return;
+        }
+        min = max;
+        max = (max) + 10;
+        $scope.pag = $scope.pag + 1;
+        cargarAsignaciones();
+    };
 
+    $scope.paginationtab1ant = function () {
+        if ($scope.minlabel === 0) {
+            toastr.warning("Ya se encuentra en la primera página de los resultados", "Advertencia");
+            return;
+        }
+        if ((min - 10) <= 0) {
+            min = 0;
+        } else {
+            min = ((min) - 10);
+        }
+        max = (max - 10);
+        $scope.pag = $scope.pag - 1;
+        cargarGruposRutas()();
+    };
+
+    $scope.paginationtab1sig = function () {
+        if ($scope.maxlabel > parseInt($scope.maxcount)) {
+            toastr.warning("Ya se encuentra en la última página de los resultados", "Advertencia");
+            return;
+        }
+        min = max;
+        max = (max) + 10;
+        $scope.pag = $scope.pag + 1;
+        cargarGruposRutas();
+    };
 
 
 });

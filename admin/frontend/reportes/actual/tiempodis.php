@@ -1,36 +1,51 @@
 <?php
-require_once('../php/connection.php');
-?>
+//Include database connection details
+require_once('../../php/connection.php');
 
-<table class="table table-bordered table-hover table-responsive table-striped">
-    <thead>
-        <tr>                                
-            <th>Hora Salida</th>
-            <th>Vehículo</th>
-            <th>Tiempo en Ruta</th> 
-            <th>Posición Actual</th>
-            <th>Tiempo (HH:mm:ss)</th>
-            <th>Distancia</th>
-        </tr>
-    </thead>
-    <tbody>
-        <?php
-        // Consulta del Despacho
-        //$sql='SELECT hora_salida, imei, latitud, longitud FROM despachos WHERE user_id=1 AND route_id=_GET['selrut'] ORDER by despacho_id'; //<JBT> Colocar el estado_id que indica despachado
-        $sql = "SELECT hora_salida, imei, latitud, longitud FROM despachos WHERE user_id= " . $_POST["user_id"]
-                . " AND ruta_id = " . $_POST["ruta_id"]
-                . " ORDER by despacho_id; ";
+
+/*Consulta del Despacho que me permite saber tiempo y distancia a determinada hora del día
+ * de los vehiculas que estan en ruta.
+ $sql = "SELECT d.hora_salida, d.imei, d.latitud, d.longitud, gur.route_name 
+            FROM despachos d, gs_user_routes AS gur WHERE gur.route_id=d.ruta_id"
+            . " AND d.user_id= " . $_POST["user_id"]
+            . " AND d.ruta_id = " . $_POST["ruta_id"]
+            . " AND d.estado_id=3"
+            . " ORDER by d.despacho_id; ";
+ */
+    $sql = "SELECT d.hora_salida, d.imei, d.latitud, d.longitud, gur.route_name 
+            FROM despachos d, gs_user_routes AS gur WHERE gur.route_id=d.ruta_id 
+            AND d.hora_salida BETWEEN (SELECT DATE_FORMAT(NOW(), '%Y-%m-%d 00:00:00')) AND (SELECT NOW())"
+            . " AND d.user_id= " . $_POST["user_id"]
+            . " AND d.ruta_id = " . $_POST["ruta_id"]
+            . " AND d.estado_id=3"
+            . " ORDER by d.despacho_id; ";
         $stm = mysql_query($sql);        
         $dif = NULL;
         $dift = NULL;
         $res = NULL;
-        $arreglo = array();
+        $nomrut = NULL;
         //$res=NULL;
         
         // Mensaje por si no se encuentra datos
         if (mysql_num_rows($stm) > 0) {
+            
+                echo"<table class='table table-bordered table-hover table-responsive table-striped'>";
+                    echo"<thead>";
+                        echo"<tr>";
+                            echo"<th>Hora Salida</th>";
+                            echo"<th>Vehículo</th>";
+                            echo"<th>Tiempo en Ruta</th>";
+                            echo"<th>Posición Actual</th>";
+                            echo"<th>Tiempo (HH:mm:ss)</th>";
+                            echo"<th>Distancia</th>";
+                        echo"</tr>";
+                    echo"</thead>";
+                    echo"<tbody>";
+             
+            
             while ($fila = mysql_fetch_array($stm)) {
             // Consulta de la tabla que se actualiza
+                $nomrut=$fila[4];
             $sql = 'SELECT dt_tracker, lat, lng, name FROM gs_objects WHERE imei=' . $fila[1];
             $stm1 = mysql_query($sql);
             // Mensaje por si no se encuentra datos
@@ -93,10 +108,16 @@ require_once('../php/connection.php');
             //$sqlin='INSERT INTO temp_rptediferencia VALUES ('$fila[0]','$fila[1]','$dif','$rs[1]','$rs[2]','$res','$dis')';
         }
         echo "</tr>";
+        echo "</tbody>";
+        echo "</table>";
+        echo "</br>"; 
+        echo "Información referente a la Ruta: "; echo "<label>$nomrut</label>";
         }
         
-        ?>	
-    </tbody>
-</table>
-<!--</body>
-</html>-->
+        else {
+                echo"</br>";
+                echo"No se ha encontrado información en su solicitud.";
+                        
+                }
+
+?>	
