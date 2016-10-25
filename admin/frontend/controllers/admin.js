@@ -235,5 +235,3 @@ ztrack.config(['$stateProvider', '$urlRouterProvider', '$httpProvider',
             SessionService.refresh();
         });
 
-
-  
