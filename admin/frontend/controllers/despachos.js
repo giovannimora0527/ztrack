@@ -29,7 +29,7 @@ ztrack.controller('DespachosController', function ($rootScope, $scope, $filter, 
     $scope.selectvehiculo = false;
     $scope.asign = {};
     $scope.areadespachos = {};
-    $scope.despachadores = {};   
+    $scope.despachadores = {};
     var min = 0;
     var max = 10;
     $scope.maxcount = 0;
@@ -39,10 +39,11 @@ ztrack.controller('DespachosController', function ($rootScope, $scope, $filter, 
     $scope.hasFiltrosTab2 = false;
     $scope.hasFiltrosTab2 = false;
     $scope.filtros = {
-        placa : "",
+        placa: "",
         vehiculo: "",
-        conductor : ""
+        conductor: ""
     };
+    $scope.puntosdecontrol = {};
 
     $scope.setActiveTab = function (tab) {
         $scope.activeTab = tab;
@@ -221,7 +222,7 @@ ztrack.controller('DespachosController', function ($rootScope, $scope, $filter, 
         };
         QueriesService.executeRequest('GET', '../laravel/public/rutas/rutasbyid', null, $params)
                 .then(function (result) {
-                    $scope.rutas = {};
+                    $scope.rutas = {};                   
                     $scope.rutas = result.rutas;
                 });
     }
@@ -351,16 +352,15 @@ ztrack.controller('DespachosController', function ($rootScope, $scope, $filter, 
                 });
     };
 
-    $scope.filtrar = function() {        
-        if(($scope.filtros.placa === "") && ($scope.filtros.vehiculo === "") && ($scope.filtros.conductor === "")){
-          toastr.warning("No se puede realizar la búsqueda. No hay filtros asociados. Intente de Nuevo","Advertencia");
-        } 
-        else{
-          $scope.hasFiltrosTab2=true;            
+    $scope.filtrar = function () {
+        if (($scope.filtros.placa === "") && ($scope.filtros.vehiculo === "") && ($scope.filtros.conductor === "")) {
+            toastr.warning("No se puede realizar la búsqueda. No hay filtros asociados. Intente de Nuevo", "Advertencia");
+        } else {
+            $scope.hasFiltrosTab2 = true;
         }
-        cargarAsignaciones(); 
+        cargarAsignaciones();
     };
-        
+
 
     function cargarAsignaciones() {
         if ($scope.hasFiltrosTab2) {
@@ -371,15 +371,13 @@ ztrack.controller('DespachosController', function ($rootScope, $scope, $filter, 
                 filtros: $scope.filtros,
                 hasFiltros: true
             };
-        }
-        else{
+        } else {
             $params = {
                 user_id: localStorage['ztrack.user_id'],
                 min: min,
-                max: max               
-            };  
+                max: max
+            };
         }
-        console.log($params);
         QueriesService.executeRequest('POST', '../laravel/public/gruposrutas/asignaciones', $scope.filtros, $params)
                 .then(function (result) {
                     if (result.success) {
@@ -471,6 +469,7 @@ ztrack.controller('DespachosController', function ($rootScope, $scope, $filter, 
                     cargarAsignacionesConductores();
                 });
     };
+    
     function cargarAsignacionesConductores() {
         $params = {
             user_id: localStorage['ztrack.user_id'],
@@ -579,31 +578,6 @@ ztrack.controller('DespachosController', function ($rootScope, $scope, $filter, 
                 });
     };
 
-    $scope.onChangeSelectedGrupos = function (gru_id) {
-        $params = {
-            user_id: localStorage['ztrack.user_id'],
-            group_id: gru_id
-        };
-        QueriesService.executeRequest('GET', '../laravel/public/despachos/vehiculoxgroupid', null, $params)
-                .then(function (result) {
-                    $scope.vehiculosdespachos = result.vehiculos;
-                });
-
-    };
-
-
-    $scope.onChangeareaPC = function () {
-        $params = {
-            user_id: localStorage['ztrack.user_id'],
-            area_id: $scope.areaselect.id
-        };
-        QueriesService.executeRequest('GET', '../laravel/public/despachos/puntoscontrol', null, $params)
-                .then(function (result) {
-                    $scope.puntoscontrol = result.puntoscontrol;
-                    cargarRutas();
-                });
-    };
-
     $scope.paginationtab2ant = function () {
         if ($scope.minlabel === 0) {
             toastr.warning("Ya se encuentra en la primera página de los resultados", "Advertencia");
@@ -656,6 +630,91 @@ ztrack.controller('DespachosController', function ($rootScope, $scope, $filter, 
         cargarGruposRutas();
     };
 
+
+    $scope.onChangeSelectedGrupos = function (gru_id) {
+        $params = {
+            user_id: localStorage['ztrack.user_id'],
+            group_id: gru_id
+        };
+        QueriesService.executeRequest('GET', '../laravel/public/despachos/vehiculoxgroupid', null, $params)
+                .then(function (result) {
+                    $scope.vehiculosdespachos = result.vehiculos;
+                });
+
+    };
+
+    $scope.cargarRutas = function () {
+        limpiarCamposDespachos();
+        cargarRutas();        
+    };
+
+    $scope.onChangeareaPC = function () {        
+        $params = {
+            user_id: localStorage['ztrack.user_id'],
+            area_id: $scope.areaselect.id
+        };
+        QueriesService.executeRequest('GET', '../laravel/public/despachos/puntoscontrol', null, $params)
+                .then(function (result) {
+                    $scope.puntoscontrol = result.puntoscontrol;
+                    cargarPuntosControlRuta();
+                    toastr.success("Puntos de Control cargados con éxito", "OK");
+                });
+    };
+
+    $scope.limpiarCamposDespachos = function () {
+        $scope.areaselect = {};
+        $scope.rutaselect = {};
+        limpiarCamposDespachos();
+    };
+
+
+    function limpiarCamposDespachos() {
+        document.getElementById("selectareadespachos").disabled = false;
+        document.getElementById("selectrutasdespachos").disabled = false;
+        $scope.puntoscontrol = {};
+        $scope.ptosdecontrol = {};
+    }
+    ;
+
+    $scope.deletePtoControlRuta = function (it) {
+        var rta = confirm("¿Desea eliminar el registro?");
+        if (rta) {
+            console.log("entro a borrar");
+        } else {
+            return;
+        }
+    };
+    
+    $scope.guardarPtoControlRuta = function () {
+        $params = {
+            user_id: localStorage['ztrack.user_id'],
+            area_id: $scope.areaselect.id,
+            route_id: $scope.rutaselect.route_id,
+            ptocontrol_id: $scope.ptocontrolselect.zone_id
+        };
+        QueriesService.executeRequest('POST', '../laravel/public/despachos/savepuntoscontrolaruta', $params, null)
+                .then(function (result) {
+                    if (result.success) {
+                        cargarPuntosControlRuta();
+                    }
+                });
+    };
+
+    function cargarPuntosControlRuta() {
+        if($scope.rutaselect === null){
+           return; 
+        }
+        $params = {
+            user_id: localStorage['ztrack.user_id'],
+            area_id: $scope.areaselect.id,
+            route_id: $scope.rutaselect.route_id
+        };
+        QueriesService.executeRequest('GET', '../laravel/public/despachos/cargarpuntoscontrolaruta', null, $params)
+                .then(function (result) {
+                    $scope.ptosdecontrol = result.ptosdecontrol;
+                });
+    }
+    ;
 
 });
 

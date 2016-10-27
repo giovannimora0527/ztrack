@@ -307,9 +307,8 @@ and open the template in the editor.
                                 <tbody>
                                     <tr>
                                         <td>
-                                            <select class="form-control" ng-model="vehiculo.select" ng-options="vh.vin for vh in vehiculos| orderBy:'vin'" ng-change="selectGrupos = true" >                                           
-                                                <option value="" selected disabled>Seleccionar</option>
-                                                <option ng-repeat="vh in vehiculo" value="{{vh.object_id}}" >{{vh.vin}}</option>
+                                            <select class="form-control" ng-model="vehiculo.select" ng-options="vh.name for vh in vehiculos track by vh.name" ng-change="selectGrupos = true" >                                           
+                                                <option value="" selected disabled>Seleccionar</option>                                                
                                             </select>
                                         </td>
                                         <td>
@@ -421,13 +420,13 @@ and open the template in the editor.
                                         </div>
                                         <div class="row"> 
                                             <div class="col-xs-12 col-sm-6">
-                                                <select class="form-control" ng-model="areaselect.id" ng-change="onChangeareaPC()">                                        
+                                                <select id="selectareadespachos" class="form-control" ng-model="areaselect.id" ng-change="cargarRutas()">                                        
                                                     <option value="" selected disabled>Seleccionar</option>
                                                     <option ng-repeat="ar in areas" value="{{ar.id}}">{{ar.name}}</option>
                                                 </select>
                                             </div>
                                             <div class="col-xs-12 col-sm-6">
-                                                <select class="form-control" ng-model="rutaselect" ng-options="ruta.route_name for ruta in rutas track by ruta.route_name">                                        
+                                                <select id="selectrutasdespachos" class="form-control" ng-model="rutaselect" ng-options="ruta.route_name for ruta in rutas track by ruta.route_name" ng-change="onChangeareaPC()">                                        
                                                     <option value="" selected disabled>Seleccionar</option>
                                                 </select>
                                             </div>
@@ -435,8 +434,15 @@ and open the template in the editor.
                                     <div class="row">
                                         <div class="row col-xs-12 col-sm-12" align="right">
                                             <div class="col-xs-12">
-                                                <button class="btn btn-default btn-sm" ng-click="limpiarCampos()">
-                                                    <i class="ace-icon fa fa-eraser bigger-110"></i>Limpiar</button>                                                  
+                                                <div class="btn-group">
+                                                    <button class="btn btn-default btn-sm" onclick="desbloquear()" ng-click="limpiarCamposDespachos()" >
+                                                        <i class="ace-icon fa fa-eraser bigger-110"></i>Limpiar
+                                                    </button>
+                                                    <button class="btn btn-white btn-sm btn-info btn-bold" title="Ver" ng-click="verPtosControles()">
+                                                        <i class="ace-icon fa fa-search"></i> Guardar
+                                                    </button>
+                                                </div>
+
                                             </div>
                                         </div>
                                         <div class="col-xs-12 col-sm-12" align="center">
@@ -447,23 +453,35 @@ and open the template in the editor.
                                                 <div class="widget-body">
                                                     <div class="col-xs-12 col-sm-6" align="center">
                                                         <div class="input-group">
-                                                            <select class="form-control" ng-model="ptocontrolselect" ng-options="pto.zone_name for pto in puntoscontrol track by pto.zone_name">
+                                                            <select class="form-control" ng-model="ptocontrolselect" ng-options="pto.zone_name for pto in puntoscontrol track by pto.zone_name" onchange="bloquearSelects()">
                                                                 <option value="" disabled selected>Seleccione una opción</option>
                                                             </select>
                                                             <span class="input-group-btn">
-                                                                <button class="btn btn-primary" type="button" ng-click="adicionarPtoControlRuta()">
+                                                                <button class="btn btn-primary" type="button" ng-click="guardarPtoControlRuta()">
                                                                     <i class="ace-icon fa fa-arrow-right bigger-110"></i>                                                       
-                                                                </button>
+                                                                </button>                                                                
                                                             </span>
                                                         </div>
                                                     </div>
                                                     <div class="col-xs-12 col-sm-6" align="center">
-                                                        <div class="input-group">
-
+                                                        <div class="widget-container">
+                                                            <div class="dd" id="nestable">
+                                                                <ol class="dd-list">
+                                                                    <li class="dd-item" ng-repeat="it in ptosdecontrol">
+                                                                        <div class="dd-handle">
+                                                                            <i class="pull-left bigger-130 ace-icon fa fa-map-marker blue"></i>
+                                                                            {{it.zone_name}}
+                                                                            <a href="" ng-click="deletePC(it)"><i class="pull-right bigger-130 ace-icon fa fa-times blue"></i></a>
+                                                                        </div>
+                                                                    </li>
+                                                                </ol>
+                                                            </div>                                            
                                                         </div>
                                                     </div>
-
                                                 </div>
+                                            </div>
+                                            <div class="row" align="right">                                                
+
                                             </div>
                                         </div>
                                     </div>                                                                    
@@ -741,5 +759,15 @@ and open the template in the editor.
     </div>
 </div>
 
-
+<script>
+    function desbloquear(){        
+        document.getElementById("selectareadespachos").disabled = false;
+        document.getElementById("selectrutasdespachos").disabled = false;
+    }
+    
+    function bloquearSelects(){
+        document.getElementById("selectareadespachos").disabled = true;
+        document.getElementById("selectrutasdespachos").disabled = true; 
+    };
+</script>
 

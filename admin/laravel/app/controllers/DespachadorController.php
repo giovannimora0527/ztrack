@@ -173,7 +173,7 @@ class DespachadorController extends \BaseController {
                 . ", '" . $data["imei"]
                 . "', '" . $time
                 . "', 3"
-                . ", " . $info["id"] // Se cambia el id -> para el nuevo registro se usa el id del despachador 
+                . ", " . $info[0]->id  // Se cambia el id -> para el nuevo registro se usa el id del despachador 
                 . ", " . $num_vuelta
                 . ");";
         try {
@@ -200,7 +200,7 @@ class DespachadorController extends \BaseController {
                 join gs_user_objects uo ON d.imei = uo.imei
                 join gs_user_object_groups ug ON ug.group_id = uo.group_id
                 where d.estado_id = 3 and d.hora_salida>(select CURDATE()) AND d.hora_salida <= (SELECT NOW()) 
-                and d.user_id = " . $info["id"] 
+                and d.user_id = " . $info[0]->id 
                 . " ORDER BY d.hora_salida asc;";  // Error esta que no estoy mandando el ID del despachador.... Sugerencia: el dministrador debe ver los despachos
         $vehiculosdespachados = DB::select($sql);
         return Response::json(array('vehiculosdespachados' => $vehiculosdespachados));

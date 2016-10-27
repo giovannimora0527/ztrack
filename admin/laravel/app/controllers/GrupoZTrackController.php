@@ -323,13 +323,13 @@ class GrupoZTrackController extends \BaseController {
             $asignaciones = DB::select($sql);
             DB::commit();
             if (count($asignaciones) > 0) {
-                return Response::json(array('success' => true, 'asignaciones' => $asignaciones, 'min' => intval($min), 'max' => $max - 1, 'count' => $count[0]->conteo,
+                return Response::json(array('success' => true, 'mensaje' => 'Datos cargados con éxito', 'asignaciones' => $asignaciones, 'min' => intval($min), 'max' => $max - 1, 'count' => $count[0]->conteo,
                             'moreresults' => $more_results));
             } else {
                 return Response::json(array('success' => false));
             }
         } catch (Exception $e) {
-            return Response::json(array('errormsj' => "No hay resultados disponibles. " . $e, 'error' => true));
+            return Response::json(array('mensaje' => "No hay resultados disponibles. " . $e, 'error' => true));
         }
     }
 
