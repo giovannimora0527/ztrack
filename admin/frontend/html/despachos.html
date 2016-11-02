@@ -490,6 +490,69 @@ and open the template in the editor.
                                 <div ng-class="{'tab-pane active': activeTab2 === 6, 'tab-pane' : activeTab2 !== 6}">
                                     <div class="container-fluid">
                                         <label>Panel de asignación de tiempos a puntos de control</label>
+                                        <div class="row">
+                                            <div class="col-xs-12 col-sm-5">
+                                                <select id="selectareadespachostiempos" class="form-control" ng-model="areaselecttime.id" ng-change="cargarRutasEnTabTiempo()">                                        
+                                                    <option value="" selected disabled>Seleccionar</option>
+                                                    <option ng-repeat="ar in areas" value="{{ar.id}}">{{ar.name}}</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-xs-12 col-sm-5">
+                                                <select id="selectrutasdespachostiempos" class="form-control" ng-model="rutaselecttime" ng-options="ruta.route_name for ruta in rutas track by ruta.route_name" ng-change="cargarPtosControlRuta()">                                        
+                                                    <option value="" selected disabled>Seleccionar</option>
+                                                </select>
+                                            </div>  
+                                            <div class="col-xs-12 col-sm-2">
+                                                <button class="btn btn-primary" ng-click="cargarPtosControlRuta()"><i class="ace-icon fa fa-search"></i> Buscar</button>
+                                            </div>
+                                        </div>
+                                        <br><br><br>
+                                        <div class="row">
+                                            <table class="table table-condensed table-responsive table-striped table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th>
+                                                            Punto de Control
+                                                        </th>
+                                                        <th>
+                                                            Fecha de Asignación
+                                                        </th>                                                        
+                                                        <th>
+                                                            Ruta
+                                                        </th>
+                                                        <th>
+                                                            Acciones
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr ng-repeat="pto in ptosdecontrol">
+                                                        <td>
+                                                            {{pto.zone_name}}  
+                                                        </td>
+                                                        <td>
+                                                            {{pto.fecha}}  
+                                                        </td>                                                        
+                                                        <td>
+                                                            {{pto.route_name}}  
+                                                        </td>
+                                                        <td align="center">
+                                                            <div class="btn-group">
+                                                                <button class="btn btn-white btn-sm btn-info btn-bold" title="Asignar Tiempo" data-toggle="modal" data-target="#editarAsignacionTiempoRuta" ng-click="cargarDatosModalTiempo(pto.zone_id, pto.rz_id)">
+                                                                    <i class="ace-icon fa fa-clock-o"></i>
+                                                                </button> 
+                                                                <button class="btn btn-white btn-sm btn-info btn-bold" title="Ver Info" data-toggle="modal" data-target="#verAsignacionTiempos" ng-click="verInfoDatosModalTiempo(pto.rz_id)">
+                                                                    <i class="ace-icon fa fa-search"></i>
+                                                                </button>
+                                                                <button class="btn btn-white btn-sm btn-warning btn-bold" title="Eliminar" ng-click="onconfirmdeletetiempo(pto.rz_id)">
+                                                                    <i class="ace-icon fa fa-trash-o bigger-120 orange"></i>
+                                                                </button>  
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     </div>
                                 </div>                                
 
@@ -502,6 +565,134 @@ and open the template in the editor.
         <!-- PAGE CONTENT ENDS -->
     </div><!-- /.col -->
 </div><!-- /.row -->
+
+<!-- Modal Asignacion de tiempos a puntos de control -->
+<div id="editarAsignacionTiempoRuta" class="bootbox modal fade bootbox-confirm in" tabindex="-1" role="dialog" aria-labelledby="editarAsignacionTiempoRuta" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>
+                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Asignar Tiempo a : <font color="#B40404">{{item3.name}} </font>                   
+                </h3>
+            </div>
+            <div class="modal-body">                
+                <table class="table table-bordered table-hover table-responsive table-striped">                    
+                    <tr>
+                        <td align="center">
+                            <label>Hora</label>
+                        </td>
+                        <td align="center">
+                            <label>Minutos</label>
+                        </td>
+                        <td align="center">
+                            <label>Segundos</label>
+                        </td>
+                    </tr> 
+                    <tr>
+                        <td align="center">
+                            <select class="form-control" ng-model="tiempo.horasel" ng-options="hora.value for hora in horas track by hora.value">                                
+                            </select>
+                        </td>
+                        <td align="center">
+                            <select class="form-control" ng-model="tiempo.minsel" ng-options="min.value for min in minutos track by min.value">                                
+                            </select>
+                        </td>
+                        <td align="center">
+                            <select class="form-control" ng-model="tiempo.segsel" ng-options="seg.value for seg in segundos track by seg.value">                               
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="3">
+                           <button data-bb-handler="cancel" type="button" class="btn btn-default" ng-click="limpiarCamposTiempos()">Limpiar</button> 
+                        </td>                        
+                    </tr>
+                </table> 
+            </div>
+            <div class="modal-footer">
+                <button data-bb-handler="cancel" type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button> 
+                <button data-bb-handler="confirm" type="button" class="btn btn-primary" ng-click="asigarTiempoPuntoControl()">Ok</button>
+            </div>            
+        </div>
+    </div>
+</div>
+
+<!-- Modal Ver Info Asignacion de tiempos a puntos de control -->
+<div id="verAsignacionTiempos" class="bootbox modal fade bootbox-confirm in" tabindex="-1" role="dialog" aria-labelledby="verAsignacionTiempos" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>
+                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Asignar Tiempo : <font color="#B40404">#. Vehículo {{item2.name}} </font>                   
+                </h3>
+            </div>
+            <div class="modal-body">                
+                <table class="table table-bordered table-hover table-responsive table-striped">
+                    <tr>
+                        <td>
+                            <label>
+                                <b>
+                                    Conductor
+                                </b>
+                            </label>
+                        </td>
+                        <td>
+                            <label>{{item2.conductor}}</label>
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>
+                                <b>
+                                    Telf. Conductor
+                                </b>
+                            </label>
+                        </td>
+                        <td>
+                            <label>{{item2.telefono}}</label>
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>
+                                <b>
+                                    Dirección
+                                </b>
+                            </label>
+                        </td>
+                        <td>
+                            <label>{{item2.direccion}}</label>
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>
+                                <b>
+                                    Grupo
+                                </b>
+                            </label>
+                        </td>
+                        <td>
+                            <select class="form-control" ng-model="asignacion.grupo" ng-options="grupo.group_name for grupo in grupos| orderBy:'group_name'" ng-change="seleccionaGrupo = true">                                        
+                                <option value="" selected disabled>Seleccionar</option>
+                                <option ng-repeat="grupo in grupos" value="{{grupo.group_id}}" ng-selected>{{grupo.group_name}}</option>
+                            </select>
+                        </td>
+                    </tr> 
+                </table> 
+            </div>
+            <div class="modal-footer">
+                <button data-bb-handler="cancel" type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button> 
+                <button data-bb-handler="confirm" type="button" class="btn btn-primary" ng-click="actualizarvehiculo(item2.id)">Ok</button>
+            </div>            
+        </div>
+    </div>
+</div>
+
+
 <!-- Modal Edicion Vehiculos -->
 <div id="editarVehiculo" class="bootbox modal fade bootbox-confirm in" tabindex="-1" role="dialog" aria-labelledby="editarVehiculo" aria-hidden="true">
     <div class="modal-dialog">
@@ -760,14 +951,15 @@ and open the template in the editor.
 </div>
 
 <script>
-    function desbloquear(){        
+    function desbloquear() {
         document.getElementById("selectareadespachos").disabled = false;
         document.getElementById("selectrutasdespachos").disabled = false;
     }
-    
-    function bloquearSelects(){
+
+    function bloquearSelects() {
         document.getElementById("selectareadespachos").disabled = true;
-        document.getElementById("selectrutasdespachos").disabled = true; 
-    };
+        document.getElementById("selectrutasdespachos").disabled = true;
+    }
+    ;
 </script>
 

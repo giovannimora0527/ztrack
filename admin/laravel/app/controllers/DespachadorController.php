@@ -83,8 +83,8 @@ class DespachadorController extends \BaseController {
                         . ", " . $data["route_id"]
                         . ", " . $data["group_id"]
                         . ", " . $turno
-                        . ", '" . $time
-                        . "', 2"
+                        . ", (select now())"
+                        . ", 2"
                         . ");";
                 DB::beginTransaction();
                 DB::insert($insert);
@@ -98,7 +98,7 @@ class DespachadorController extends \BaseController {
     }
 
     public function getVehiculosdisponibles() {
-        $data = Input::all();
+        $data = Input::all(); //Hacer filtro q tenga conductor
         $sql = "select dt.object_id, gso.name vehiculo from gs_despacho_temporal dt "
                 . "join gs_user_objects ob on dt.object_id = ob.object_id "
                 . "join gs_objects gso on ob.imei = gso.imei "
@@ -171,8 +171,8 @@ class DespachadorController extends \BaseController {
                 . "', '" . $myArray[1]
                 . "', " . $data["ruta_id"]
                 . ", '" . $data["imei"]
-                . "', '" . $time
-                . "', 3"
+                . "', (select now())" 
+                . ", 3"
                 . ", " . $info[0]->id  // Se cambia el id -> para el nuevo registro se usa el id del despachador 
                 . ", " . $num_vuelta
                 . ");";
@@ -212,8 +212,8 @@ class DespachadorController extends \BaseController {
         $time = date('Y-m-d H:i:s', time());
         $sql_update = "update despachos set "
                 . "estado_id = 4"
-                . ", hora_llegada = '" . $time
-                . "' where despacho_id = " . $data["despacho_id"];
+                . ", hora_llegada = (select now())"
+                . " where despacho_id = " . $data["despacho_id"];
         //Actualizo el estado del despacho de 3 => 4 que esta en espera (parqueadero) y le asigna la hora de llegada        
         DB::update($sql_update);
         //Valido el ultimo turno para despachar y poner en cola al vehiculo
@@ -226,8 +226,8 @@ class DespachadorController extends \BaseController {
         try {
             $sql = "update gs_despacho_temporal set "
                     . "turno = " .($turno[0]->turno + 1)
-                    . ", hora_llegada = '" . $time                    
-                    . "', estado = 4"
+                    . ", hora_llegada = (select now())"           
+                    . ", estado = 4"
                     . " where object_id = " . $data["object_id"]
                     . ""; 
            

@@ -72,11 +72,21 @@ ztrack.controller('DespachosController', function ($rootScope, $scope, $filter, 
             cargarAsignacionesConductores();
         }
         if (tab === 4) {
+            $scope.ptosdecontrol = {};
             cargarAreas();
         }
     };
     $scope.setActiveTab2 = function (tab) {
         $scope.activeTab2 = tab;
+        if (tab === 5) {
+            cargarAreas();
+        }
+        if (tab === 6) {
+            $scope.ptosdecontrol = {};
+            cargarAreasTiempos();
+            cargarTimePicker();
+
+        }
 
     };
     $scope.despacho = {};
@@ -185,6 +195,17 @@ ztrack.controller('DespachosController', function ($rootScope, $scope, $filter, 
                 });
     }
     ;
+
+    function cargarAreasTiempos() {
+        $params = {
+            user_id: localStorage['ztrack.user_id']
+        };
+        QueriesService.executeRequest('GET', '../laravel/public/grupos/cargarareas', null, $params)
+                .then(function (result) {
+                    $scope.areas = result.areas;
+                });
+    }
+    ;
     $scope.asignarGrupos = function () {
         if (!$scope.gruposelect) {
             toastr.warning("Debe seleccionar un grupo para poder continuar");
@@ -222,7 +243,19 @@ ztrack.controller('DespachosController', function ($rootScope, $scope, $filter, 
         };
         QueriesService.executeRequest('GET', '../laravel/public/rutas/rutasbyid', null, $params)
                 .then(function (result) {
-                    $scope.rutas = {};                   
+                    $scope.rutas = {};
+                    $scope.rutas = result.rutas;
+                });
+    }
+
+    $scope.cargarRutasEnTabTiempo = function () {
+        $params = {
+            user_id: localStorage['ztrack.user_id'],
+            area_id: $scope.areaselecttime.id
+        };
+        QueriesService.executeRequest('GET', '../laravel/public/rutas/rutasbyid', null, $params)
+                .then(function (result) {
+                    $scope.rutas = {};
                     $scope.rutas = result.rutas;
                 });
     }
@@ -469,7 +502,7 @@ ztrack.controller('DespachosController', function ($rootScope, $scope, $filter, 
                     cargarAsignacionesConductores();
                 });
     };
-    
+
     function cargarAsignacionesConductores() {
         $params = {
             user_id: localStorage['ztrack.user_id'],
@@ -645,10 +678,10 @@ ztrack.controller('DespachosController', function ($rootScope, $scope, $filter, 
 
     $scope.cargarRutas = function () {
         limpiarCamposDespachos();
-        cargarRutas();        
+        cargarRutas();
     };
 
-    $scope.onChangeareaPC = function () {        
+    $scope.onChangeareaPC = function () {
         $params = {
             user_id: localStorage['ztrack.user_id'],
             area_id: $scope.areaselect.id
@@ -684,7 +717,7 @@ ztrack.controller('DespachosController', function ($rootScope, $scope, $filter, 
             return;
         }
     };
-    
+
     $scope.guardarPtoControlRuta = function () {
         $params = {
             user_id: localStorage['ztrack.user_id'],
@@ -701,8 +734,8 @@ ztrack.controller('DespachosController', function ($rootScope, $scope, $filter, 
     };
 
     function cargarPuntosControlRuta() {
-        if($scope.rutaselect === null){
-           return; 
+        if ($scope.rutaselect === null) {
+            return;
         }
         $params = {
             user_id: localStorage['ztrack.user_id'],
@@ -715,6 +748,103 @@ ztrack.controller('DespachosController', function ($rootScope, $scope, $filter, 
                 });
     }
     ;
+
+
+    $scope.cargarPtosControlRuta = function () {
+        if ($scope.rutaselect === null) {
+            return;
+        }
+        $params = {
+            user_id: localStorage['ztrack.user_id'],
+            route_id: $scope.rutaselecttime.route_id
+        };
+        QueriesService.executeRequest('GET', '../laravel/public/despachos/cargarpuntoscontrolaruta', null, $params)
+                .then(function (result) {
+                    $scope.ptosdecontrol = result.ptosdecontrol;
+                });
+    };
+
+    function cargarTimePicker() {
+        $scope.horas = [];
+        $scope.minutos = [];
+        $scope.segundos = [];
+        for (var i = 1; i < 24; i++) {
+            if (i < 10) {                
+                $array = {value: '0' + i};
+            } else {
+                $array = {value: i};
+            }            
+            $scope.horas.push($array);
+        }
+        for (var i = 0; i < 60; i++) {
+            if (i < 10) {
+                $array = {value: '0' + i};
+            } else {
+                $array = {value: i};
+            }
+            $scope.minutos.push($array);
+            $scope.segundos.push($array);
+        }
+
+
+    }
+    ;
+
+    $scope.cargarDatosModalTiempo = function (pcid, rzid) {
+        $scope.pcselect = pcid;
+        $array = {
+            user_id: localStorage['ztrack.user_id'],
+            pc_id: pcid,
+            rz_id: rzid
+        };
+        console.log($array);
+        //Agrupar en item3
+    };
+
+    $scope.asigarTiempoPuntoControl = function () {
+        if (($scope.tiempo.horasel === undefined || $scope.tiempo.horasel === null) && ($scope.tiempo.minsel === undefined || $scope.tiempo.minsel === null) && ($scope.tiempo.segsel === undefined || $scope.tiempo.segsel === null)) {
+            toastr.warning("Debe asignar un tiempo diferente a vacio para poder continuar. Intente de nuevo.", "Advertencia");
+            return;
+        }
+        if (($scope.tiempo.horasel === undefined || $scope.tiempo.horasel === null) && ($scope.tiempo.minsel === undefined || $scope.tiempo.minsel === null)) {
+            toastr.warning("Verifique si el punto de control va a tener un tiempo de solo segundos. Intente de nuevo.", "Advertencia");
+            return;
+        }
+        
+        if($scope.tiempo.horasel === undefined || $scope.tiempo.horasel === null){
+          $scope.hora = "00";  
+        } 
+        else{
+          $scope.hora = $scope.tiempo.horasel.value;    
+        }
+        if($scope.tiempo.minsel === undefined || $scope.tiempo.minsel === null){
+          $scope.minuto =  "00";  
+        }
+        else{
+          $scope.minuto = $scope.tiempo.minsel.value;    
+        }
+        if($scope.tiempo.segsel === undefined || $scope.tiempo.segsel === null){
+          $scope.segundo = "00";  
+        }
+        else{
+          $scope.segundo = $scope.tiempo.segsel.value;    
+        }
+        $params = {
+            tiempo: $scope.hora + ":" + $scope.minuto + ":" + $scope.segundo,
+            user_id: localStorage['ztrack.user_id'],
+            pc: $scope.pcselect
+        };
+        
+        QueriesService.executeRequest('POST', '../laravel/public/despachos/guardartiempopc', $params, null)
+                .then(function (result) {
+
+                });
+
+    };
+
+    $scope.limpiarCamposTiempos = function () {
+        $scope.tiempo = {};        
+    };
 
 });
 
