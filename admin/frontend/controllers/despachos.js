@@ -708,15 +708,7 @@ ztrack.controller('DespachosController', function ($rootScope, $scope, $filter, 
         $scope.ptosdecontrol = {};
     }
     ;
-
-    $scope.deletePtoControlRuta = function (it) {
-        var rta = confirm("¿Desea eliminar el registro?");
-        if (rta) {
-            console.log("entro a borrar");
-        } else {
-            return;
-        }
-    };
+    
 
     $scope.guardarPtoControlRuta = function () {
         $params = {
@@ -792,13 +784,15 @@ ztrack.controller('DespachosController', function ($rootScope, $scope, $filter, 
 
     $scope.cargarDatosModalTiempo = function (pcid, rzid) {
         $scope.pcselect = pcid;
-        $array = {
+        $params = {
             user_id: localStorage['ztrack.user_id'],
             pc_id: pcid,
             rz_id: rzid
-        };
-        console.log($array);
-        //Agrupar en item3
+        };        
+        QueriesService.executeRequest('GET', '../laravel/public/despachos/rutazonainfo', null, $params)
+                .then(function (result) {
+                    $scope.rutazona = result.rutazona;
+                });
     };
 
     $scope.asigarTiempoPuntoControl = function () {
@@ -845,6 +839,16 @@ ztrack.controller('DespachosController', function ($rootScope, $scope, $filter, 
     $scope.limpiarCamposTiempos = function () {
         $scope.tiempo = {};        
     };
+    
+    $scope.deletePtoControlRuta = function (it) {
+        var rta = confirm("¿Desea eliminar el registro?");
+        if (rta) {
+            console.log("entro a borrar");
+        } else {
+            return;
+        }
+    };
+        
 
 });
 

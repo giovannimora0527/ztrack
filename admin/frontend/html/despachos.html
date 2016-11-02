@@ -471,7 +471,7 @@ and open the template in the editor.
                                                                         <div class="dd-handle">
                                                                             <i class="pull-left bigger-130 ace-icon fa fa-map-marker blue"></i>
                                                                             {{it.zone_name}}
-                                                                            <a href="" ng-click="deletePC(it)"><i class="pull-right bigger-130 ace-icon fa fa-times blue"></i></a>
+                                                                            <a href="" ng-click="deletePtoControlRuta(it)"><i class="pull-right bigger-130 ace-icon fa fa-times blue"></i></a>
                                                                         </div>
                                                                     </li>
                                                                 </ol>
@@ -538,15 +538,12 @@ and open the template in the editor.
                                                         </td>
                                                         <td align="center">
                                                             <div class="btn-group">
-                                                                <button class="btn btn-white btn-sm btn-info btn-bold" title="Asignar Tiempo" data-toggle="modal" data-target="#editarAsignacionTiempoRuta" ng-click="cargarDatosModalTiempo(pto.zone_id, pto.rz_id)">
+                                                                <button class="btn btn-white btn-sm btn-info btn-bold" title="Asignar Tiempo" data-toggle="modal" data-target="#editarAsignacionTiempoRuta">
                                                                     <i class="ace-icon fa fa-clock-o"></i>
                                                                 </button> 
-                                                                <button class="btn btn-white btn-sm btn-info btn-bold" title="Ver Info" data-toggle="modal" data-target="#verAsignacionTiempos" ng-click="verInfoDatosModalTiempo(pto.rz_id)">
+                                                                <button class="btn btn-white btn-sm btn-info btn-bold" title="Ver Info" data-toggle="modal" data-target="#verAsignacionTiempos" ng-click="cargarDatosModalTiempo(pto.zone_id, pto.rz_id)">
                                                                     <i class="ace-icon fa fa-search"></i>
-                                                                </button>
-                                                                <button class="btn btn-white btn-sm btn-warning btn-bold" title="Eliminar" ng-click="onconfirmdeletetiempo(pto.rz_id)">
-                                                                    <i class="ace-icon fa fa-trash-o bigger-120 orange"></i>
-                                                                </button>  
+                                                                </button>                                                                 
                                                             </div>
                                                         </td>
                                                     </tr>
@@ -555,7 +552,6 @@ and open the template in the editor.
                                         </div>
                                     </div>
                                 </div>                                
-
                             </div>
                         </div> 
                     </div>
@@ -623,7 +619,7 @@ and open the template in the editor.
         <div class="modal-content">
             <div class="modal-header">
                 <h3>
-                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Asignar Tiempo : <font color="#B40404">#. Vehículo {{item2.name}} </font>                   
+                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Ver tiempo en Punto de Control : <font color="#B40404">{{rutazona.zone_name}} </font>                   
                 </h3>
             </div>
             <div class="modal-body">                
@@ -632,61 +628,30 @@ and open the template in the editor.
                         <td>
                             <label>
                                 <b>
-                                    Conductor
+                                    Ruta
                                 </b>
                             </label>
                         </td>
                         <td>
-                            <label>{{item2.conductor}}</label>
+                            <label>{{rutazona.route_name}}</label>
                         </td>
-
                     </tr>
                     <tr>
                         <td>
                             <label>
                                 <b>
-                                    Telf. Conductor
+                                    Tiempo Asignado
                                 </b>
                             </label>
                         </td>
                         <td>
-                            <label>{{item2.telefono}}</label>
+                            <label>{{rutazona.tiempopc}}</label>
                         </td>
-
-                    </tr>
-                    <tr>
-                        <td>
-                            <label>
-                                <b>
-                                    Dirección
-                                </b>
-                            </label>
-                        </td>
-                        <td>
-                            <label>{{item2.direccion}}</label>
-                        </td>
-
-                    </tr>
-                    <tr>
-                        <td>
-                            <label>
-                                <b>
-                                    Grupo
-                                </b>
-                            </label>
-                        </td>
-                        <td>
-                            <select class="form-control" ng-model="asignacion.grupo" ng-options="grupo.group_name for grupo in grupos| orderBy:'group_name'" ng-change="seleccionaGrupo = true">                                        
-                                <option value="" selected disabled>Seleccionar</option>
-                                <option ng-repeat="grupo in grupos" value="{{grupo.group_id}}" ng-selected>{{grupo.group_name}}</option>
-                            </select>
-                        </td>
-                    </tr> 
+                    </tr>                 
                 </table> 
             </div>
             <div class="modal-footer">
-                <button data-bb-handler="cancel" type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button> 
-                <button data-bb-handler="confirm" type="button" class="btn btn-primary" ng-click="actualizarvehiculo(item2.id)">Ok</button>
+                <button data-bb-handler="cancel" type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
             </div>            
         </div>
     </div>
