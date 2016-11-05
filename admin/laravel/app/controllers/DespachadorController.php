@@ -67,12 +67,15 @@ class DespachadorController extends \BaseController {
         $data = Input::all();
         $sql = "select * from gs_info_despachador where user_id = " . $data["user_id"];
         $data_despachador = DB::select($sql);
-        $sql = "select * from gs_despacho_temporal where user_id = " . $data["user_id"];
-        $result = DB::select($sql);
-        $turno = count($result);
-        $turno++;
-        date_default_timezone_set('America/Bogota');
-        $time = date('Y-m-d H:i:s', time());
+        $sql = "select MAX(turno) turno from gs_despacho_temporal where user_id = " . $data["user_id"];
+        $result = DB::select($sql);  
+        if($result[0]->turno == null){
+          $turno = 1;  
+        }
+        else{
+          $turno = intval($result[0]->turno + 1);    
+        }      
+        
         try {
             $validacion_sql = "select * from gs_despacho_temporal where object_id = " . $data["vehiculo_id"];
             $validate = DB::select($validacion_sql);

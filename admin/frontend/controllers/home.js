@@ -9,6 +9,7 @@ ztrack.controller('HomeController', function ($rootScope, $scope, AuthService, S
     $scope.data = SessionService.getInfo();
     $scope.title = "Principal";
     toastr.success("Bienvenido a ZTrack : " + $scope.data.user.name);
+    getVehiculosEnRutaPorcentaje();
     getCantidadVehiculos();
     getCantidadConductores();
     getVehiculosEnRuta();
@@ -16,6 +17,20 @@ ztrack.controller('HomeController', function ($rootScope, $scope, AuthService, S
     getCantidadRutas();
     getCantidadDespachadores();
     getTiempoPromedio();
+    
+    //Configuracion Easypiechart
+    $scope.percent = 0;
+    $scope.options = {
+            animate:{
+                duration:0,
+                enabled:false
+            },
+            barColor:'#3983c2',
+            scaleColor:false,
+            lineWidth: 5,
+            lineCap:'circle',
+            size : 49
+        };
 
     function getCantidadVehiculos() {
         $params = {
@@ -26,7 +41,7 @@ ztrack.controller('HomeController', function ($rootScope, $scope, AuthService, S
                     $scope.cantvehiculos = result.resultado;
                 });
     }
-    
+
     function getCantidadConductores() {
         $params = {
             user_id: localStorage['ztrack.user_id']
@@ -36,7 +51,7 @@ ztrack.controller('HomeController', function ($rootScope, $scope, AuthService, S
                     $scope.conductores = result.resultado;
                 });
     }
-    
+
     function getVehiculosEnRuta() {
         $params = {
             user_id: localStorage['ztrack.user_id']
@@ -46,7 +61,7 @@ ztrack.controller('HomeController', function ($rootScope, $scope, AuthService, S
                     $scope.enruta = result.resultado;
                 });
     }
-    
+
     function getVehiculosEnParqueadero() {
         $params = {
             user_id: localStorage['ztrack.user_id']
@@ -56,7 +71,7 @@ ztrack.controller('HomeController', function ($rootScope, $scope, AuthService, S
                     $scope.enparqueadero = result.resultado;
                 });
     }
-    
+
     function getCantidadRutas() {
         $params = {
             user_id: localStorage['ztrack.user_id']
@@ -66,7 +81,7 @@ ztrack.controller('HomeController', function ($rootScope, $scope, AuthService, S
                     $scope.totalrutas = result.resultado;
                 });
     }
-    
+
     function getCantidadDespachadores() {
         $params = {
             user_id: localStorage['ztrack.user_id']
@@ -76,7 +91,7 @@ ztrack.controller('HomeController', function ($rootScope, $scope, AuthService, S
                     $scope.totaldesp = result.resultado;
                 });
     }
-    
+
     function getTiempoPromedio() {
         $params = {
             user_id: localStorage['ztrack.user_id']
@@ -86,16 +101,22 @@ ztrack.controller('HomeController', function ($rootScope, $scope, AuthService, S
                     $scope.promedio = result.resultado;
                 });
     }
-    
-    $scope.pruebas = function(){
+
+    //Metodo de prueba el circleinfo dinamico
+    function getVehiculosEnRutaPorcentaje() {
         $params = {
             user_id: localStorage['ztrack.user_id']
         };
-        QueriesService.executeRequest('GET', '../laravel/public/pruebas/databases', null, $params)
+        QueriesService.executeRequest('GET', '../laravel/public/reportes/porcentajevehiculosenruta', null, $params)
                 .then(function (result) {
-                    toastr.success(result.mensaje,"OK");
-                }); 
-    };
+                    $scope.promediovehiculosruta = result.resultado;
+                    $scope.percent = result.resultado;
+                    $scope.restante = 100 - parseInt(result.resultado);
+                    
+                });
+    }
+
+
 
 });
 

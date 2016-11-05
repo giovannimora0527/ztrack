@@ -143,7 +143,7 @@ and open the template in the editor.
                                                 <div class="widget-body">
                                                     <div class="widget-container">
                                                         <div ng-if="!hayvehiculos">
-                                                            <label><font color="#DF0101">No hay vehiculos en espera. Todos estan en Ruta.</font></label>
+                                                            <label><font color="#DF0101">No hay vehiculos en espera de despacho. Debe registrar su llegada o Todos estan en Ruta.</font></label>
                                                         </div>
                                                         <div class="dd" id="nestable">
                                                             <ol class="dd-list">
@@ -168,7 +168,7 @@ and open the template in the editor.
                                                 <div class="widget-body">
                                                     <div class="widget-container">
                                                         <div ng-if="!hayvehiculosdespachados">
-                                                            <label><font color="#DF0101">No hay vehiculos despachados. Todos están en Paradero.</font></label>
+                                                            <label><font color="#DF0101">No hay vehiculos despachados o Todos están en Paradero.</font></label>
                                                         </div>
                                                         <div class="dd" id="nestable">
                                                             <ol class="dd-list">
@@ -206,7 +206,7 @@ and open the template in the editor.
                                                 <div class="widget-body">
                                                     <div class="widget-container">
                                                         <div ng-if="!hayvehiculosdespachados">
-                                                            <label><font color="#DF0101">No hay vehiculos en ruta. Todos están en Paradero.</font></label>
+                                                            <label><font color="#DF0101">No hay vehiculos en ruta o Todos están en Paradero.</font></label>
                                                         </div>
                                                         <div class="dd" id="nestable">
                                                             <ol class="dd-list">
@@ -232,7 +232,7 @@ and open the template in the editor.
                                                 <div class="widget-body">
                                                     <div class="widget-container">
                                                         <div ng-if="!hayvehiculosllegada">
-                                                            <label><font color="#DF0101">No hay vehiculos en el paradero. Todos están en Recorrido.</font></label>
+                                                            <label><font color="#DF0101">No hay vehiculos en el paradero o Todos están en Recorrido.</font></label>
                                                         </div>
                                                         <div class="dd" id="nestable1">
                                                             <ol class="dd-list">
@@ -316,7 +316,8 @@ and open the template in the editor.
             </div>
             <div class="modal-footer">
                 <button id="btndespachar" type="button" class="btn btn-primary" ng-click="despachar(vehiculo)"><i class="pull-left bigger-130 ace-icon fa fa-arrow-right"></i>Despachar</button>
-                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="pull-left bigger-130 ace-icon fa fa-times"></i>Cerrar</button>
+                
+                <button  id="btncerrar" type="button" class="btn btn-default" data-dismiss="modal"><i class="pull-left bigger-130 ace-icon fa fa-times"></i>Cerrar</button>
             </div>
         </div>
 

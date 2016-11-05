@@ -2,6 +2,14 @@ var app = angular.module('zmodo-directives', []);
 
 //http://jsfiddle.net/thomporter/DwKZh/
 
+
+app.directive('data-percent', [function () {
+        return {
+            restrict: 'A',
+            template: 'data-percent: "{{promediovehiculosruta}}"'
+        };
+    }]);
+
 app.directive('numbersOnly', function () {
     return {
         require: 'ngModel',
@@ -65,13 +73,13 @@ app.directive("passwordMatcher", function () {
     };
 });
 
-app.directive('myModal', function() {
-   return {
-     restrict: 'A',
-     link: function(scope, element, attr) {
-       scope.dismiss = function() {
-           element.modal('hide');
-       };
-     }
-   }; 
+app.directive('myModal', function () {
+    return {
+        restrict: 'A',
+        link: function (scope, element, attr) {
+            scope.dismiss = function () {
+                element.modal('hide');
+            };
+        }
+    };
 });

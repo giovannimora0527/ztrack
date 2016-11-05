@@ -24,12 +24,12 @@ class ReportesController extends \BaseController {
 
     public function getVehiculosenruta() {
         $data = Input::all();
-        $sql = "select user_id from gs_info_despachador where empresa_id = " . $data["user_id"];
+        $sql = "select id from gs_info_despachador where empresa_id = " . $data["user_id"];
         $result = DB::select($sql);
         $count = 0;
         if (count($result) > 0) {
             for ($i = 0; $i < count($result); $i++) {
-                $query = "select count(*) numero from despachos where user_id = " . $result[$i]->user_id . " and estado_id = 3;";
+                $query = "select count(*) numero from despachos where user_id = " . $result[$i]->id . " and estado_id = 3;";
                 $resultado = DB::select($query);
                 $count += $resultado[0]->numero;
             }
@@ -70,19 +70,45 @@ class ReportesController extends \BaseController {
 
     public function getTiempopromedio() {
         $data = Input::all();
-        $sql = "select user_id from gs_info_despachador where empresa_id = " . $data["user_id"] .";";       
+        $sql = "select user_id from gs_info_despachador where empresa_id = " . $data["user_id"] . ";";
         $result = DB::select($sql);
         $array_result = array();
         if (count($result) > 0) {
             for ($i = 0; $i < count($result); $i++) {
                 $query = "select CAST((SUM((TIMEDIFF(d.hora_llegada,d.hora_salida)))/COUNT(d.hora_salida)) AS TIME) AS promedio
                           from despachos d
-                          where user_id = " . $result[$i]->user_id . ";";                
+                          where user_id = " . $result[$i]->user_id . ";";
                 $resultados = DB::select($query);
                 array_push($array_result, $resultados);
-            }            
-        }  
+            }
+        }
         return Response::json(array('resultado' => $array_result));
+    }
+
+    public function getPorcentajevehiculosenruta() {
+        $data = Input::all();
+        //Calculo para el conteo de vehiculos registrados por la empresa
+        $sql = "select count(*) numero from gs_user_objects where user_id = " . $data["user_id"];
+        $result1 = DB::select($sql);        
+        
+        //Calculo para el conteo de vehiculos que se encuentran en ruta
+        $sql = "select id from gs_info_despachador where empresa_id = " . $data["user_id"];       
+        $result = DB::select($sql);
+        $count = 0;
+        if (count($result) > 0) {
+            for ($i = 0; $i < count($result); $i++) {
+                $query = "select count(*) numero from despachos where user_id = " . $result[$i]->id . " and estado_id = 3;";                               
+                $resultado = DB::select($query);
+                $count += $resultado[0]->numero;
+            }
+        }        
+        if($result1[0]->numero > 0){           
+           return Response::json(array('resultado' => intval(($count / $result1[0]->numero)* 100)));  
+        }
+        else{
+           return Response::json(array('resultado' => 0));    
+        }
+        
     }
 
 }

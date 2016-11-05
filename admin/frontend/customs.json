@@ -1,6 +1,9 @@
 {
     "elements": {},
     "attributes": {
+        "easypiechart": {
+            "context": "div"
+        },
         "ui-view": {
             "context": "div"
         },

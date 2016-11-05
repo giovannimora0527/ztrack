@@ -7,7 +7,7 @@
  * @email giovannimora0527@gmail.com
  * @version 1.1
  */
-var ztrack = angular.module('ztrack', ['ui.bootstrap', 'ngCookies', 'ui.router', 'zmodo-directives', 'queries-service', 'formValidationService', 'toastr', 'anchorScrollOffset']);
+var ztrack = angular.module('ztrack', ['ui.bootstrap', 'ngCookies', 'ui.router', 'zmodo-directives', 'queries-service', 'formValidationService', 'toastr', 'anchorScrollOffset', 'easypiechart']);
 ztrack.config(['$stateProvider', '$urlRouterProvider', '$httpProvider',
     function ($stateProvider, $urlRouterProvider) {
         $urlRouterProvider.otherwise('principal');
