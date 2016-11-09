@@ -227,6 +227,9 @@ ztrack.controller('DespachosController', function ($rootScope, $scope, $filter, 
             fechaini: $scope.gruporuta.fechaini,
             fechafin: $scope.gruporuta.fechafin
         };
+        
+        console.log($params);
+        return;
         QueriesService.executeRequest('GET', '../laravel/public/gruposrutas/gruposrutas', null, $params)
                 .then(function (result) {
                     if (result.success) {
@@ -386,12 +389,19 @@ ztrack.controller('DespachosController', function ($rootScope, $scope, $filter, 
     };
 
     $scope.filtrar = function () {
-        if (($scope.filtros.placa === "") && ($scope.filtros.vehiculo === "") && ($scope.filtros.conductor === "")) {
+        $scope.hasFiltrosTab2 = false;
+        if (($scope.filtros.placa === "") && ($scope.filtros.vehiculo === "") && ($scope.filtros.conductor === "") && ($scope.filtros.grupo === "")) {
             toastr.warning("No se puede realizar la búsqueda. No hay filtros asociados. Intente de Nuevo", "Advertencia");
         } else {
             $scope.hasFiltrosTab2 = true;
         }
         cargarAsignaciones();
+    };
+           
+    $scope.limpiarFiltros = function (){         
+         $scope.hasFiltrosTab2 = false;
+         $scope.filtros = {};
+         cargarAsignaciones();
     };
 
 
@@ -425,9 +435,11 @@ ztrack.controller('DespachosController', function ($rootScope, $scope, $filter, 
                         } else {
                             $scope.paginationtab2 = false;
                         }
-                    } else {
+                    } else {                        
                         $scope.resultsfound1 = false;
                         $scope.paginationtab2 = false;
+                        $scope.hasFiltrosTab2 = false;
+                        
                     }
 
                 });
@@ -847,6 +859,18 @@ ztrack.controller('DespachosController', function ($rootScope, $scope, $filter, 
         } else {
             return;
         }
+    };
+    
+    
+    //Espacio para crear los filtros de grupos rutas
+    $scope.filtrarGruposRutas = function () {
+        $scope.hasFiltrosTab1 = false;
+        if (true) {
+            toastr.warning("No se puede realizar la búsqueda. No hay filtros asociados. Intente de Nuevo", "Advertencia");
+        } else {
+            $scope.hasFiltrosTab1 = true;
+        }
+        //cargarAsignaciones();
     };
         
 

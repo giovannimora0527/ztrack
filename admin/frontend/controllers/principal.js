@@ -9,6 +9,7 @@ ztrack.controller('PrincipalController', function ($rootScope, $scope, AuthServi
   $scope.data = SessionService.getInfo();
   $scope.title = "Principal";
   toastr.success("Bienvenido a ZTrack : " + $scope.data.user.name);
+  $scope.active = "active";
   
 });
 

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<div class="breadcrumbs ace-save-state" id="breadcrumbs">
+    <ul class="breadcrumb">
+        <li>
+            <i class="menu icon fa fa-home"></i>
+            <a ui-sref="principal">Inicio</a>
+        </li>
+        <li class="active"><font color="#0B0B3B">{{title}}</font></li>
+    </ul><!-- /.breadcrumb -->    
+</div>
+<br>
+<div class="row">
+    <div class="col-xs-12">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="tabbable">
+                    <ul class="nav nav-tabs">
+                        <li ng-class="{'active' : activeTab === 1}"><a href="" ng-click="setActiveTab(1)">
+                                <i class="blue fa fa-exclamation-triangle bigger-120"></i>
+                                Registro de Novedades
+                            </a>
+                        </li>
+                        <li ng-class="{'active' : activeTab === 2}"><a href="" ng-click="setActiveTab(2)">
+                                <i class="blue fa fa-search bigger-120"></i>
+                                Ver Novedades
+                            </a>
+                        </li> 
+                        <li ng-class="{'active' : activeTab === 3}"><a href="" ng-click="setActiveTab(3)">
+                                <i class="blue fa fa-check bigger-120"></i>
+                                Solucionar Novedad
+                            </a>
+                        </li>                       
+                    </ul>
+                    <div class="tab-content">
+                        <!-- Pestaña de registro de novedades -->
+                        <div ng-class="{'tab-pane active': activeTab === 1, 'tab-pane' : activeTab !== 1}">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-md-6">  
+                                        <label class="control-label border blue">Seleccione el área de asignación</label>
+                                        <select class="form-control" ng-model="areaselect" ng-options="area.name for area in areas track by area.name" ng-change="onChangeSelectedArea()">                                        
+                                            <option value="" selected disabled>Seleccionar</option>                       
+                                        </select>
+                                    </div> 
+                                    <div class="col-md-6">  
+                                        <label class="control-label border blue">Seleccione la ruta.</label>
+                                        <select class="form-control" ng-model="rutaselect" ng-options="ruta.route_name for ruta in rutas track by ruta.route_name">                                           
+                                            <option value="" selected disabled>Seleccionar</option>                                                
+                                        </select>                                       
+                                    </div>
+                                </div> 
+                                <br>
+                                <button class="btn btn-primary" ng-click="cargarVehiculos()">Cargar Vehiculos</button>
+                                <br> <br>
+                                <div class="row">                      
+                                    <div class="col-md-12">                                        
+                                        <table class="table table-bordered table-condensed table-responsive table-striped" >
+                                            <thead>
+                                                <tr>
+                                                    <th colspan="5">
+                                                        Resultados
+                                                    </th>
+                                                </tr>
+                                                <tr>
+                                                    <th>
+                                                        #. Vehículo  
+                                                    </th>
+                                                    <th>
+                                                        Placa
+                                                    </th>
+                                                    <th>
+                                                        Conductor  
+                                                    </th> 
+                                                    <th>
+                                                        Estado
+                                                    </th>                                                     
+                                                    <th>
+                                                        Acciones 
+                                                    </th> 
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr ng-repeat="veh in vehiculos">
+                                                    <td>
+                                                        {{veh.name}}
+                                                    </td>
+                                                    <td>
+                                                        {{veh.plate_number}}
+                                                    </td>
+                                                    <td>
+                                                        {{veh.driver_name}}
+                                                    </td> 
+                                                    <td>
+                                                        {{veh.descripcion}}
+                                                    </td>                                                    
+                                                    <td>
+                                                        <div class="btn-group">
+                                                            <button class="btn btn-white btn-sm btn-info btn-bold" title="Agregar Novedad" data-toggle="modal" data-target="#editarNovedad" ng-click="cargarModal(veh)">
+                                                                <i class="ace-icon fa fa-edit"></i>
+                                                            </button> 
+                                                            <button class="btn btn-white btn-sm btn-warning btn-bold" title="Eliminar" ng-click="onconfirmdeletegr(veh.object_id)">
+                                                                <i class="ace-icon fa fa-trash-o bigger-120 orange"></i>
+                                                            </button>  
+                                                        </div>
+                                                    </td> 
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                            </div> 
+                        </div>
+                        <!--                Pestaña de vehiculos a grupos-->
+                        <div ng-class="{'tab-pane active': activeTab === 2, 'tab-pane' : activeTab !== 2}">
+                            <div class="container-fluid">
+                                <h3>
+                                    Ver Novedades
+                                </h3>
+                                <div class="row">
+
+                                </div> 
+                            </div> 
+                        </div> 
+                        <!--                Pestaña de conductores a vehiculos-->
+                        <div ng-class="{'tab-pane active': activeTab === 3, 'tab-pane' : activeTab !== 3}">
+                            <div class="container-fluid">
+                                <h3>
+                                    Solucionar Novedades
+                                </h3>
+                                <br>                       
+                                <div class="row">
+
+                                </div>                                
+                            </div> 
+                        </div>                       
+                    </div>
+                </div>
+            </div> 
+        </div>
+    </div>
+    
+    
+<!-- Modal Novedades-->
+<div id="editarNovedad" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Registrar Novedad a <font color="#B40404">{{vehiculo.name}}</font></h4>
+            </div>
+            <div class="modal-body">                
+                Seleccione la Novedad
+            </div>
+            <div class="modal-footer">
+                <button id="btndespachar" type="button" class="btn btn-primary" ng-click="registrarnovedad(vehiculo)"><i class="pull-left bigger-130 ace-icon fa fa-arrow-right"></i>Registrar Novedad</button>                
+                <button  id="btncerrar" type="button" class="btn btn-default" data-dismiss="modal"><i class="pull-left bigger-130 ace-icon fa fa-times"></i>Cerrar</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+</div> 

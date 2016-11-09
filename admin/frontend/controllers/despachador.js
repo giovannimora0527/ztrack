@@ -9,6 +9,7 @@ angular.module('ztrack').controller('AdminDespachosController', function ($rootS
     $scope.title = "Gestión de Despachadores";
     $scope.activeTab = 1;    
     $scope.hasSelected = false;
+    getFechahoy();
 
 
     $scope.setActiveTab = function (tab) {
@@ -18,9 +19,15 @@ angular.module('ztrack').controller('AdminDespachosController', function ($rootS
             cargarAreas();
         }
     };
+    
+    function getFechahoy(){
+       var str = "" + new Date();
+       str = str.slice(3,15);
+       //$scope.fechaptos = str;      
+    }
 
     $scope.dateTimeNow = function () {
-        $scope.date = new Date();
+        $scope.date = new Date();       
     };
     $scope.dateTimeNow();
 

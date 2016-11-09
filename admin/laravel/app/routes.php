@@ -25,6 +25,8 @@ Route::controller('despachos', 'DespachosController');
 Route::controller('despachador', 'DespachadorController');
 //Reportes
 Route::controller('reportes', 'ReportesController');
+//Novedades
+Route::controller('novedades', 'NovedadController');
 
 //Pruebas
 Route::controller('pruebas', 'PruebasController');

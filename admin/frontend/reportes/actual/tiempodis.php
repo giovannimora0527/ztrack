@@ -12,20 +12,26 @@ require_once('../../php/connection.php');
             . " AND d.estado_id=3"
             . " ORDER by d.despacho_id; ";
  */
+         
     $sql = "SELECT d.hora_salida, d.imei, d.latitud, d.longitud, gur.route_name 
             FROM despachos d, gs_user_routes AS gur WHERE gur.route_id=d.ruta_id 
-            AND d.hora_salida BETWEEN (SELECT DATE_FORMAT(NOW(), '%Y-%m-%d 00:00:00')) AND (SELECT NOW())"
-            . " AND d.user_id= " . $_POST["user_id"]
+            AND d.hora_salida BETWEEN '2016-11-01 19:32:00' AND '2016-11-01 19:50:00'"
             . " AND d.ruta_id = " . $_POST["ruta_id"]
             . " AND d.estado_id=3"
             . " ORDER by d.despacho_id; ";
-        $stm = mysql_query($sql);        
+//AND d.hora_salida BETWEEN (SELECT DATE_FORMAT(NOW(), '%Y-%m-%d 00:00:00')) AND (SELECT NOW())
+// Ó
+//AND d.hora_salida BETWEEN (SELECT DATE_FORMAT(NOW(), '%Y-%m-%d 00:00:00')) AND (SELECT DATE_ADD(NOW(), INTERVAL 2 HOUR))
+//. " AND d.user_id= " . $_POST["user_id"]
+    $stm = mysql_query($sql); 
+       
         $dif = NULL;
         $dift = NULL;
         $res = NULL;
         $nomrut = NULL;
         //$res=NULL;
-        
+        //echo $_POST['ruta_id'];
+        //
         // Mensaje por si no se encuentra datos
         if (mysql_num_rows($stm) > 0) {
             
@@ -46,6 +52,7 @@ require_once('../../php/connection.php');
             while ($fila = mysql_fetch_array($stm)) {
             // Consulta de la tabla que se actualiza
                 $nomrut=$fila[4];
+           //$sql = 'SELECT DATE_ADD(dt_tracker, INTERVAL 2 HOUR), lat, lng, name FROM gs_objects WHERE imei=' . $fila[1];
             $sql = 'SELECT dt_tracker, lat, lng, name FROM gs_objects WHERE imei=' . $fila[1];
             $stm1 = mysql_query($sql);
             // Mensaje por si no se encuentra datos
@@ -106,18 +113,17 @@ require_once('../../php/connection.php');
             echo round($dis[0], 2, PHP_ROUND_HALF_UP);
             echo " Km </td>";
             //$sqlin='INSERT INTO temp_rptediferencia VALUES ('$fila[0]','$fila[1]','$dif','$rs[1]','$rs[2]','$res','$dis')';
-        }
-        echo "</tr>";
-        echo "</tbody>";
-        echo "</table>";
-        echo "</br>"; 
-        echo "Información referente a la Ruta: "; echo "<label>$nomrut</label>";
+            }
+            echo "</tr>";
+            echo "</tbody>";
+            echo "</table>";
+            echo "</br>"; 
+            echo "Informaci&oacute;n referente a la Ruta: "; echo "<label class='control-label bolder blue'>$nomrut</label>";
         }
         
         else {
                 echo"</br>";
-                echo"No se ha encontrado información en su solicitud.";
-                        
-                }
+                echo"<label class='control-label bolder blue'>"; echo"No se ha encontrado informaci&oacute;n en su solicitud.";echo"</label>";        
+        }
 
 ?>	

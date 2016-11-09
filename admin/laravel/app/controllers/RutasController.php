@@ -36,7 +36,7 @@ class RutasController extends \BaseController {
         $fecharegistro = date("Y-m-d H:i:s", $time);
         $insert = false;
 
-        //Insertar el registro de la asignacion del despachador a la ruta(s)
+//Insertar el registro de la asignacion del despachador a la ruta(s)
         for ($i = 0; $i < count($data) - 3; $i++) {
             $route_id = ($data[$i]["route_id"]);
             $sql = "insert into gs_despachador_ruta(desp_id, user_id, area_id, route_id, fecha_asignacion) values("
@@ -81,7 +81,7 @@ class RutasController extends \BaseController {
 
     public function getGruposvehiculosbyrutasid() {
         $data = Input::all();
-        //Selecciono el id de la empresa para que el despachador trabajo y poder localizar los gruposrutas registrados por el usuario empresa
+//Selecciono el id de la empresa para que el despachador trabajo y poder localizar los gruposrutas registrados por el usuario empresa
         $sql = "select empresa_id from gs_info_despachador where user_id = " . $data["user_id"];
         $result = DB::select($sql);
         $query = "select gr.group_id, guog.group_name from gs_gruposrutas gr "
@@ -109,7 +109,7 @@ class RutasController extends \BaseController {
 
     public function getVehiculosbygroupid() {
         $data = Input::all();
-        //Selecciono el id de la empresa para que el despachador trabajo y poder localizar los vehiculos asociados al grupo
+//Selecciono el id de la empresa para que el despachador trabajo y poder localizar los vehiculos asociados al grupo
         $sql = "select empresa_id from gs_info_despachador where user_id = " . $data["user_id"];
         $result = DB::select($sql);
         $qry = "select gso.object_id, gob.name, gso.imei "
@@ -125,8 +125,33 @@ class RutasController extends \BaseController {
             return Response::json(array('empty' => true, 'mensaje' => 'No hay vehiculos asociados al grupo. Contacte al administrador.'));
         }
     }
-    
-    // copiar y pegar en despachador controller
 
-    
+    public function getVueltasbyruta() { 
+        $user_id = Input::get('user_id');
+        $area_id = Input::get('area_id');
+        $ruta_id = Input::get('ruta_id');
+        $fechac = Input::get('fecha');
+        
+        $sql = "SELECT DISTINCT numero_recorrido FROM despachos WHERE ruta_id=" . $ruta_id
+                . " AND hora_salida >= (SELECT DATE_FORMAT('" . $fechac . "' , '%Y-%m-%d 00:00:00'))"
+                . " AND estado_id = 4 ORDER BY 1 ASC;";       
+        $vueltas = DB::select($sql);
+        return Response::json(array('vueltas' => $vueltas));
+    }
+
+    public function getVehiculosbyruta() {    
+        $user_id = Input::get('user_id');
+        $area_id = Input::get('area_id');
+        $ruta_id = Input::get('ruta_id');
+        $fechac = Input::get('fecha');
+ 
+        $sql = "SELECT DISTINCT d. imei, go.name "
+                . " FROM despachos d INNER JOIN gs_objects go ON go.imei = d.imei "
+                . " INNER JOIN gs_user_routes gur ON gur.route_id=d.ruta_id WHERE ruta_id=" . $ruta_id
+                . " AND d.hora_salida >= (SELECT DATE_FORMAT('" . $fechac . "', '%Y-%m-%d 00:00:00'))"
+                . " AND d.estado_id = 4 ORDER BY 1 ASC;";
+        $vehiculos = DB::select($sql);
+        return Response::json(array('vehiculos' => $vehiculos));        
+    }
+
 }

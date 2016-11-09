@@ -93,8 +93,8 @@
         <div class="main-container ace-save-state" id="main-container">            
             <div id="sidebar" class="sidebar responsive">                
                 <ul class="nav nav-list">
-                    <li class="active">
-                        <a ui-sref="principal">
+                    <li id="1" class="">
+                        <a ui-sref="principal" onclick="validarUrl(1)">
                             <i class="menu-icon fa fa-home"></i>
                             <span class="menu-text"> Inicio </span>
                         </a>
@@ -117,14 +117,14 @@
                         </a>
                         <b class="arrow"></b>
                         <ul class="submenu">
-                            <li class="">
+                            <li id="3" class="" onclick="validarUrl(3)">
                                 <a ui-sref="reporteseventos" class="dropdown-toggle">
                                     <i class="menu-icon fa fa-bookmark"></i>
                                     Eventos                                    
                                 </a>
                                 <b class="arrow"></b>                                
                             </li>
-                            <li class="">
+                            <li id="4" class="" onclick="validarUrl(4)">
                                 <a ui-sref="reportesdespachos">
                                     <i class="menu-icon fa fa-automobile"></i>
                                     Despachos
@@ -139,42 +139,42 @@
                                 </a>
                                 <b class="arrow"></b> 
                                 <ul class="submenu">
-                                    <li class="">
+                                    <li id="6" class="" onclick="validarUrl(6)"> <!-- CHOVE -->
                                         <a ui-sref="reportesactuales">
                                             <i class="menu-icon fa fa-clock-o blue"></i>
                                             Estado Actual
                                         </a>
                                         <b class="arrow"></b>
-                                    </li>
-                                    <li class="">
+                                    </li> <!-- /CHOVE -->
+                                    <li id="7" class="" onclick="validarUrl(7)"><!-- CHOVE -->
+                                        <a ui-sref="reportesPC">
+                                            <i class="menu-icon fa fa fa-clock-o blue"></i>
+                                            Tiempos en Puntos de Control
+                                        </a>
+                                        <b class="arrow"></b>
+                                    </li> <!-- /CHOVE -->
+                                    <li id="8" class="" onclick="validarUrl(8)"> <!-- CHOVE -->
                                         <a ui-sref="reportestiempos">
                                             <i class="menu-icon fa fa-clock-o blue"></i>
                                             Tiempo en Ruta
                                         </a>
                                         <b class="arrow"></b>
-                                    </li> 
-                                    <li class="">
+                                    </li> <!-- /CHOVE --> 
+                                    <li id="9" class="" onclick="validarUrl(9)">
                                         <a ui-sref="reportesduracion">
                                             <i class="menu-icon fa fa fa-clock-o blue"></i>
                                             Duración en Ruta
                                         </a>
                                         <b class="arrow"></b>
                                     </li> 
-                                    <li >
-                                        <a ui-sref="reportesPC">
-                                            <i class="menu-icon fa fa fa-clock-o blue"></i>
-                                            Tiempos en Puntos de Control
-                                        </a>
-                                        <b class="arrow"></b>
-                                    </li> 
-                                    <li class="">
+                                    <li id="10" class="" onclick="validarUrl(10)">
                                         <a ui-sref="reportesTFR">
                                             <i class="menu-icon fa fa fa-clock-o blue"></i>
                                             Tiempo fuera de Ruta
                                         </a>
                                         <b class="arrow"></b>
                                     </li>
-                                    <li class="">
+                                    <li id="11" class="" onclick="validarUrl(11)">
                                         <a ui-sref="reportesdiferencia">
                                             <i class="menu-icon fa fa fa-clock-o blue"></i>
                                             Diferencia de Tiempos
@@ -185,7 +185,7 @@
                             </li>
                         </ul>
                     </li>
-                    <li class="">
+                    <li id="12" class="">
                         <a href="#" class="dropdown-toggle">
                             <i class="menu-icon fa fa-search"></i>
                             <span class="menu-text"> Consultas </span>
@@ -194,21 +194,21 @@
                         </a>
                         <b class="arrow"></b>
                         <ul class="submenu">
-                            <li class="">
+                            <li id="13" class="">
                                 <a ui-sref="consultaconductores">
                                     <i class="menu-icon fa fa-users"></i>
                                     Conductores
                                 </a>
                                 <b class="arrow"></b>
                             </li>
-                            <li class="">
+                            <li id="14" class="">
                                 <a ui-sref="consultavehiculos">
                                     <i class="menu-icon fa fa-automobile"></i>
                                     Vehículos
                                 </a>
                                 <b class="arrow"></b>
                             </li>
-                            <li class="">
+                            <li id="15" class="">
                                 <a ui-sref="consultarutas">
                                     <i class="menu-icon fa fa-road"></i>
                                     Rutas
@@ -217,7 +217,7 @@
                             </li>
                         </ul>
                     </li>
-                    <li class="">
+                    <li id="16" class="">
                         <a href="#" class="dropdown-toggle">
                             <i class="menu-icon fa fa-pencil-square-o"></i>
                             <span class="menu-text"> Despachos </span> 
@@ -226,28 +226,28 @@
                         </a>
                         <b class="arrow"></b>
                         <ul class="submenu">
-                            <li class="">
+                            <li id="17" class="">
                                 <a ui-sref="gestionconductores">
                                     <i class="menu-icon fa fa-user"></i>
                                     Gestión de Conductores
                                 </a>
                                 <b class="arrow"></b>
                             </li>
-                            <li class="">
+                            <li id="18" class="">
                                 <a ui-sref="gestiongrupos">
                                     <i class="menu-icon fa fa-group"></i>
                                     Gestión de Grupos
                                 </a>
                                 <b class="arrow"></b>
                             </li> 
-                            <li class="">
+                            <li id="19" class="">
                                 <a ui-sref="gestiondespachos">
                                     <i class="menu-icon fa fa-clock-o"></i>
                                     Gestión de Despachos
                                 </a>
                                 <b class="arrow"></b>
                             </li>  
-                            <li class="">
+                            <li id="20" class="">
                                 <a ui-sref="gestiondespachadores">
                                     <i class="menu-icon fa fa-newspaper-o"></i>
                                     Gestión de Despachadores
@@ -479,6 +479,10 @@
                                 });
                             }
                             ;
+                            
+                            function validarUrl(id){
+                               console.log(id);  
+                            }
         </script>
 
         <!--        <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.js"></script>-->
@@ -526,8 +530,8 @@
         <script src="controllers/perfil.js"></script>
         <script src="controllers/auth-service.js"></script>
         <script src="controllers/session-service.js"></script>
-        
-<!--        scripts\easy-pie-chart\dist-->
+
+        <!--        scripts\easy-pie-chart\dist-->
 
     </body>
 </html>

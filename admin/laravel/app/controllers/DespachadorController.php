@@ -262,11 +262,11 @@ class DespachadorController extends \BaseController {
     
     public function getHistorialrecorrido(){
        $data = Input::all(); 
-       $sql = "SELECT d.vehiculo_id, d.numero_recorrido, SUBSTRING(d.hora_salida,11,9) hora_salida, "
+       $sql = "SELECT d.vehiculo_id, d.imei, d.numero_recorrido, SUBSTRING(d.hora_salida,11,9) hora_salida, "
                . "SUBSTRING(d.hora_llegada,11,9) hora_llegada, d.ruta_id, r.route_name, obd.driver_name, gob.plate_number placa, gob.name vehiculo, "
                . "TIMEDIFF(d.hora_llegada,d.hora_salida) as diferencia "
                . "FROM despachos d "
-               . "JOIN gs_user_objects guo ON guo.object_id = d.vehiculo_id "
+               . "JOIN gs_user_objects guo ON guo.imei = d.imei "
                . "JOIN gs_objects gob ON gob.imei = guo.imei "
                . "JOIN gs_user_object_drivers obd ON guo.driver_id = obd.driver_id "
                . "JOIN gs_user_routes r ON r.route_id = d.ruta_id "

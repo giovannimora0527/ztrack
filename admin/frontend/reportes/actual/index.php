@@ -36,14 +36,10 @@ require_once('../../php/connection.php');
                             <i class="blue fa fa-tachometer bigger-120"></i>
                             Por Puntos de Control
                         </a>
-                    </li> 
-                    <li ng-class="{'active' : activeTab === 3}"><a href="" ng-click="setActiveTab(3)">
-                            <i class="blue fa fa-file bigger-120"></i>
-                            Por Selecci&oacute;n 
-                        </a>
-                    </li>                                    
+                    </li>                           
                 </ul> 
                 <div class="tab-content">
+                    <!-- Inicio Tab 1 -->
                     <div ng-class="{'tab-pane active': activeTab === 1, 'tab-pane' : activeTab !== 1}">
                         <div class="container-fluid">
                             <h4>Visualizar Reporte de Tiempo y Distancia al Instante.</h4>
@@ -78,13 +74,13 @@ require_once('../../php/connection.php');
                                             </select>
                                         </td>										
                                         <td align="center">
-                                            <button class="btn btn-white btn-info btn-bold" id="tdsql" onClick="informeTD()">
+                                            <button class="btn btn-white btn-info btn-bold" id="tdsql" onClick="informeTD()" ng-disabled="bntdisabled">
                                                 <i class="ace-icon fa fa-search bigger-120 blue"></i>
                                                 Consultar
                                             </button>
                                         </td>
                                         <td align="center">
-                                            <button class="btn btn-white btn-warning btn-bold" id="cancelar" onClick="cancelarTD()">
+                                            <button class="btn btn-white btn-warning btn-bold" id="cancelar" ng-click="asignarVehiculos()" onClick="cancelarTD()">
                                                 <i class="ace-icon fa fa-times orange"></i>
                                                 Cancelar
                                             </button>
@@ -103,7 +99,8 @@ require_once('../../php/connection.php');
                             </div>      
                         </div>
                     </div>
-                    <!--Tab 2 Reportes por puntos de control-->
+                    <!-- Fin Tab 1-->
+                    <!-- Inicio Tab 2 Reportes por puntos de control-->
                     <div id="ptoscontrol" ng-class="{'tab-pane active': activeTab === 2, 'tab-pane' : activeTab !== 2}">
                         <div class="container-fluid">
                             <h4><p>Reporte Control de Reloj.</p></h4>
@@ -164,62 +161,9 @@ require_once('../../php/connection.php');
                             </div> 
                         </div>                                       
                     </div>
+                    <!-- Fin Tab 2 -->
                     <!--Tab 3 Reportes Generales-->
-                    <div id="general" ng-class="{'tab-pane active': activeTab === 3, 'tab-pane' : activeTab !== 3}">
-                        <div class="container-fluid">
-                            <h4>Reportes Generales</h4>
-                            <table class="table  table-bordered table-hover table-responsive table-striped">
-                                <thead>
-                                    <tr>                                
-                                        <th valign="middle">Seleccione el &Aacute;rea</th>                                  
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>  
-                                        <td align="center">
-                                           <select class="form-control" ng-model="areaselect" ng-options="area.name for area in areas track by area.name" ng-change="cargarRutasByArea()">
-                                                <option value="" selected disabled>Seleccionar un &Aacute;rea</option>
-                                            </select>  
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            <table class="table  table-bordered table-hover table-responsive table-striped">
-                                <thead>
-                                    <tr>                                
-                                        <th colspan="4" valign="middle">Seleccione la Ruta</th>                                  
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>  
-                                        <td align="center">
-                                            <select class="form-control" ng-model="selectruta" ng-options="ruta.route_name for ruta in rutas track by ruta.route_name">
-                                                <option value="" selected disabled>Seleccionar una ruta</option>                                                
-                                            </select>
-                                        </td>										
-                                        <td align="center">
-                                            <button class="btn btn-white btn-info btn-bold" id="tdsql" onClick="informeTD()">
-                                                <i class="ace-icon fa fa-search bigger-120 blue"></i>
-                                                Consultar
-                                            </button>
-                                        </td>
-                                        <td align="center">
-                                            <button class="btn btn-white btn-warning btn-bold" id="cancelar" onClick="cancelarTD()">
-                                                <i class="ace-icon fa fa-times orange"></i>
-                                                Cancelar
-                                            </button>
-                                        </td>	
-                                        <td align="center">
-                                            <button type="button" class="btn btn-white btn-default btn-bold" id="pdfgenera"  onClick="generaTD()">
-                                                 <i class="ace-icon fa fa-cloud-download bigger-120 red2"></i>
-                                                PDF
-                                            </button>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+                    <!-- Fin Tab 3 -->
                 </div>
             </div>
             <!-- PAGE CONTENT ENDS -->
@@ -235,15 +179,9 @@ require_once('../../php/connection.php');
 <script type="text/javascript">
     var pdf = '';
     var pdfpc = '';
-    //var css = '<link rel="stylesheet" href="assets/css/bootstrap.min.css"/>';
-    //var img = '<img style="border:0px" src="img/logo.png" /><hr/>';
-    //var label_t = '<label>Tiempo y Distancia Entre Vehiculos</label>';
-   // var label_pc = '<label>Tiempo Diferencia Entre Puntos de Control</label>';
-
     function informeTD() {
         var id = document.getElementById("selrut").value; 
         var user_id = localStorage['ztrack.user_id'];
-        
         $.ajax({
             type: "post",
             data: { 
@@ -262,7 +200,7 @@ require_once('../../php/connection.php');
 
 
     function generaTD() {
-        //pdf = css + img + label_t + pdf;
+        
         $.ajax({
             type: "post",
             url: "reportes/actual/tablapdf.php",
@@ -294,7 +232,7 @@ require_once('../../php/connection.php');
     }
 
     function generaPC() {
-        //pdfpc = css + img + label_pc + pdfpc;
+        
         $.ajax({
             type: "post",
             url: "reportes/actual/listapdfPC.php",

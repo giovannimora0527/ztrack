@@ -237,28 +237,28 @@ class GrupoZTrackController extends \BaseController {
         if($hasFiltros){
           if($filtroconductor != ""){
              if($cantfiltros == 0){
-               $filtros .= " gd.driver_name LIKE '%" . $filtroconductor . "%'";               
+               $filtros .= " UPPER(gd.driver_name) LIKE UPPER('%" . $filtroconductor . "%')";               
              }
              else{
-               $filtros .= " AND gd.driver_name LIKE '%" . $filtroconductor . "%'";  
+               $filtros .= " AND UPPER(gd.driver_name) LIKE UPPER('%" . $filtroconductor . "%')";  
              }
              $cantfiltros++; 
           } 
           if($filtrovehiculo != ""){
              if($cantfiltros == 0){
-               $filtros .= " gu.name LIKE '%" . $filtrovehiculo . "%'";               
+               $filtros .= " UPPER(gu.name) LIKE UPPER('%" . $filtrovehiculo . "%')";               
              }
              else{
-               $filtros .= " AND gu.name LIKE '%" . $filtrovehiculo . "%'";  
+               $filtros .= " AND UPPER(gu.name) LIKE UPPER('%" . $filtrovehiculo . "%')";  
              }
              $cantfiltros++; 
           } 
           if($filtroplaca != ""){
              if($cantfiltros == 0){
-               $filtros .= " gu.plate_number LIKE '%" . $filtroplaca . "%'";                
+               $filtros .= " UPPER(gu.plate_number) LIKE UPPER('%" . $filtroplaca . "%')";                
              }
              else{
-               $filtros .= " AND gu.plate_number LIKE '%" . $filtroplaca . "%'";  
+               $filtros .= " AND UPPER(gu.plate_number) LIKE UPPER('%" . $filtroplaca . "%')";  
              }
              $cantfiltros++; 
           } 
@@ -326,7 +326,7 @@ class GrupoZTrackController extends \BaseController {
                 return Response::json(array('success' => true, 'mensaje' => 'Datos cargados con éxito', 'asignaciones' => $asignaciones, 'min' => intval($min), 'max' => $max - 1, 'count' => $count[0]->conteo,
                             'moreresults' => $more_results));
             } else {
-                return Response::json(array('success' => false));
+                return Response::json(array('success' => false, 'mensaje' => "No hay resultados disponibles."));
             }
         } catch (Exception $e) {
             return Response::json(array('mensaje' => "No hay resultados disponibles. " . $e, 'error' => true));

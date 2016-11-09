@@ -122,7 +122,7 @@ class DespachosController extends \BaseController {
         $sql_tiempo = "";
         if (count($result) > 0) {
             $sql_tiempo = "update gs_rutazonas set "
-                    . "tiempopc = '" . $time
+                    . "tiempo_zona = '" . $time
                     . "' where zone_id = " . $data["pc"];
         } else {
             return Response::json(array('mensaje' => "No se pudo guardar el registro. Intente de nuevo o contacte al administrador del sistema. ", 'error' => true));
@@ -143,8 +143,8 @@ class DespachosController extends \BaseController {
         $data = Input::all();
         $sql = "select uz.zone_name, ur.route_name,
                 CASE 
-                  WHEN rz.tiempopc IS NULL THEN 'Sin Asignar'
-                  ELSE rz.tiempopc 
+                  WHEN rz.tiempo_zona IS NULL THEN 'Sin Asignar'
+                  ELSE rz.tiempo_zona 
                   END AS tiempopc
                 from gs_rutazonas  rz
                 join gs_user_zones uz ON uz.zone_id = rz.zone_id

@@ -44,7 +44,7 @@ ztrack.config(['$stateProvider', '$urlRouterProvider', '$httpProvider',
                 })
                 .state('reportestiempos', {
                     url: '/reportes_tiempo_en_ruta',
-                    templateUrl: 'html/reptimeruta.html',
+                    templateUrl: 'reportes/tiemporuta/index.php',
                     controller: 'ReportesController',
                     onEnter: function (SessionService, $state) {
                         if (!SessionService.isLoged()) {
@@ -64,7 +64,7 @@ ztrack.config(['$stateProvider', '$urlRouterProvider', '$httpProvider',
                 })
                 .state('reportesPC', {
                     url: '/reportes_puntos_control',
-                    templateUrl: 'html/timesPC.html',
+                    templateUrl: 'reportes/ptoscontrol/index.php',
                     controller: 'ReportesController',
                     onEnter: function (SessionService, $state) {
                         if (!SessionService.isLoged()) {
@@ -87,9 +87,9 @@ ztrack.config(['$stateProvider', '$urlRouterProvider', '$httpProvider',
                         }
                     }
                 })
-                .state('reportesgenerales', {
+                .state('reportesactuales', {
                     url: '/reportes_generales_rutas',
-                    templateUrl: 'reportes/index.php',
+                    templateUrl: 'reportes/actual/index.php',
                     controller: 'ReportesController',
                     onEnter: function (SessionService, $state) {
                         if (!SessionService.isLoged()) {
@@ -172,6 +172,16 @@ ztrack.config(['$stateProvider', '$urlRouterProvider', '$httpProvider',
                     url: '/modulo_despachos',
                     templateUrl: 'html/modulodespachos.html',
                     controller: 'DespachadoresController',
+                    onEnter: function (SessionService, $state) {
+                        if (!SessionService.isLoged()) {
+                            $state.go('salir');
+                        }
+                    }
+                })
+                .state('modulonovedades', {
+                    url: '/novedades',
+                    templateUrl: 'html/novedades.html',
+                    controller: 'NovedadesController',
                     onEnter: function (SessionService, $state) {
                         if (!SessionService.isLoged()) {
                             $state.go('salir');
