@@ -101,21 +101,24 @@ class DespachosController extends \BaseController {
 
     public function getCargarpuntoscontrolaruta() {
         $data = Input::all();
-        $sqlselect = "SELECT rz.rz_id, rz.fecha, uz.zone_id, uz.zone_name, ur.route_id, ur.route_name
+        $sqlselect = "SELECT rz.rz_id, rz.fecha, uz.zone_id, uz.zone_name, ur.route_id, ur.route_name,
+                      CASE 
+                        WHEN rz.tiempo_zona = '00:00:00' THEN 'Sin Asignar'
+                        ELSE rz.tiempo_zona 
+                        END AS tiempo_zona
                       FROM gs_rutazonas rz                      
                       JOIN gs_user_zones uz ON uz.zone_id = rz.zone_id
                       JOIN gs_user_routes ur ON ur.route_id = rz.route_id
                       WHERE rz.user_id = " . $data["user_id"] .
                 " AND rz.route_id = " . $data["route_id"] .
-                "";
-
+                "";        
         $ptosdecontrol = DB::select($sqlselect);
         return Response::json(array('ptosdecontrol' => $ptosdecontrol));
     }
 
     public function postGuardartiempopc() {
         $data = Input::all();
-        $sql = "select * from gs_rutazonas where zone_id = " . $data["pc"] . ";";
+        $sql = "select * from gs_rutazonas where rz_id = " . $data["pc"] . ";";        
         $result = DB::select($sql);
         $tiempos = strtotime($data["tiempo"]);
         $time = date("H:i:s", $tiempos);
@@ -123,7 +126,7 @@ class DespachosController extends \BaseController {
         if (count($result) > 0) {
             $sql_tiempo = "update gs_rutazonas set "
                     . "tiempo_zona = '" . $time
-                    . "' where zone_id = " . $data["pc"];
+                    . "' where rz_id = " . $data["pc"];
         } else {
             return Response::json(array('mensaje' => "No se pudo guardar el registro. Intente de nuevo o contacte al administrador del sistema. ", 'error' => true));
         }
