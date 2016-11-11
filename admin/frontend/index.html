@@ -194,21 +194,21 @@
                         </a>
                         <b class="arrow"></b>
                         <ul class="submenu">
-                            <li id="13" class="">
+                            <li id="13" class="" onclick="validarUrl(13)">
                                 <a ui-sref="consultaconductores">
                                     <i class="menu-icon fa fa-users"></i>
                                     Conductores
                                 </a>
                                 <b class="arrow"></b>
                             </li>
-                            <li id="14" class="">
+                            <li id="14" class="" onclick="validarUrl(14)">
                                 <a ui-sref="consultavehiculos">
                                     <i class="menu-icon fa fa-automobile"></i>
                                     Vehículos
                                 </a>
                                 <b class="arrow"></b>
                             </li>
-                            <li id="15" class="">
+                            <li id="15" class="" onclick="validarUrl(15)">
                                 <a ui-sref="consultarutas">
                                     <i class="menu-icon fa fa-road"></i>
                                     Rutas
@@ -226,28 +226,28 @@
                         </a>
                         <b class="arrow"></b>
                         <ul class="submenu">
-                            <li id="17" class="">
+                            <li id="17" class="" onclick="validarUrl(17)">
                                 <a ui-sref="gestionconductores">
                                     <i class="menu-icon fa fa-user"></i>
                                     Gestión de Conductores
                                 </a>
                                 <b class="arrow"></b>
                             </li>
-                            <li id="18" class="">
+                            <li id="18" class="" onclick="validarUrl(18)">
                                 <a ui-sref="gestiongrupos">
                                     <i class="menu-icon fa fa-group"></i>
                                     Gestión de Grupos
                                 </a>
                                 <b class="arrow"></b>
                             </li> 
-                            <li id="19" class="">
+                            <li id="19" class="" onclick="validarUrl(19)">
                                 <a ui-sref="gestiondespachos">
                                     <i class="menu-icon fa fa-clock-o"></i>
                                     Gestión de Despachos
                                 </a>
                                 <b class="arrow"></b>
                             </li>  
-                            <li id="20" class="">
+                            <li id="20" class="" onclick="validarUrl(20)">
                                 <a ui-sref="gestiondespachadores">
                                     <i class="menu-icon fa fa-newspaper-o"></i>
                                     Gestión de Despachadores
@@ -317,8 +317,8 @@
         <script src="assets/js/jquery-1.11.3.min.js"></script><!--
         <![endif]-->
         <script type="text/javascript">
-                            if ('ontouchstart' in document.documentElement)
-                                document.write("<script src='assets/js/jquery.mobile.custom.min.js'>" + "<" + "/script>");
+                                        if ('ontouchstart' in document.documentElement)
+                                            document.write("<script src='assets/js/jquery.mobile.custom.min.js'>" + "<" + "/script>");
         </script>
         <script src="assets/js/bootstrap.min.js"></script>
 
@@ -345,144 +345,141 @@
 
         <!-- inline scripts related to this page -->
         <script type="text/javascript">
-                            jQuery(function ($) {
-                                $('.easy-pie-chart.percentage').each(function () {
-                                    var $box = $(this).closest('.infobox');
-                                    var barColor = $(this).data('color') || (!$box.hasClass('infobox-dark') ? $box.css('color') : 'rgba(255,255,255,0.95)');
-                                    var trackColor = barColor = 'rgba(255,255,255,0.95)' ? 'rgba(255,255,255,0.25)' : '#E2E2E2';
-                                    var size = parseInt($(this).data('size')) || 50;
-                                    $(this).easyPieChart({
-                                        barColor: barColor,
-                                        trackColor: trackColor,
-                                        scaleColor: false,
-                                        lineCap: 'butt',
-                                        lineWidth: parseInt(size / 10),
-                                        animate: ace.vars['old_ie'] ? false : 1000,
-                                        size: size
-                                    });
-                                })
+                                        jQuery(function ($) {
+                                            $('.easy-pie-chart.percentage').each(function () {
+                                                var $box = $(this).closest('.infobox');
+                                                var barColor = $(this).data('color') || (!$box.hasClass('infobox-dark') ? $box.css('color') : 'rgba(255,255,255,0.95)');
+                                                var trackColor = barColor = 'rgba(255,255,255,0.95)' ? 'rgba(255,255,255,0.25)' : '#E2E2E2';
+                                                var size = parseInt($(this).data('size')) || 50;
+                                                $(this).easyPieChart({
+                                                    barColor: barColor,
+                                                    trackColor: trackColor,
+                                                    scaleColor: false,
+                                                    lineCap: 'butt',
+                                                    lineWidth: parseInt(size / 10),
+                                                    animate: ace.vars['old_ie'] ? false : 1000,
+                                                    size: size
+                                                });
+                                            })
 
-                                $('.sparkline').each(function () {
-                                    var $box = $(this).closest('.infobox');
-                                    var barColor = !$box.hasClass('infobox-dark') ? $box.css('color') : '#FFF';
-                                    $(this).sparkline('html',
-                                            {
-                                                tagValuesAttribute: 'data-values',
-                                                type: 'bar',
-                                                barColor: barColor,
-                                                chartRangeMin: $(this).data('min') || 0
+                                            $('.sparkline').each(function () {
+                                                var $box = $(this).closest('.infobox');
+                                                var barColor = !$box.hasClass('infobox-dark') ? $box.css('color') : '#FFF';
+                                                $(this).sparkline('html',
+                                                        {
+                                                            tagValuesAttribute: 'data-values',
+                                                            type: 'bar',
+                                                            barColor: barColor,
+                                                            chartRangeMin: $(this).data('min') || 0
+                                                        });
                                             });
-                                });
+                                            //flot chart resize plugin, somehow manipulates default browser resize event to optimize it!
+                                            //but sometimes it brings up errors with normal resize event handlers
+                                            $.resize.throttleWindow = false;
+                                            var placeholder = $('#piechart-placeholder').css({'width': '90%', 'min-height': '150px'});
+                                            placeholder.on('plothover', function (event, pos, item) {
+                                                if (item) {
+                                                    if (previousPoint !== item.seriesIndex) {
+                                                        previousPoint = item.seriesIndex;
+                                                        var tip = item.series['label'] + " : " + item.series['percent'] + '%';
+                                                        $tooltip.show().children(0).text(tip);
+                                                    }
+                                                    $tooltip.css({top: pos.pageY + 10, left: pos.pageX + 10});
+                                                } else {
+                                                    $tooltip.hide();
+                                                    previousPoint = null;
+                                                }
+
+                                            });
+                                            $(document).one('ajaxloadstart.page', function (e) {
+                                                $tooltip.remove();
+                                            });
+                                            var d1 = [];
+                                            for (var i = 0; i < Math.PI * 2; i += 0.5) {
+                                                d1.push([i, Math.sin(i)]);
+                                            }
+
+                                            var d2 = [];
+                                            for (var i = 0; i < Math.PI * 2; i += 0.5) {
+                                                d2.push([i, Math.cos(i)]);
+                                            }
+
+                                            var d3 = [];
+                                            for (var i = 0; i < Math.PI * 2; i += 0.2) {
+                                                d3.push([i, Math.tan(i)]);
+                                            }
+                                            $('#recent-box [data-rel="tooltip"]').tooltip({placement: tooltip_placement});
+                                            function tooltip_placement(context, source) {
+                                                var $source = $(source);
+                                                var $parent = $source.closest('.tab-content');
+                                                var off1 = $parent.offset();
+                                                var w1 = $parent.width();
+                                                var off2 = $source.offset();
+                                                if (parseInt(off2.left) < parseInt(off1.left) + parseInt(w1 / 2))
+                                                    return 'right';
+                                                return 'left';
+                                            }
 
 
-                                //flot chart resize plugin, somehow manipulates default browser resize event to optimize it!
-                                //but sometimes it brings up errors with normal resize event handlers
-                                $.resize.throttleWindow = false;
-                                var placeholder = $('#piechart-placeholder').css({'width': '90%', 'min-height': '150px'});
+                                            $('.dialogs,.comments').ace_scroll({
+                                                size: 300
+                                            });
+                                            //Android's default browser somehow is confused when tapping on label which will lead to dragging the task
+                                            //so disable dragging when clicking on label                        
+                                            if (ace.vars['touch'] && ace.vars['android']) {
+                                                $('#tasks').on('touchstart', function (e) {
+                                                    var li = $(e.target).closest('#tasks li');
+                                                    if (li.length === 0)
+                                                        return;
+                                                    var label = li.find('label.inline').get(0);
+                                                    if (label === e.target || $.contains(label, e.target))
+                                                        e.stopImmediatePropagation();
+                                                });
+                                            }
 
-                                placeholder.on('plothover', function (event, pos, item) {
-                                    if (item) {
-                                        if (previousPoint !== item.seriesIndex) {
-                                            previousPoint = item.seriesIndex;
-                                            var tip = item.series['label'] + " : " + item.series['percent'] + '%';
-                                            $tooltip.show().children(0).text(tip);
+                                            $('#tasks').sortable({
+                                                opacity: 0.8,
+                                                revert: true,
+                                                forceHelperSize: true,
+                                                placeholder: 'draggable-placeholder',
+                                                forcePlaceholderSize: true,
+                                                tolerance: 'pointer',
+                                                stop: function (event, ui) {
+                                                    //just for Chrome!!!! so that dropdowns on items don't appear below other items after being moved
+                                                    $(ui.item).css('z-index', 'auto');
+                                                }
+                                            }
+                                            );
+                                        });
+                                        function goToTrack() {
+                                            var userId = localStorage.getItem('ztrack.user_id');
+                                            $.ajax({
+                                                url: 'php/validate.php',
+                                                data: {userId: userId},
+                                                dataType: "json",
+                                                type: 'POST',
+                                                success: function (result) {
+                                                    if (result[0]["success"]) {
+                                                        var url = window.location.origin + "/track/login.php?u=" + result[0]["usuario"] +
+                                                                "&p=" + result[0]["password"] + "&rm=true&m=false";
+                                                        var windows = window.location.origin + "/track/tracking2.php";
+                                                        sessionStorage.setItem('url', windows);
+                                                        window.open(url, '_blank');
+                                                    }
+                                                }
+                                            });
                                         }
-                                        $tooltip.css({top: pos.pageY + 10, left: pos.pageX + 10});
-                                    } else {
-                                        $tooltip.hide();
-                                        previousPoint = null;
-                                    }
-
-                                });
-
-                                $(document).one('ajaxloadstart.page', function (e) {
-                                    $tooltip.remove();
-                                });
-
-                                var d1 = [];
-                                for (var i = 0; i < Math.PI * 2; i += 0.5) {
-                                    d1.push([i, Math.sin(i)]);
-                                }
-
-                                var d2 = [];
-                                for (var i = 0; i < Math.PI * 2; i += 0.5) {
-                                    d2.push([i, Math.cos(i)]);
-                                }
-
-                                var d3 = [];
-                                for (var i = 0; i < Math.PI * 2; i += 0.2) {
-                                    d3.push([i, Math.tan(i)]);
-                                }
-                                $('#recent-box [data-rel="tooltip"]').tooltip({placement: tooltip_placement});
-                                function tooltip_placement(context, source) {
-                                    var $source = $(source);
-                                    var $parent = $source.closest('.tab-content');
-                                    var off1 = $parent.offset();
-                                    var w1 = $parent.width();
-
-                                    var off2 = $source.offset();
-                                    if (parseInt(off2.left) < parseInt(off1.left) + parseInt(w1 / 2))
-                                        return 'right';
-                                    return 'left';
-                                }
-
-
-                                $('.dialogs,.comments').ace_scroll({
-                                    size: 300
-                                });
-
-
-                                //Android's default browser somehow is confused when tapping on label which will lead to dragging the task
-                                //so disable dragging when clicking on label                        
-                                if (ace.vars['touch'] && ace.vars['android']) {
-                                    $('#tasks').on('touchstart', function (e) {
-                                        var li = $(e.target).closest('#tasks li');
-                                        if (li.length === 0)
-                                            return;
-                                        var label = li.find('label.inline').get(0);
-                                        if (label === e.target || $.contains(label, e.target))
-                                            e.stopImmediatePropagation();
-                                    });
-                                }
-
-                                $('#tasks').sortable({
-                                    opacity: 0.8,
-                                    revert: true,
-                                    forceHelperSize: true,
-                                    placeholder: 'draggable-placeholder',
-                                    forcePlaceholderSize: true,
-                                    tolerance: 'pointer',
-                                    stop: function (event, ui) {
-                                        //just for Chrome!!!! so that dropdowns on items don't appear below other items after being moved
-                                        $(ui.item).css('z-index', 'auto');
-                                    }
-                                }
-                                );
-                            });
-
-                            function goToTrack() {
-                                var userId = localStorage.getItem('ztrack.user_id');
-                                $.ajax({
-                                    url: 'php/validate.php',
-                                    data: {userId: userId},
-                                    dataType: "json",
-                                    type: 'POST',
-                                    success: function (result) {
-                                        if (result[0]["success"]) {
-                                            var url = window.location.origin + "/track/login.php?u=" + result[0]["usuario"] +
-                                                    "&p=" + result[0]["password"] + "&rm=true&m=false";
-                                            var windows = window.location.origin + "/track/tracking2.php";
-                                            sessionStorage.setItem('url', windows);
-                                            window.open(url, '_blank');
+                                        ;
+                                        function validarUrl(id) {
+                                            console.log(id);
+                                            for (var i = 1; i <= 20; i++) {
+                                                $("#" + i).removeClass("active");
+                                            }
+                                            $("#" + id).addClass("active");
                                         }
-                                    }
-                                });
-                            }
-                            ;
-                            
-                            function validarUrl(id){
-                               console.log(id);  
-                            }
+                                        
+                                        $("#1").addClass("active"); 
+                                        
         </script>
 
         <!--        <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.js"></script>-->
@@ -530,8 +527,5 @@
         <script src="controllers/perfil.js"></script>
         <script src="controllers/auth-service.js"></script>
         <script src="controllers/session-service.js"></script>
-
-        <!--        scripts\easy-pie-chart\dist-->
-
     </body>
 </html>

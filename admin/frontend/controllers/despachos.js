@@ -228,9 +228,6 @@ ztrack.controller('DespachosController', function ($rootScope, $scope, $filter, 
             fechaini: $scope.gruporuta.fechaini,
             fechafin: $scope.gruporuta.fechafin
         };
-
-        console.log($params);
-        return;
         QueriesService.executeRequest('GET', '../laravel/public/gruposrutas/gruposrutas', null, $params)
                 .then(function (result) {
                     if (result.success) {

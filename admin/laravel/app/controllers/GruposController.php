@@ -30,6 +30,16 @@ class GruposController extends \BaseController {
        $areas = DB::select('select group_id id, group_name name from gs_user_places_groups where user_id = ' . $user_id);
         return Response::json(array('areas' => $areas));
     }
+    
+    public function getGruposbyareaid() { 
+        $user_id = Input::get('user_id');
+        $area_id = Input::get('area_id');
+        $sql = "";
+        
+        $groups = [];
+        //$groups = DB::select($sql);
+        return Response::json(array('grupos' => $groups));
+    }
 
     
 

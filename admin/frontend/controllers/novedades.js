@@ -8,6 +8,7 @@ ztrack.controller('NovedadesController', function ($rootScope, $scope, AuthServi
     $scope.title = "Registro de Novedades";
     $scope.activeTab = 1;
     cargarAreas();
+    $scope.novedadesselect = [];
 
     $scope.setActiveTab = function (tab) {
         $scope.activeTab = tab;
@@ -38,6 +39,7 @@ ztrack.controller('NovedadesController', function ($rootScope, $scope, AuthServi
         cargarRutas();
     };
 
+
     function cargarRutas() {
         $params = {
             user_id: localStorage['ztrack.user_id'],
@@ -51,9 +53,12 @@ ztrack.controller('NovedadesController', function ($rootScope, $scope, AuthServi
     }
 
     $scope.cargarVehiculos = function () {
+        $scope.areaselect.disabled = true;
+        $scope.rutaselect.disabled = true;
         $params = {
             user_id: localStorage['ztrack.user_id'],
-            ruta_id: $scope.rutaselect.route_id
+            ruta_id: $scope.rutaselect.route_id,
+            area_id: $scope.areaselect.id
         };
         QueriesService.executeRequest('GET', '../laravel/public/novedades/vehiculos', null, $params)
                 .then(function (result) {
@@ -61,19 +66,73 @@ ztrack.controller('NovedadesController', function ($rootScope, $scope, AuthServi
                     $scope.vehiculos = result.vehiculos;
                 });
     };
-    
-    $scope.cargarModal = function(veh){
-      $scope.vehiculo = veh;  
-      $scope.cargarNovedades();
+
+    $scope.cargarModal = function (veh) {
+        $scope.vehiculoseleccionado = veh;
+        $scope.cargarNovedades();
+    };
+
+    $scope.cargarNovedades = function () {
+        $params = {
+            user_id: localStorage['ztrack.user_id']
+        };
+
+        QueriesService.executeRequest('GET', '../laravel/public/novedades/novedades', null, $params)
+                .then(function (result) {
+                    $scope.novedades = {};
+                    $scope.novedades = result.novedades;
+                });
+    };
+
+    $scope.adicionarNovedad = function () {
+        if ($scope.selectnovedad === undefined) {
+            toastr.error("Debe seleccionar una novedad para continuar. Intente de nuevo", "Error");
+            return;
+        }
+        if ($scope.novedadesselect.length === 0) {
+            $scope.novedadesselect.push({
+                novedad_id: $scope.selectnovedad.novedad_id,
+                descripcion: $scope.selectnovedad.descripcion
+            });
+        } else {
+            var esta = false;
+            for (var i = 0; i < $scope.novedadesselect.length; i++) {
+                if (parseInt($scope.novedadesselect[i].novedad_id) === parseInt($scope.selectnovedad.novedad_id)) {
+                    esta = true;
+                }
+            }
+            if (!esta) {
+                $scope.novedadesselect.push({
+                    novedad_id: $scope.selectnovedad.novedad_id,
+                    descripcion: $scope.selectnovedad.descripcion
+                });
+            } else {
+                toastr.warning("La novedad ya se encuentra preseleccionada. Intente de nuevo con otra.", "Atención");
+            }
+        }
     };
     
-    $scope.cargarNovedades = function(){
-      $params = {
-            user_id: localStorage['ztrack.user_id']           
-        };  
+    $scope.deleteNovedad = function(item){
+       $scope.novedadesselect.splice($scope.novedadesselect.indexOf(item), 1); 
     };
-    
-    
+
+
+    $scope.registrarNovedad = function () {
+        $params = {
+            user_id: localStorage['ztrack.user_id'],
+            despachador_id: localStorage['ztrack.despachador_id'],
+            vehiculo_id : $scope.vehiculoseleccionado.object_id,
+            novedades_list : $scope.novedadesselect
+        };
+        
+        QueriesService.executeRequest('POST', '../laravel/public/novedades/novedadesavehiculo', $params, null)
+                .then(function (result) {
+                    
+                });
+      
+    };
+
+
 
 });
 

@@ -4,12 +4,13 @@
  * and open the template in the editor.
  */
 var ztrack = angular.module('ztrack');
-ztrack.controller('PrincipalController', function ($rootScope, $scope, AuthService, SessionService, $state, QueriesService, toastr) {   
+ztrack.controller('PrincipalController', function ($, $rootScope, $scope, AuthService, SessionService, $state, QueriesService, toastr) {   
   
   $scope.data = SessionService.getInfo();
   $scope.title = "Principal";
-  toastr.success("Bienvenido a ZTrack : " + $scope.data.user.name);
-  $scope.active = "active";
+  toastr.success("Bienvenido a ZTrack : " + $scope.data.user.name);  
+  
+  
   
 });
 

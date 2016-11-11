@@ -42,7 +42,7 @@ and open the template in the editor.
                             <div class="container-fluid">
                                 <div class="row">
                                     <div class="col-md-6">  
-                                        <label class="control-label border blue">Seleccione el área de asignación</label>
+                                        <label class="control-label border blue">Seleccione el área de asignación.</label>
                                         <select class="form-control" ng-model="areaselect" ng-options="area.name for area in areas track by area.name" ng-change="onChangeSelectedArea()">                                        
                                             <option value="" selected disabled>Seleccionar</option>                       
                                         </select>
@@ -75,10 +75,7 @@ and open the template in the editor.
                                                     </th>
                                                     <th>
                                                         Conductor  
-                                                    </th> 
-                                                    <th>
-                                                        Estado
-                                                    </th>                                                     
+                                                    </th>                                                      
                                                     <th>
                                                         Acciones 
                                                     </th> 
@@ -94,11 +91,8 @@ and open the template in the editor.
                                                     </td>
                                                     <td>
                                                         {{veh.driver_name}}
-                                                    </td> 
-                                                    <td>
-                                                        {{veh.descripcion}}
                                                     </td>                                                    
-                                                    <td>
+                                                    <td align="center">
                                                         <div class="btn-group">
                                                             <button class="btn btn-white btn-sm btn-info btn-bold" title="Agregar Novedad" data-toggle="modal" data-target="#editarNovedad" ng-click="cargarModal(veh)">
                                                                 <i class="ace-icon fa fa-edit"></i>
@@ -144,26 +138,54 @@ and open the template in the editor.
             </div> 
         </div>
     </div>
-    
-    
-<!-- Modal Novedades-->
-<div id="editarNovedad" class="modal fade" role="dialog">
-    <div class="modal-dialog">
-        <!-- Modal content-->
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Registrar Novedad a <font color="#B40404">{{vehiculo.name}}</font></h4>
-            </div>
-            <div class="modal-body">                
-                Seleccione la Novedad
-            </div>
-            <div class="modal-footer">
-                <button id="btndespachar" type="button" class="btn btn-primary" ng-click="registrarnovedad(vehiculo)"><i class="pull-left bigger-130 ace-icon fa fa-arrow-right"></i>Registrar Novedad</button>                
-                <button  id="btncerrar" type="button" class="btn btn-default" data-dismiss="modal"><i class="pull-left bigger-130 ace-icon fa fa-times"></i>Cerrar</button>
-            </div>
-        </div>
 
+
+    <!-- Modal Novedades-->
+    <div id="editarNovedad" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Registrar Novedad a <font color="#B40404">{{vehiculo.name}}</font></h4>
+                </div>
+                <div class="modal-body"> 
+                    <div class="row">
+                        <div class="col-md-6">
+                            Seleccione la Novedad
+                            <div class="input-group">
+                                <select class="form-control" ng-model="selectnovedad" ng-options="nov.descripcion for nov in novedades track by nov.descripcion">
+                                    <option value="" selected disabled>Seleccione una opción</option>
+                                </select>
+                                <span class="input-group-btn">
+                                    <button class="btn btn-primary" type="button" ng-click="adicionarNovedad()">
+                                        <i class="ace-icon fa fa-arrow-right bigger-110"></i>                                                       
+                                    </button>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">                            
+                            Novedades Seleccionadas
+                            <div class="dd" id="nestable">
+                                <ol class="dd-list">
+                                    <li class="dd-item" ng-repeat="n in novedadesselect">
+                                        <div class="dd-handle">
+                                            <i class="pull-left bigger-130 ace-icon fa fa-automobile blue"></i>
+                                            Novedad: {{n.descripcion}}
+                                            <a href="" ng-click="deleteNovedad(n)"><i class="pull-right bigger-130 ace-icon fa fa-times blue"></i></a>
+                                        </div>
+                                    </li>
+                                </ol>
+                            </div>   
+                        </div>
+                    </div>                
+                </div>
+                <div class="modal-footer">
+                    <button id="btnregistrar" type="button" class="btn btn-primary" ng-click="registrarNovedad()"><i class="pull-left bigger-130 ace-icon fa fa-arrow-right"></i>Registrar Novedad</button>                
+                    <button  id="btncerrar" type="button" class="btn btn-default" data-dismiss="modal"><i class="pull-left bigger-130 ace-icon fa fa-times"></i>Cerrar</button>
+                </div>
+            </div>
+
+        </div>
     </div>
-</div>
 </div> 
