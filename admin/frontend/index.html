@@ -29,7 +29,8 @@
         <link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
         <!-- Plugin files -->        
         <link href="https://cdn.rawgit.com/zhaber/datetimepicker/master/datetimepicker.css" type="text/css" rel="stylesheet">
-
+<!--        DatePicker    -->
+        <link rel="stylesheet" href="../assets/css/bootstrap-datepicker3.min.css" />
 
     </head>
 
@@ -228,15 +229,15 @@
                         <ul class="submenu">
                             <li id="17" class="" onclick="validarUrl(17)">
                                 <a ui-sref="gestionconductores">
-                                    <i class="menu-icon fa fa-user"></i>
+                                    <i class="menu-icon fa fa-group"></i>
                                     Gestión de Conductores
                                 </a>
                                 <b class="arrow"></b>
                             </li>
                             <li id="18" class="" onclick="validarUrl(18)">
-                                <a ui-sref="gestiongrupos">
-                                    <i class="menu-icon fa fa-group"></i>
-                                    Gestión de Grupos
+                                <a ui-sref="gestionvehiculos">
+                                    <i class="menu-icon fa fa-automobile"></i>
+                                    Gestión de Vehículos
                                 </a>
                                 <b class="arrow"></b>
                             </li> 
@@ -470,8 +471,7 @@
                                             });
                                         }
                                         ;
-                                        function validarUrl(id) {
-                                            console.log(id);
+                                        function validarUrl(id) {                                            
                                             for (var i = 1; i <= 20; i++) {
                                                 $("#" + i).removeClass("active");
                                             }
@@ -480,6 +480,22 @@
                                         
                                         $("#1").addClass("active"); 
                                         
+        </script>
+        <script src="../assets/js/bootstrap-datepicker.min.js"></script>
+
+
+        <script>
+        //datepicker plugin
+        //link
+        $('.date-picker').datepicker({
+            languaje: "es",
+            autoclose: true,
+            todayHighlight: true
+         })
+        //show datepicker when clicking on the icon
+        .next().on(ace.click_event, function () {
+            $(this).prev().focus();
+        });
         </script>
 
         <!--        <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.js"></script>-->

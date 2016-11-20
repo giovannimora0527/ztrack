@@ -27,19 +27,18 @@ and open the template in the editor.
                         </li>
                         <li ng-class="{'active' : activeTab === 2}"><a href="" ng-click="setActiveTab(2)">
                                 <i class="blue fa fa-search bigger-120"></i>
-                                Ver Novedades
+                                Ver y Editar Novedades
                             </a>
-                        </li> 
-                        <li ng-class="{'active' : activeTab === 3}"><a href="" ng-click="setActiveTab(3)">
-                                <i class="blue fa fa-check bigger-120"></i>
-                                Solucionar Novedad
-                            </a>
-                        </li>                       
+                        </li>                  
                     </ul>
                     <div class="tab-content">
                         <!-- Pestaña de registro de novedades -->
                         <div ng-class="{'tab-pane active': activeTab === 1, 'tab-pane' : activeTab !== 1}">
                             <div class="container-fluid">
+                                * Para poder reaiizar el registro de una novedad, seleccione el area de asignacion, posteriormente la ruta y clic en el boton cargar vehiculos. Puede asignar una o varias
+                                novedades a uno o varios vehículos.
+                                <br><br>
+
                                 <div class="row">
                                     <div class="col-md-6">  
                                         <label class="control-label border blue">Seleccione el área de asignación.</label>
@@ -57,7 +56,7 @@ and open the template in the editor.
                                 <br>
                                 <button class="btn btn-primary" ng-click="cargarVehiculos()">Cargar Vehiculos</button>
                                 <br> <br>
-                                <div class="row">                      
+                                <div class="row" ng-if="hayResultados">                      
                                     <div class="col-md-12">                                        
                                         <table class="table table-bordered table-condensed table-responsive table-striped" >
                                             <thead>
@@ -110,29 +109,130 @@ and open the template in the editor.
 
                             </div> 
                         </div>
-                        <!--                Pestaña de vehiculos a grupos-->
+                        <!-- Pestaña de Novedades-->
                         <div ng-class="{'tab-pane active': activeTab === 2, 'tab-pane' : activeTab !== 2}">
                             <div class="container-fluid">
                                 <h3>
                                     Ver Novedades
                                 </h3>
+                                * Para poder filtar es necesario elegir uno de los siguientes filtros a continuación. Paara poder filtrar por vehículo es necesario seleccionar el área y posteriormente 
+                                la ruta.
+                                <br><br>
                                 <div class="row">
-
-                                </div> 
-                            </div> 
-                        </div> 
-                        <!--                Pestaña de conductores a vehiculos-->
-                        <div ng-class="{'tab-pane active': activeTab === 3, 'tab-pane' : activeTab !== 3}">
-                            <div class="container-fluid">
-                                <h3>
-                                    Solucionar Novedades
-                                </h3>
-                                <br>                       
+                                    <div class="col-md-2">
+                                        <label class="control-label border blue">Fecha</label>                                        
+                                        <div class="input-group">
+                                            <input class="form-control date-picker" ng-model="fechafilter" id="id-fecha" type="text" data-date-format="yyyy-mm-dd" ng-change="desbloquearBtnFilter()" placeholder="yyyy-mm-dd" />
+                                            <span class="input-group-addon">
+                                                <i class="fa fa-calendar bigger-110 border blue"></i>
+                                            </span>
+                                        </div>                                        
+                                    </div>
+                                    <div class="col-md-3">  
+                                        <label class="control-label border blue">Seleccione el área.</label>
+                                        <select id="selectarea" class="form-control" ng-model="areaselect" ng-options="area.name for area in areas track by area.name" ng-change="onChangeSelectedArea()">                                        
+                                            <option value="" selected disabled>Seleccionar</option>                       
+                                        </select>
+                                    </div> 
+                                    <div class="col-md-4">  
+                                        <label class="control-label border blue">Seleccione la ruta.</label>
+                                        <div class="input-group">
+                                            <select id="selectruta" class="form-control" ng-model="rutaselect" ng-options="ruta.route_name for ruta in rutas track by ruta.route_name" ng-change="">                                           
+                                                <option value="" selected disabled>Seleccionar</option>                                                
+                                            </select>
+                                            <span class="input-group-addon">
+                                                <a href="" ng-click="cargarVehiculos()">
+                                                    <i class="fa fa-arrow-right bigger-110 border blue"></i>
+                                                </a>
+                                            </span>
+                                        </div>
+                                    </div> 
+                                    <div class="col-md-3"> 
+                                        <label class="control-label border blue">Vehículo.</label>
+                                        <select id="selectveh" class="form-control" ng-model="vehiculofilter" ng-options="veh.name for veh in vehiculos track by veh.name" onchange="bloquear()" ng-change="desbloquearBtnFilter()">                                           
+                                            <option value="" selected disabled>Seleccionar</option>                                                
+                                        </select>                                       
+                                    </div>
+                                </div><br> 
                                 <div class="row">
-
-                                </div>                                
+                                    <div class="col-md-6">  
+                                        <button class="btn btn-default" onclick="desbloquear()" ng-click="limpiarCamposFilter()"><i class="fa fa-eraser"></i> Limpiar Campos</button>
+                                        <button ng-disabled="btnfilteractive" class="btn btn-primary" ng-click="filtrar()"><i class="fa fa-search"></i> Buscar</button>
+                                    </div> 
+                                </div>
+                                <br> 
+                                <!--                                ng-if="hayNovedades"-->
+                                <div class="row">
+                                    <div class="col-md-12">                                        
+                                        <table class="table table-condesed table-responsive table-bordered table stripped">
+                                            <thead>
+                                                <tr>
+                                                    <td>
+                                                        Vehiculo  
+                                                    </td>
+                                                    <td>
+                                                        Novedad  
+                                                    </td>
+                                                    <td>
+                                                        Despachador Encargado 
+                                                    </td>
+                                                    <td>
+                                                        Fecha y Hora de Registro
+                                                    </td>
+                                                    <td>
+                                                        Acciones
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <input class="form-control"  ng-model="filtrovehiculo" />  
+                                                    </td>
+                                                    <td>
+                                                        <select class="form-control" ng-model="filtronovedad" >
+                                                            <option value="" disabled selected>Seleccione una novedad</option>
+                                                        </select>  
+                                                    </td>
+                                                    <td>
+                                                        <select class="form-control" ng-model="filtrodespachador" >
+                                                            <option value="" disabled selected>Seleccione un despachador</option>
+                                                        </select> 
+                                                    </td>
+                                                    <td>
+                                                        <input class="form-control date-picker" ng-model="filtrofecha" id="id-fecha" type="text" data-date-format="yyyy-mm-dd" placeholder="yyyy-mm-dd"/>
+                                                    </td>
+                                                    <td>
+                                                        <button class="btn btn-primary" ng-click="filtrarregistros()">Filtrar</button> 
+                                                    </td>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr ng-repeat = "nov in novedadesregistradas">
+                                                    <td>
+                                                        {{nov.name}} 
+                                                    </td>
+                                                    <td>
+                                                        {{nov.descripcion}}  
+                                                    </td>
+                                                    <td>
+                                                        {{nov.nombre}} {{nov.apellido}} 
+                                                    </td>
+                                                    <td>
+                                                        {{nov.fecha_registro}}
+                                                    </td>
+                                                    <td align="center">
+                                                        <div class="btn-group">
+                                                            <button class="btn btn-white btn-sm btn-info btn-bold" title="Solucionar Novedad" data-toggle="modal" data-target="#editarSolucionNovedad" ng-click="cargarModalSolucion(veh)">
+                                                                <i class="ace-icon fa fa-edit"></i>
+                                                            </button>                                                              
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div> 
+                                </div>
                             </div> 
-                        </div>                       
+                        </div>                                                
                     </div>
                 </div>
             </div> 
@@ -189,3 +289,30 @@ and open the template in the editor.
         </div>
     </div>
 </div> 
+
+<script>
+    //datepicker plugin
+    //link
+    $('.date-picker').datepicker({
+        languaje: "es",
+        autoclose: true,
+        todayHighlight: true
+    })
+            //show datepicker when clicking on the icon
+            .next().on(ace.click_event, function () {
+        $(this).prev().focus();
+    });
+
+    function bloquear() {
+        document.getElementById("selectruta").disabled = true;
+        document.getElementById("selectarea").disabled = true;
+        document.getElementById("selectveh").disabled = true;
+    }
+
+    function desbloquear() {
+        document.getElementById("selectruta").disabled = false;
+        document.getElementById("selectarea").disabled = false;
+        document.getElementById("selectveh").disabled = false;
+    }
+
+</script>

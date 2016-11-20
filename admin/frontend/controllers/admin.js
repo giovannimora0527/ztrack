@@ -127,9 +127,9 @@ ztrack.config(['$stateProvider', '$urlRouterProvider', '$httpProvider',
                         }
                     }
                 })
-                .state('gestiongrupos', {
-                    url: '/gestion_de_grupos',
-                    templateUrl: 'html/gestiongrupos.html',
+                .state('gestionvehiculos', {
+                    url: '/gestion_de_vehiculos',
+                    templateUrl: 'html/gestionvehiculos.html',
                     controller: 'GestionController',
                     onEnter: function (SessionService, $state) {
                         if (!SessionService.isLoged()) {

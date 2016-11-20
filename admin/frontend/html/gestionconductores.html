@@ -24,7 +24,180 @@ and open the template in the editor.
 
 <div class="row">
     <div class="col-xs-12">
-      
+        <div class="container-fluid">
+            <div class="row">
+                <div class="tabbable">
+                    <ul class="nav nav-tabs">
+                        <li ng-class="{'active' : activeTab === 1}"><a href="" ng-click="setActiveTab(1)">
+                                <i class="blue fa fa-group bigger-120"></i>
+                                Registro de Conductores
+                            </a>
+                        </li>
+                        <li ng-class="{'active' : activeTab === 2}"><a href="" ng-click="setActiveTab(2)">
+                                <i class="blue fa fa-search bigger-120"></i>
+                                Buscar Información Conductores
+                            </a>
+                        </li>                  
+                    </ul>
+                    <div class="tab-content">
+                        <!-- Pestaña de registro de conductores -->
+                        <div ng-class="{'tab-pane active': activeTab === 1, 'tab-pane' : activeTab !== 1}">
+                            <div class="container-fluid">
+                                * Para poder reaiizar el registro de un conductor es necesario llenar los datos que son obligatorios (*). El sistema validará
+                                que no se encuentre registrado previamente a traves del número de identificación.
+                                <br><br>
+                                <div class="row">
+                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#agregarConductor"><i class="ace-icon fa fa-plus align-top bigger-125" aria-hidden="true"></i> Agregar Nuevo conductor</button>  
+                                </div><br><br>
+                                <div class="row" ng-if="hayConductores">                      
+                                    <div class="col-md-12">                                        
+                                        <table class="table table-bordered table-condensed table-responsive table-striped" >
+                                            <thead>                                                
+                                                <tr>
+                                                    <th>
+                                                        Número de Identificación
+                                                    </th>
+                                                    <th>
+                                                        Nombres y Apellidos
+                                                    </th>
+                                                    <th>
+                                                        Dirección  
+                                                    </th>                                                      
+                                                    <th>
+                                                        Teléfono 
+                                                    </th> 
+                                                    <th>
+                                                        Email
+                                                    </th>
+                                                    <th>
+                                                        Acciones
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr ng-repeat="c in conductores">
+                                                    <td>
+                                                        {{c.driver_idn}}
+                                                    </td>
+                                                    <td>
+                                                        {{c.driver_name}}
+                                                    </td>
+                                                    <td>
+                                                        {{c.driver_address}}
+                                                    </td>
+                                                    <td>
+                                                        {{c.driver_phone}}
+                                                    </td> 
+                                                    <td>
+                                                        {{c.driver_email}}
+                                                    </td>
+                                                    <td align="center">
+                                                        <div class="btn-group">
+                                                            <button class="btn btn-white btn-sm btn-info btn-bold" title="Ver Información Adicional" data-toggle="modal" data-target="#verInfo" ng-click="cargarModal(c)">
+                                                                <i class="ace-icon fa fa-edit"></i>
+                                                            </button> 
+                                                            <button class="btn btn-white btn-sm btn-warning btn-bold" title="Eliminar" ng-click="onconfirmdeleteconductor(c.driver_id)">
+                                                                <i class="ace-icon fa fa-trash-o bigger-120 orange"></i>
+                                                            </button>  
+                                                        </div>
+                                                    </td> 
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div> 
+                        </div>
+                        <!-- Pestaña de consulta de conductores-->
+                        <div ng-class="{'tab-pane active': activeTab === 2, 'tab-pane' : activeTab !== 2}">
+                            <div class="container-fluid">
+                                <h3>
+                                    Ver Conductores
+                                </h3>
+                                * Informacion.
+                                <br><br>
+                                <div class="row">
+
+                                </div>                                 
+                            </div> 
+                        </div>                                                
+                    </div>
+                </div>
+            </div>
+        </div>
         <!-- PAGE CONTENT ENDS -->
     </div><!-- /.col -->
 </div><!-- /.row -->
+
+
+<!-- Modal Agregar Conductor-->
+<div id="agregarConductor" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title"><i class="pull-left bigger-130 ace-icon fa fa-user"></i> Agregar un nuevo conductor</h4>
+            </div>
+            <div class="modal-body"> 
+                A continuación rellene la información que es obligatoria (*).
+                <table class="table table-bordered table-hover table-responsive table-striped">
+                    <tr>
+                        <td>
+                           (*) <label>Nombres y Apellidos:</label>
+                        </td>
+                        <td>
+                            <input type="text" class="form-control" ng-model="conductor.nombres" /> 
+                        </td>
+                    </tr>
+                    <tr> 
+                        <td>
+                          (*) <label>Número de Identificacióon:</label>                            
+                        </td>
+                        <td>
+                            <input type="text" class="form-control" ng-model="conductor.identificacion" /> 
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                        (*)  <label>Dirección:</label>                            
+                        </td>
+                        <td>
+                            <input type="text" class="form-control" ng-model="conductor.direccion" /> 
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                        (*)    <label>Teléfono:</label>                           
+                        </td>
+                        <td>
+                            <input type="text" class="form-control" ng-model="conductor.telefono" /> 
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>Email:</label>                           
+                        </td>
+                        <td>
+                            <input type="text" class="form-control" ng-model="conductor.email" /> 
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>Descripción:</label>                           
+                        </td>
+                        <td>
+                            <textarea class="form-control" ng-model = "conductor.descripcion"></textarea>
+                        </td>
+                    </tr>
+
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="pull-left bigger-130 ace-icon fa fa-times"></i>Cerrar</button>
+                <button type="button" class="btn btn-primary" ng-click="guardarConductor()"><i class="pull-left bigger-130 ace-icon fa fa-save"></i>Guardar</button>
+            </div>
+        </div>
+
+    </div>
+</div>

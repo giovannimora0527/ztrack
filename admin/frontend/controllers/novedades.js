@@ -9,6 +9,11 @@ ztrack.controller('NovedadesController', function ($rootScope, $scope, AuthServi
     $scope.activeTab = 1;
     cargarAreas();
     $scope.novedadesselect = [];
+    $scope.hayResultados = false;
+    $scope.hayNovedades = false;
+    $scope.btnfilteractive = "disabled";
+    $scope.vehiculofilter = null;
+
 
     $scope.setActiveTab = function (tab) {
         $scope.activeTab = tab;
@@ -64,6 +69,13 @@ ztrack.controller('NovedadesController', function ($rootScope, $scope, AuthServi
                 .then(function (result) {
                     $scope.vehiculos = {};
                     $scope.vehiculos = result.vehiculos;
+                    if ($scope.vehiculos.length > 0) {
+                        $scope.hayResultados = true;
+                        toastr.success("Resultados cargados con éxito.", "OK");
+                    } else {
+                        $scope.hayResultados = false;
+                        toastr.warning("No hay resultados de vehículos.", "Advertencia");
+                    }
                 });
     };
 
@@ -111,9 +123,9 @@ ztrack.controller('NovedadesController', function ($rootScope, $scope, AuthServi
             }
         }
     };
-    
-    $scope.deleteNovedad = function(item){
-       $scope.novedadesselect.splice($scope.novedadesselect.indexOf(item), 1); 
+
+    $scope.deleteNovedad = function (item) {
+        $scope.novedadesselect.splice($scope.novedadesselect.indexOf(item), 1);
     };
 
 
@@ -121,16 +133,65 @@ ztrack.controller('NovedadesController', function ($rootScope, $scope, AuthServi
         $params = {
             user_id: localStorage['ztrack.user_id'],
             despachador_id: localStorage['ztrack.despachador_id'],
-            vehiculo_id : $scope.vehiculoseleccionado.object_id,
-            novedades_list : $scope.novedadesselect
+            vehiculo_id: $scope.vehiculoseleccionado.object_id,
+            novedades_list: $scope.novedadesselect
         };
-        
+
         QueriesService.executeRequest('POST', '../laravel/public/novedades/novedadesavehiculo', $params, null)
                 .then(function (result) {
-                    
+                    $scope.novedadesselect = [];
+                    $scope.selectnovedad = {};
+                    $('#editarNovedad').modal('hide');
                 });
-      
+
     };
+
+    $scope.desbloquearBtnFilter = function () {
+        if ($scope.vehiculofilter !== null) {
+            $scope.btnfilteractive = "";
+            isfiltervehiculo = 1;
+            return;
+        }
+        if ($scope.fechafilter === "") {
+            $scope.btnfilteractive = "disabled";
+        } else {
+            $scope.btnfilteractive = "";
+        }
+    };
+
+    $scope.limpiarCamposFilter = function () {
+        $scope.btnfilteractive = "disabled";
+        $scope.vehiculofilter = {};
+        $scope.areaselect = {};
+        $scope.rutaselect = {};
+        $scope.fechafilter = "";
+    };
+
+
+    $scope.filtrar = function () {
+        $params = {
+            fecha: $scope.fechafilter
+        };
+        if ($scope.vehiculofilter !== null) {
+            $params = {
+                fecha: $scope.fechafilter,
+                vehiculoid: $scope.vehiculofilter.object_id
+            };
+        }
+        console.log($params);
+        QueriesService.executeRequest('GET', '../laravel/public/novedades/novedadesavehiculoxfiltro', null, $params)
+                .then(function (result) {
+                    $scope.novedadesregistradas = result.novedades;
+                    if ($scope.novedadesregistradas.length > 0) {
+                        toastr.success("Información cargada con éxito.","OK");
+                    }
+                    else{
+                        toastr.warning("No hay resultados con el criterio de búsqueda.","Advertencia");
+                    }
+                });
+
+    };
+
 
 
 
