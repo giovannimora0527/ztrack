@@ -14,6 +14,8 @@
 Route::controller('captcha', 'CaptchaController');
 //Conductores
 Route::controller('conductores', 'ConductorController');
+//Vehiculos
+Route::controller('vehiculos', 'VehiculosController');
 //Grupos
 Route::controller('grupos', 'GruposController');
 //Rutas

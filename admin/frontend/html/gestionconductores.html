@@ -93,10 +93,10 @@ and open the template in the editor.
                                                     </td>
                                                     <td align="center">
                                                         <div class="btn-group">
-                                                            <button class="btn btn-white btn-sm btn-info btn-bold" title="Ver Información Adicional" data-toggle="modal" data-target="#verInfo" ng-click="cargarModal(c)">
+                                                            <button class="btn btn-white btn-sm btn-info btn-bold" title="Editar Conductor" data-toggle="modal" data-target="#verInfo" ng-click="cargarModal(c)">
                                                                 <i class="ace-icon fa fa-edit"></i>
                                                             </button> 
-                                                            <button class="btn btn-white btn-sm btn-warning btn-bold" title="Eliminar" ng-click="onconfirmdeleteconductor(c.driver_id)">
+                                                            <button class="btn btn-white btn-sm btn-warning btn-bold" title="Eliminar Conductor" ng-click="onconfirmdeleteconductor(c.driver_id)">
                                                                 <i class="ace-icon fa fa-trash-o bigger-120 orange"></i>
                                                             </button>  
                                                         </div>
@@ -198,6 +198,76 @@ and open the template in the editor.
                 <button type="button" class="btn btn-primary" ng-click="guardarConductor()"><i class="pull-left bigger-130 ace-icon fa fa-save"></i>Guardar</button>
             </div>
         </div>
+    </div>
+</div>
 
+<!-- Modal Ver y Editar Info Conductor-->
+<div id="verInfo" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title"><i class="pull-left bigger-130 ace-icon fa fa-user"></i> Editar los datos del conductor: {{conductorseleccionado.driver_name}}</h4> 
+            </div>
+            <div class="modal-body"> 
+                A continuación rellene la información que es obligatoria (*).
+                <table class="table table-bordered table-hover table-responsive table-striped">
+                    <tr> 
+                        <td>
+                          (*) <label>Número de Identificación:</label>                            
+                        </td>
+                        <td>
+                            <input disabled type="text" class="form-control" ng-model="conductorseleccionado.driver_idn" /> 
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                           (*) <label>Nombres y Apellidos:</label>
+                        </td>
+                        <td>
+                            <input type="text" class="form-control" ng-model="conductorseleccionado.driver_name" /> 
+                        </td>
+                    </tr>                    
+                    <tr>
+                        <td>
+                        (*)  <label>Dirección:</label>                            
+                        </td>
+                        <td>
+                            <input type="text" class="form-control" ng-model="conductorseleccionado.driver_address" /> 
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                        (*)    <label>Teléfono:</label>                           
+                        </td>
+                        <td>
+                            <input type="text" class="form-control" ng-model="conductorseleccionado.driver_phone" /> 
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>Email:</label>                           
+                        </td>
+                        <td>
+                            <input type="text" class="form-control" ng-model="conductorseleccionado.driver_email" /> 
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>Descripción:</label>                           
+                        </td>
+                        <td>
+                            <textarea class="form-control" ng-model = "conductorseleccionado.driver_desc"></textarea>
+                        </td>
+                    </tr>
+
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="pull-left bigger-130 ace-icon fa fa-times"></i>Cerrar</button>
+                <button type="button" class="btn btn-primary" ng-click="actualizarConductor()"><i class="pull-left bigger-130 ace-icon fa fa-save"></i>Actualizar</button>
+            </div>
+        </div>
     </div>
 </div>

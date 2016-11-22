@@ -44,8 +44,7 @@ ztrack.controller('GestionConductorController', function ($rootScope, $scope, Au
 
 
 
-    $scope.guardarConductor = function () {
-        console.log($scope.conductor);
+    $scope.guardarConductor = function () {        
         if ($scope.conductor.nombres === "" || $scope.conductor.direccion === "" || $scope.conductor.identificacion === "" || $scope.conductor.telefono === "") {
             toastr.warning("Hay campos vacios presentes en el formulario que son obligatorios. Revise e intente de nuevo. ", "Advertencia");
             return;
@@ -59,6 +58,49 @@ ztrack.controller('GestionConductorController', function ($rootScope, $scope, Au
            return;
         }
         QueriesService.executeRequest('POST', '../laravel/public/conductores/saveconductor', $scope.conductor, null)
+                .then(function (result) {
+                    getConductoresInfo();  
+                });
+    };
+    
+    $scope.cargarModal = function(data){
+       $scope.conductorseleccionado = data;  
+    };
+    
+    $scope.actualizarConductor = function(){
+        console.log($scope.conductorseleccionado.driver_id);
+        if ($scope.conductorseleccionado.driver_name === "" || $scope.conductorseleccionado.driver_address === "" || $scope.conductorseleccionado.driver_idn === "" || $scope.conductorseleccionado.driver_phone === "") {
+            toastr.warning("Hay campos vacios presentes en el formulario que son obligatorios. Revise e intente de nuevo. ", "Advertencia");
+            return;
+        }        
+        if(isNaN($scope.conductorseleccionado.driver_idn)){
+           toastr.warning("El campo Número de Identifcación debe contener solo valores numéricos. ", "Advertencia");  
+           return;
+        }        
+        if(isNaN($scope.conductorseleccionado.driver_phone)){
+           toastr.warning("El campo Teléfono debe contener solo valores numéricos. ", "Advertencia");  
+           return;
+        }
+        QueriesService.executeRequest('POST', '../laravel/public/conductores/updateconductor', $scope.conductorseleccionado, null)
+                .then(function (result) {
+                    getConductoresInfo();  
+                });
+    };
+    
+    $scope.onconfirmdeleteconductor = function(conductor_id){
+        var rta = confirm("¿Desea eliminar el registro?");
+        if (rta) {
+            $scope.eliminarconductor(conductor_id);
+        } else {
+            return;
+        }
+    };
+    
+    $scope.eliminarconductor = function (conductor_id){       
+       $params = {
+           conductor_id : conductor_id
+       };
+       QueriesService.executeRequest('POST', '../laravel/public/conductores/deleteconductor', $params, null)
                 .then(function (result) {
                     getConductoresInfo();  
                 });

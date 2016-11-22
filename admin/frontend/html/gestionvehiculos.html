@@ -24,7 +24,89 @@ and open the template in the editor.
 
 <div class="row">
     <div class="col-xs-12">
-      
+        <div class="container-fluid">
+            <div class="row">
+                <div class="tabbable">
+                    <ul class="nav nav-tabs">
+                        <li ng-class="{'active' : activeTab === 1}"><a href="" ng-click="setActiveTab(1)">
+                                <i class="blue fa fa-group bigger-120"></i>
+                                Registro de Vehiculos
+                            </a>
+                        </li>
+                        <li ng-class="{'active' : activeTab === 2}"><a href="" ng-click="setActiveTab(2)">
+                                <i class="blue fa fa-search bigger-120"></i>
+                                Consulta de Información de Vehículos
+                            </a>
+                        </li>                  
+                    </ul>
+                    <div class="tab-content">
+                        <!-- Pestaña de registro de vehiculos -->
+                        <div ng-class="{'tab-pane active': activeTab === 1, 'tab-pane' : activeTab !== 1}">
+                            <div class="container-fluid">
+                                * Para poder registrar un vehículo hay que tener en cuenta los campos obligatorios para poder continuar. <br><br>
+                                <button class="btn btn-primary" ng-click="nuevo()">Nuevo Vehículo</button><br><br>
+                                <div class="container-fluid">
+                                    <table class="table table-condensed table-responsive table-striped table-bordered">
+                                        <tr>
+                                            <td>
+                                                Nombre del vehículo
+                                            </td>
+                                            <td>
+                                                <input class="form-control" ng-model="vehiculo.nombre" placeholder="Ingrese el nombre o el movil del vehículo." />
+                                            </td>
+                                        </tr>                                         
+                                        <tr>
+                                            <td>
+                                                Imei del Vehículo
+                                            </td>
+                                            <td>
+                                                <input class="form-control" ng-model="vehiculo.imei" placeholder="Ingrese el imei del gps asociado al vehículo." />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                Conductor Asignado
+                                            </td>
+                                            <td>
+                                                <select class="form-control" ng-model="vehiculo.conductor" ng-options="c.driver_name  for c in conductores track by c.driver_name">
+                                                    <option disabled value="" selected>Seleccione un conductor</option>
+                                                </select>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2">
+                                                <button class="btn btn-default" title="Cancelar" ng-click="nuevo()">
+                                                    <i class="ace-icon fa fa-save"></i> Cancelar
+                                                </button>   
+                                                <button class="btn btn-primary" title="Guardar Vehículo" ng-click="guardarVehiculo()">
+                                                    <i class="ace-icon fa fa-save"></i> Guardar
+                                                </button>                                                
+                                            </td>
+                                        </tr>
+
+                                    </table>
+
+                                </div>
+
+                            </div> 
+                        </div>
+                        <!-- Pestaña de consulta de vehiculos-->
+                        <div ng-class="{'tab-pane active': activeTab === 2, 'tab-pane' : activeTab !== 2}">
+                            <div class="container-fluid">
+                                <h3>
+                                    Ver Vehículos
+                                </h3>
+                                * Informacion.
+                                <br><br>
+                                <div class="row">
+
+                                </div>                                 
+                            </div> 
+                        </div>                                                
+                    </div>
+                </div>
+            </div>
+        </div>
         <!-- PAGE CONTENT ENDS -->
     </div><!-- /.col -->
 </div><!-- /.row -->

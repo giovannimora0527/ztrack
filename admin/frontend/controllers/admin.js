@@ -223,10 +223,9 @@ ztrack.config(['$stateProvider', '$urlRouterProvider', '$httpProvider',
                 $injector.invoke(function ($http, SessionService) {
                     SessionService.unauthorized();
                 });
-            }
-            return $q.reject(response);
+            }            
             if (canRecover(rejection)) {
-                return responseOrNewPromise;
+                return $q.reject(response);
             }
             return $q.reject(rejection);
         },
