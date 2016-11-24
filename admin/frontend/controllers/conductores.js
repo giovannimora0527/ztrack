@@ -67,8 +67,7 @@ ztrack.controller('GestionConductorController', function ($rootScope, $scope, Au
        $scope.conductorseleccionado = data;  
     };
     
-    $scope.actualizarConductor = function(){
-        console.log($scope.conductorseleccionado.driver_id);
+    $scope.actualizarConductor = function(){        
         if ($scope.conductorseleccionado.driver_name === "" || $scope.conductorseleccionado.driver_address === "" || $scope.conductorseleccionado.driver_idn === "" || $scope.conductorseleccionado.driver_phone === "") {
             toastr.warning("Hay campos vacios presentes en el formulario que son obligatorios. Revise e intente de nuevo. ", "Advertencia");
             return;

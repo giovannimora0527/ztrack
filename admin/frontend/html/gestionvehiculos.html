@@ -83,24 +83,124 @@ and open the template in the editor.
                                                 </button>                                                
                                             </td>
                                         </tr>
-
                                     </table>
-
                                 </div>
-
                             </div> 
                         </div>
                         <!-- Pestaña de consulta de vehiculos-->
                         <div ng-class="{'tab-pane active': activeTab === 2, 'tab-pane' : activeTab !== 2}">
-                            <div class="container-fluid">
-                                <h3>
-                                    Ver Vehículos
-                                </h3>
-                                * Informacion.
+                            <div class="container-fluid">                                
+                                * Para poder filtrar debe seleccionar cualquiera de los siguientes filtros. Si desea tambien se puede actualizar la información del vehículo
+                                y reasignar un conductor.
+                                * Nota: El listado de los conductores son aquellos que se encuentran asignados a un vehículo.
                                 <br><br>
                                 <div class="row">
-
-                                </div>                                 
+                                    <table class="table table-condensed table-responsive table-bordered">
+                                        <tr>
+                                            <td>
+                                                <label>Conductor</label> 
+                                            </td>
+                                            <td>
+                                                <select class="form-control" ng-model="filter.conductor" ng-options="c.driver_name  for c in conductoresasignados track by c.driver_name">
+                                                    <option selected value="" disabled>Seleccione un conductor.</option>
+                                                </select> 
+                                            </td>
+                                            <td>
+                                                <label>Placa</label> 
+                                            </td>
+                                            <td>
+                                                <input class="form-control" ng-model="filter.placa" type="text" placeholder="Ingrese la placa del vehículo" /> 
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <label>Ruta</label> 
+                                            </td>
+                                            <td>
+                                                <select class="form-control" ng-model="filter.ruta" ng-options="r.route_name  for r in rutas track by r.route_name">
+                                                    <option selected value="" disabled>Seleccione una ruta.</option>
+                                                </select> 
+                                            </td>
+                                            <td>
+                                                <label># de Vehículo</label> 
+                                            </td>
+                                            <td>
+                                                <input class="form-control" type="text" placeholder="Ingrese el número del vehículo" /> 
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="4" align="center">
+                                                <button type="button" class="btn btn-sm btn-primary" ng-click="filtrarVehiculo()">Buscar</button>
+                                                <button type="button" class="btn btn-sm btn-default" ng-click="limpiarCampos()">Limpiar Campos</button>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div><br> 
+                                <div class="row">
+                                    <table class="table table-bordered table-condensed table-responsive table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>
+                                                    # de Vehículo 
+                                                </th>
+                                                <th>
+                                                    Placa 
+                                                </th>
+                                                <th>
+                                                    Conductor
+                                                </th>
+                                                <th>
+                                                    Tel. Conductor 
+                                                </th>
+                                                <th>
+                                                    Ruta 
+                                                </th>
+                                                <th>
+                                                    Acciones
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr ng-repeat="veh in vehiculos">
+                                                <td>
+                                                    {{veh.name}}
+                                                </td>
+                                                <td>
+                                                    {{veh.plate_number}}
+                                                </td>
+                                                <td>
+                                                    {{veh.driver_name}}
+                                                </td>
+                                                <td>
+                                                    {{veh.driver_phone}}
+                                                </td>
+                                                <td>
+                                                    {{veh.route_name}}
+                                                </td>
+                                                <td>
+                                                    <div class="btn-group">
+                                                        <button class="btn btn-white btn-sm btn-info btn-bold" title="Editar" data-toggle="modal" ng-click="seleccionarItem(gr.gr_id, gr.group_name, gr.fechaini, gr.fechafin, gr.area_id, gr.area_name)" data-target="#editarGrupoRuta" >
+                                                            <i class="ace-icon fa fa-edit"></i>
+                                                        </button> 
+                                                        <button class="btn btn-white btn-sm btn-warning btn-bold" title="Reportes">
+                                                            <i class="ace-icon fa fa-file bigger-120 orange"></i>
+                                                        </button>  
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="6" align="center">
+                                                    <button class="btn btn-white btn-sm btn-warning btn-bold" title="Anterior"  ng-click="">
+                                                            <i class="ace-icon fa fa-arrow-left bigger-120 orange"></i>
+                                                    </button> 
+                                                    <button class="btn btn-white btn-sm btn-warning btn-bold" title="Siguiente">
+                                                            <i class="ace-icon fa fa-arrow-right bigger-120 orange"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>                                
                             </div> 
                         </div>                                                
                     </div>

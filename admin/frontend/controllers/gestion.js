@@ -12,6 +12,19 @@ ztrack.controller('GestionController', function ($rootScope, $scope, AuthService
         imei: "",
         conductor: null
     };
+    $scope.filter = {
+        conductor: null,
+        placa: "",
+        numvehiculo: "",
+        ruta: null
+    };
+    var min = 0;
+    var max = 10;
+    $scope.maxcount = 0;
+    $scope.paginationtab = false;
+    $scope.pag = 1;
+    
+    
     cargarListadoConductores();
 
 
@@ -20,8 +33,32 @@ ztrack.controller('GestionController', function ($rootScope, $scope, AuthService
         if (tab === 1) {
             cargarListadoConductores();
         }
+        if (tab === 2) {
+            cargarListadoConductoresAsignados();
+            cargarListadoRutas();
+        }
     };
 
+    function cargarListadoRutas() {
+        $params = {
+            user_id: localStorage['ztrack.user_id']
+        };
+        QueriesService.executeRequest('GET', '../laravel/public/rutas/allinforutasbyid', null, $params)
+                .then(function (result) {
+                    $scope.rutas = result.rutas;
+                });
+    }
+    
+    function cargarListadoConductoresAsignados() {
+        $params = {
+            user_id: localStorage['ztrack.user_id']
+        };
+        QueriesService.executeRequest('GET', '../laravel/public/conductores/conductoresasignados', null, $params)
+                .then(function (result) {
+                    $scope.conductoresasignados = result.conductores;
+                });
+    }
+    
     function cargarListadoConductores() {
         $params = {
             user_id: localStorage['ztrack.user_id']
@@ -45,6 +82,10 @@ ztrack.controller('GestionController', function ($rootScope, $scope, AuthService
             toastr.warning("El IMEI no puede tener menos de 15 dígitos. Intente de nuevo.", "Advertencia");
             return;
         }
+        if(isNaN($scope.vehiculo.imei)){
+           toastr.warning("El campo IMEI debe contener solo valores numéricos. ", "Advertencia");  
+           return;
+        } 
         if($scope.vehiculo.nombre === ""){
             toastr.warning("El campo Nombre del Vehículo no puede quedar vacío. Intente de nuevo.", "Advertencia");
             return;
@@ -64,9 +105,35 @@ ztrack.controller('GestionController', function ($rootScope, $scope, AuthService
         QueriesService.executeRequest('POST', '../laravel/public/vehiculos/savevehiculo', $params, null)
                 .then(function (result) {
                     if(result.success){
-                       $scope.nuevo();
+                       $scope.nuevo();               
+                       cargarListadoConductores();
                     }
                 });
+    };
+    
+    $scope.filtrarVehiculo = function(){
+       var hayFiltros = null; 
+       if($scope.filter.conductor === null && $scope.filter.placa === "" && $scope.filter.numvehiculo === "" && $scope.filter.ruta === null){
+          console.log("Se supone q filtre todos los vehiculos"); 
+          hayFiltros = false;
+       } 
+       if($scope.filter.conductor !== null && $scope.filter.placa !== "" && $scope.filter.numvehiculo !== "" && $scope.filter.ruta !== null){          
+          hayFiltros = true;
+       } 
+       if(hayFiltros){
+           
+       }
+       else{
+           //Aqui acomodo el min y max, paginacion siguiente y si hay mas resultados
+         QueriesService.executeRequest('POST', '../laravel/public/vehiculos/savevehiculo', $params, null)
+                .then(function (result) {
+                    if(result.success){
+                       $scope.nuevo();               
+                       cargarListadoConductores();
+                    }
+                });  
+       }
+       
     };
 
 
