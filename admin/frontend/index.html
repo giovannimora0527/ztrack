@@ -221,7 +221,7 @@
                     <li id="16" class="">
                         <a href="#" class="dropdown-toggle">
                             <i class="menu-icon fa fa-pencil-square-o"></i>
-                            <span class="menu-text"> Despachos </span> 
+                            <span class="menu-text"> Gestionar </span> 
 
                             <b class="arrow fa fa-angle-down"></b>
                         </a>
@@ -231,6 +231,13 @@
                                 <a ui-sref="gestionconductores">
                                     <i class="menu-icon fa fa-group"></i>
                                     Gestión de Conductores
+                                </a>
+                                <b class="arrow"></b>
+                            </li>
+                             <li id="21" class="" onclick="validarUrl(21)">
+                                <a ui-sref="gestiongrupos">
+                                    <i class="menu-icon fa fa-group"></i>
+                                    Gestión de Grupos
                                 </a>
                                 <b class="arrow"></b>
                             </li>
@@ -529,6 +536,7 @@
         <script src="controllers/despachos.js"></script>
         <script src="controllers/reportes.js"></script>
         <script src="controllers/gestion.js"></script>
+        <script src="controllers/grupos.js"></script>
         <script src="controllers/despachador.js"></script>
         <script src="controllers/conductores.js"></script>
         <script src="controllers/perfil.js"></script>

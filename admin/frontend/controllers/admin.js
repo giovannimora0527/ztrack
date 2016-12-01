@@ -107,6 +107,16 @@ ztrack.config(['$stateProvider', '$urlRouterProvider', '$httpProvider',
                         }
                     }
                 })
+                .state('gestiongrupos', {
+                    url: '/gestion_grupos',
+                    templateUrl: 'html/grupos.html',
+                    controller: 'GruposController',
+                    onEnter: function (SessionService, $state) {
+                        if (!SessionService.isLoged()) {
+                            $state.go('salir');
+                        }
+                    }
+                })
                 .state('gestiondespachadores', {
                     url: '/gestion_despachadores',
                     templateUrl: 'html/despachadores.html',

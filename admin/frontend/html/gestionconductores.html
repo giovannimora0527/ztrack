@@ -61,6 +61,9 @@ and open the template in the editor.
                                                         Nombres y Apellidos
                                                     </th>
                                                     <th>
+                                                        Código
+                                                    </th>
+                                                    <th>
                                                         Dirección  
                                                     </th>                                                      
                                                     <th>
@@ -81,6 +84,9 @@ and open the template in the editor.
                                                     </td>
                                                     <td>
                                                         {{c.driver_name}}
+                                                    </td>
+                                                    <td>
+                                                        {{c.driver_assign_id}}
                                                     </td>
                                                     <td>
                                                         {{c.driver_address}}
@@ -160,6 +166,14 @@ and open the template in the editor.
                     </tr>
                     <tr>
                         <td>
+                            <label>Código:</label>                           
+                        </td>
+                        <td>
+                            <input type="text" class="form-control" ng-model="conductor.codigo" /> 
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
                         (*)  <label>Dirección:</label>                            
                         </td>
                         <td>
@@ -228,7 +242,7 @@ and open the template in the editor.
                         <td>
                             <input type="text" class="form-control" ng-model="conductorseleccionado.driver_name" /> 
                         </td>
-                    </tr>                    
+                    </tr>                     
                     <tr>
                         <td>
                         (*)  <label>Dirección:</label>                            
@@ -243,6 +257,14 @@ and open the template in the editor.
                         </td>
                         <td>
                             <input type="text" class="form-control" ng-model="conductorseleccionado.driver_phone" /> 
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                          <label>Código</label>                            
+                        </td>
+                        <td>
+                            <input type="text" class="form-control" ng-model="conductorseleccionado.driver_codigo" /> 
                         </td>
                     </tr>
                     <tr>

@@ -10,6 +10,7 @@ ztrack.controller('GestionConductorController', function ($rootScope, $scope, Au
     $scope.conductor = {
         nombres: "",
         identificacion: "",
+        codigo: "",
         direccion: "",
         telefono: "",
         email: "",

@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<div class="breadcrumbs ace-save-state" id="breadcrumbs">
+    <ul class="breadcrumb">
+        <li>
+            <i class="menu icon fa fa-home"></i>
+            <a ui-sref="principal">Inicio</a>
+        </li>
+        <li class="active"><font color="#0B0B3B">{{title}}</font></li>
+    </ul><!-- /.breadcrumb -->
+</div>
+<div class="page-header">
+    <h1>
+        Gestión de Grupos
+        <small>
+            <i class="ace-icon fa fa-angle-double-right"></i>
+        </small>
+    </h1>
+</div><!-- /.page-header -->
+<div class="row">
+    <div class="col-xs-12">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="tabbable">
+                    <ul class="nav nav-tabs">
+                        <li ng-class="{'active' : activeTab === 1}"><a href="" ng-click="setActiveTab(1)">
+                                <i class="blue fa fa-group bigger-120"></i>
+                                Registro de Grupos
+                            </a>
+                        </li>
+                        <li ng-class="{'active' : activeTab === 2}"><a href="" ng-click="setActiveTab(2)">
+                                <i class="blue fa fa-search bigger-120"></i>
+                                Buscar Información Grupos
+                            </a>
+                        </li>                  
+                    </ul>
+                    <div class="tab-content">
+                        <!-- Pestaña de registro de grupos -->
+                        <div ng-class="{'tab-pane active': activeTab === 1, 'tab-pane' : activeTab !== 1}">
+                            <div class="container-fluid">
+                                * Para agregar un nuevo grupo es necesario digitar los campos que son obligatorios (*).
+                                <br><br>
+                                <div class="row">
+                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#agregarGrupo"><i class="ace-icon fa fa-plus align-top bigger-125" aria-hidden="true"></i> Agregar Nuevo Grupo</button>  
+                                </div><br><br>
+                                <div class="row">
+                                    <table class="table table-bordered table-condensed table-responsive table-striped" ng-if="hayGrupos">
+                                        <thead>
+                                            <tr>
+                                                <th>
+                                                    Nombre de Grupo 
+                                                </th>
+                                                <th>
+                                                    Descripción 
+                                                </th>
+                                                <th>
+                                                    Acciones
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr ng-repeat="g in grupos">
+                                                <td>
+                                                    {{g.group_name}}
+                                                </td>
+                                                <td>
+                                                    {{g.group_desc}} 
+                                                </td>
+                                                <td align="center">
+                                                    <div class="btn-group">
+                                                        <button class="btn btn-white btn-sm btn-info btn-bold" title="Editar Grupo" data-toggle="modal" data-target="#verInfo" ng-click="cargarModal(c)">
+                                                            <i class="ace-icon fa fa-edit"></i>
+                                                        </button> 
+                                                        <button class="btn btn-white btn-sm btn-warning btn-bold" title="Eliminar Grupo" ng-click="onconfirmdeletegrupo(g.group_id)">
+                                                            <i class="ace-icon fa fa-trash-o bigger-120 orange"></i>
+                                                        </button>  
+                                                    </div>
+                                                </td> 
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>                                 
+                            </div> 
+                        </div>
+                        <!-- Pestaña de consulta de grupos-->
+                        <div ng-class="{'tab-pane active': activeTab === 2, 'tab-pane' : activeTab !== 2}">
+                            <div class="container-fluid">
+                                <h3>
+                                    Ver Información
+                                </h3>
+                                * Filtros.
+                                <br><br>
+                                <div class="row">
+                                   
+                                </div>                                 
+                            </div> 
+                        </div>                                                
+                    </div>
+                </div>
+            </div>    
+        </div>
+    </div>
+</div>
+
+<!-- Modal Agregar Grupo-->
+<div id="agregarGrupo" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title"><i class="pull-left bigger-130 ace-icon fa fa-automobile"></i> Agregar un nuevo grupo de vehículos</h4>
+            </div>
+            <div class="modal-body"> 
+                A continuación rellene la información que es obligatoria (*).
+                <table class="table table-bordered table-hover table-responsive table-striped">
+                    <tr>
+                        <td>
+                            (*) <label>Nombre:</label>
+                        </td>
+                        <td>
+                            <input type="text" class="form-control" ng-model="grupo.nombre" /> 
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>Descripción:</label>                           
+                        </td>
+                        <td>
+                            <textarea class="form-control" ng-model = "grupo.descripcion"></textarea>
+                        </td>
+                    </tr>
+
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="pull-left bigger-130 ace-icon fa fa-times"></i>Cerrar</button>
+                <button type="button" class="btn btn-primary" ng-click="guardarGrupo()"><i class="pull-left bigger-130 ace-icon fa fa-save"></i>Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Ver y Editar Info Conductor-->
+<div id="verInfo" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title"><i class="pull-left bigger-130 ace-icon fa fa-user"></i> Editar los datos del conductor: {{conductorseleccionado.driver_name}}</h4> 
+            </div>
+            <div class="modal-body"> 
+                A continuación rellene la información que es obligatoria (*).
+                <table class="table table-bordered table-hover table-responsive table-striped">
+                    <tr> 
+                        <td>
+                            (*) <label>Número de Identificación:</label>                            
+                        </td>
+                        <td>
+                            <input disabled type="text" class="form-control" ng-model="conductorseleccionado.driver_idn" /> 
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            (*) <label>Nombres y Apellidos:</label>
+                        </td>
+                        <td>
+                            <input type="text" class="form-control" ng-model="conductorseleccionado.driver_name" /> 
+                        </td>
+                    </tr>                     
+                    <tr>
+                        <td>
+                            (*)  <label>Dirección:</label>                            
+                        </td>
+                        <td>
+                            <input type="text" class="form-control" ng-model="conductorseleccionado.driver_address" /> 
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            (*)    <label>Teléfono:</label>                           
+                        </td>
+                        <td>
+                            <input type="text" class="form-control" ng-model="conductorseleccionado.driver_phone" /> 
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>Código</label>                            
+                        </td>
+                        <td>
+                            <input type="text" class="form-control" ng-model="conductorseleccionado.driver_codigo" /> 
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>Email:</label>                           
+                        </td>
+                        <td>
+                            <input type="text" class="form-control" ng-model="conductorseleccionado.driver_email" /> 
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>Descripción:</label>                           
+                        </td>
+                        <td>
+                            <textarea class="form-control" ng-model = "conductorseleccionado.driver_desc"></textarea>
+                        </td>
+                    </tr>
+
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="pull-left bigger-130 ace-icon fa fa-times"></i>Cerrar</button>
+                <button type="button" class="btn btn-primary" ng-click="actualizarConductor()"><i class="pull-left bigger-130 ace-icon fa fa-save"></i>Actualizar</button>
+            </div>
+        </div>
+    </div>
+</div>

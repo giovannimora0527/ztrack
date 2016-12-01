@@ -101,8 +101,9 @@ and open the template in the editor.
                                                 <label>Conductor</label> 
                                             </td>
                                             <td>
-                                                <select class="form-control" ng-model="filter.conductor" ng-options="c.driver_name  for c in conductoresasignados track by c.driver_name">
+                                                <select class="form-control" ng-model="filter.conductor">
                                                     <option selected value="" disabled>Seleccione un conductor.</option>
+                                                    <option ng-repeat="c in conductoresasignados" value="{{c.driver_id}}">{{c.driver_name}}</option>
                                                 </select> 
                                             </td>
                                             <td>
@@ -117,15 +118,16 @@ and open the template in the editor.
                                                 <label>Ruta</label> 
                                             </td>
                                             <td>
-                                                <select class="form-control" ng-model="filter.ruta" ng-options="r.route_name  for r in rutas track by r.route_name">
+                                                <select class="form-control" ng-model="filter.ruta" >
                                                     <option selected value="" disabled>Seleccione una ruta.</option>
+                                                    <option ng-repeat="r in rutas" value="{{r.route_id}}">{{r.route_name}}</option>
                                                 </select> 
                                             </td>
                                             <td>
                                                 <label># de Vehículo</label> 
                                             </td>
                                             <td>
-                                                <input class="form-control" type="text" placeholder="Ingrese el número del vehículo" /> 
+                                                <input class="form-control" ng-model="filter.numvehiculo" type="text" placeholder="Ingrese el número del vehículo" /> 
                                             </td>
                                         </tr>
                                         <tr>
@@ -161,7 +163,12 @@ and open the template in the editor.
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr ng-repeat="veh in vehiculos">
+                                            <tr ng-if="!resultsfound">
+                                                <td colspan="6" align="center">
+                                                    <label><font color="#B40404">No hay resultados disponibles con su criterio de búsqueda.</font></label>
+                                                </td>
+                                            </tr>
+                                            <tr ng-repeat="veh in vehiculosresultados">
                                                 <td>
                                                     {{veh.name}}
                                                 </td>
@@ -175,7 +182,7 @@ and open the template in the editor.
                                                     {{veh.driver_phone}}
                                                 </td>
                                                 <td>
-                                                    {{veh.route_name}}
+                                                    {{veh.rutas}}
                                                 </td>
                                                 <td>
                                                     <div class="btn-group">
@@ -190,10 +197,10 @@ and open the template in the editor.
                                             </tr>
                                             <tr>
                                                 <td colspan="6" align="center">
-                                                    <button class="btn btn-white btn-sm btn-warning btn-bold" title="Anterior"  ng-click="">
+                                                    <button class="btn btn-white btn-sm btn-warning btn-bold" title="Anterior" ng-click="pagant()">
                                                             <i class="ace-icon fa fa-arrow-left bigger-120 orange"></i>
                                                     </button> 
-                                                    <button class="btn btn-white btn-sm btn-warning btn-bold" title="Siguiente">
+                                                    <button class="btn btn-white btn-sm btn-warning btn-bold" title="Siguiente" ng-click="pagsig()">
                                                             <i class="ace-icon fa fa-arrow-right bigger-120 orange"></i>
                                                     </button>
                                                 </td>

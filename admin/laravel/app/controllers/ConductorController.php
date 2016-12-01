@@ -30,15 +30,17 @@ class ConductorController extends \BaseController {
             return Response::json(array('mensaje' => 'El conductor ya se encuentra en la base de datos con el número del DNI. Intente de nuevo', 'success' => false));
         }
 
-        $sql = "insert into gs_user_object_drivers (driver_name, user_id, driver_idn, driver_address, driver_phone, driver_email, driver_desc) values("
-                . "'" . strtoupper($data["nombres"])
-                . "', '" . $data["user_id"]
+        $sql = "insert into gs_user_object_drivers (user_id, driver_name, driver_assign_id, driver_idn, driver_address, driver_phone, driver_email, driver_desc, estado_id) values("                
+                . "'" . $data["user_id"]
+                . "','" . strtoupper($data["nombres"])
+                . "', '" . $data["codigo"]
                 . "', '" . $data["identificacion"]
                 . "', '" . strtoupper($data["direccion"])
                 . "', '" . $data["telefono"]
                 . "', '" . $data["email"]
                 . "', '" . $data["descripcion"]
-                . "');";
+                . "', 1" 
+                . ");";
         try {
             DB::beginTransaction();
             DB::insert($sql);            
@@ -53,6 +55,7 @@ class ConductorController extends \BaseController {
         $data = Input::all();
         $sql = "update gs_user_object_drivers set "
                 . "driver_name = '" . strtoupper($data["driver_name"])
+                . "', driver_assgin_id = '" . $data["driver_codigo"]
                 . "', driver_address = '" . strtoupper($data["driver_address"])
                 . "', driver_phone = '" . $data["driver_phone"]
                 . "', driver_email = '" . $data["driver_email"]
