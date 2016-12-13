@@ -83,8 +83,48 @@ class VehiculosController extends \BaseController {
         }
     }
 
-    public function postUpdatevehiculo() {
-        
+    public function postActualizarvehiculo() {
+       $data = Input::all();
+       $sql = "";  
+       $actualizado = false;
+       
+       //SI se cambia el conductor del vehiculo
+       if($data["hasFilterDriver"] == 1){
+         //Valido si el conductor no se encuentra asignado a un vehiculo previamente
+          $query = "select * from gs_user_objects where imei = ".$data["imei"]; 
+          $results = DB::select($query);
+          $conductor_id = $results[0]->driver_id;
+          //obtengo el conductor y lo paso a estado disponible
+          $sql = "update gs_user_object_drivers set "
+                  . "estado_id = 1"
+                  . " where driver_id = " . $conductor_id;
+          DB::update($sql);
+         //cambio el registro en la tabla user_objects  
+         $sql = "update gs_user_objects guo set "
+                 . "guo.driver_id = '"  .$data["driver_id"]                
+                 . "' where guo.imei = '" .$data["imei"] . "';";         
+         DB::update($sql);
+         //actualizo el estado del nuevo conductor asignado
+         $sql = "update gs_user_object_drivers set "
+                  . "estado_id = 2"
+                  . " where driver_id = " . $data["driver_id"];
+          DB::update($sql);
+         $actualizado = true;
+       }
+       $sql = "update gs_objects gob set "
+             . "gob.plate_number = '"  .$data["plate_number"] 
+             . "', gob.model = '"  .$data["model"]                               
+             . "', gob.name = '"  .$data["name"]
+             . "' where gob.imei = '" .$data["imei"] . "';"; 
+       DB::update($sql);
+       
+       if($actualizado == true){
+         return Response::json(array('success' => true, 'mensaje' => "El registro se ha actualizado correctamente"));  
+       }
+       else{
+           return Response::json(array('success' => false, 'mensaje' => "El registro se ha guardado correctamente"));
+       }       
+       
     }
 
     public function postDeletevehiculo() {
@@ -95,7 +135,7 @@ class VehiculosController extends \BaseController {
         $data = Input::all();
         $hasFiltros = Input::get("hasFiltros");
         $more_results = false;
-        $sql = "select guo.object_id, guo.imei, gob.name, gob.plate_number, d.driver_name, d.driver_address, 
+        $sql = "select guo.object_id, guo.imei, gob.name, gob.model, gob.plate_number, d.driver_name, d.driver_address, 
                        d.driver_phone, GROUP_CONCAT(r.route_name SEPARATOR ', ')  rutas
                 from gs_user_objects guo
                 join gs_objects gob ON gob.imei = guo.imei

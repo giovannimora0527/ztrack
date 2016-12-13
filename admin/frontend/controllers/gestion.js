@@ -12,6 +12,9 @@ ztrack.controller('GestionController', function ($rootScope, $scope, AuthService
         imei: "",
         conductor: null
     };
+    $scope.vehiculoupdate = {
+        driver_id: ""
+    };
     $scope.filter = {
         placa: "",
         numvehiculo: "",
@@ -25,9 +28,9 @@ ztrack.controller('GestionController', function ($rootScope, $scope, AuthService
     $scope.pag = 1;
     $scope.resultsfound = false;
 
+    $scope.editar = false;
 
     cargarListadoConductores();
-
 
     $scope.setActiveTab = function (tab) {
         $scope.activeTab = tab;
@@ -111,9 +114,9 @@ ztrack.controller('GestionController', function ($rootScope, $scope, AuthService
                     }
                 });
     };
-    
-    function cargarConductores(){
-      $scope.filtrarVehiculo();  
+
+    function cargarConductores() {
+        $scope.filtrarVehiculo();
     }
 
     $scope.filtrarVehiculo = function () {
@@ -159,7 +162,7 @@ ztrack.controller('GestionController', function ($rootScope, $scope, AuthService
                     }
                 });
     };
-    
+
     $scope.pagant = function () {
         if ($scope.minlabel === 0) {
             toastr.warning("Ya se encuentra en la primera página de los resultados", "Advertencia");
@@ -201,6 +204,63 @@ ztrack.controller('GestionController', function ($rootScope, $scope, AuthService
         $scope.resultsfound = false;
         $scope.vehiculosresultados = {};
     };
+
+
+    $scope.editarVehiculo = function (vehiculo) {
+        $scope.vehiculoseleccionado = vehiculo;
+        cargarListadoConductores();
+    };
+
+    $scope.onClickEditar = function () {
+        $scope.editar = true;
+        document.getElementById("name").disabled = false;
+        document.getElementById("marca").disabled = false;
+        document.getElementById("placa").disabled = false;
+        document.getElementById("name").disabled = false;
+    };
+
+    $scope.actualizarVehiculo = function (vehiculoselect) {
+
+        if ($scope.vehiculoupdate.driver_id === "") {
+            $params = {
+                hasFilterDriver: 0
+            };
+        } else {
+            $params = {
+                hasFilterDriver: 1,
+                driver_id: $scope.vehiculoupdate.driver_id
+            };
+        }
+
+        if (vehiculoselect.name === "") {
+            toastr.warning("El vehículo no puede tener el campo nombre vacio. Intente de nuevo.", "Advertencia");
+            return;
+        }
+        QueriesService.executeRequest('POST', '../laravel/public/vehiculos/actualizarvehiculo', vehiculoselect, $params)
+                .then(function (result) {
+                    //Ocultando el modal
+                    if (result.success) {
+                        $('#verInfoVehiculo').modal('hide');
+                        $scope.vehiculoseleccionado = {};
+                        document.getElementById("name").disabled = false;
+                        document.getElementById("marca").disabled = true;
+                        document.getElementById("placa").disabled = true;
+                        document.getElementById("name").disabled = true;
+                        $scope.editar = false;
+                        $scope.vehiculosresultados = {};
+                        cargarListadoConductoresAsignados();
+                        $scope.filter = {
+                            placa: "",
+                            numvehiculo: "",
+                            conductor: "",
+                            ruta: ""
+                        };
+                    }
+
+                });
+    };
+
+
 
 });
 

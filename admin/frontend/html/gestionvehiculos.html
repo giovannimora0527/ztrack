@@ -186,7 +186,7 @@ and open the template in the editor.
                                                 </td>
                                                 <td>
                                                     <div class="btn-group">
-                                                        <button class="btn btn-white btn-sm btn-info btn-bold" title="Editar" data-toggle="modal" ng-click="seleccionarItem(gr.gr_id, gr.group_name, gr.fechaini, gr.fechafin, gr.area_id, gr.area_name)" data-target="#editarGrupoRuta" >
+                                                        <button class="btn btn-white btn-sm btn-info btn-bold" title="Editar" data-toggle="modal" data-target="#verInfoVehiculo" ng-click="editarVehiculo(veh)">
                                                             <i class="ace-icon fa fa-edit"></i>
                                                         </button> 
                                                         <button class="btn btn-white btn-sm btn-warning btn-bold" title="Reportes">
@@ -198,10 +198,10 @@ and open the template in the editor.
                                             <tr>
                                                 <td colspan="6" align="center">
                                                     <button class="btn btn-white btn-sm btn-warning btn-bold" title="Anterior" ng-click="pagant()">
-                                                            <i class="ace-icon fa fa-arrow-left bigger-120 orange"></i>
+                                                        <i class="ace-icon fa fa-arrow-left bigger-120 orange"></i>
                                                     </button> 
                                                     <button class="btn btn-white btn-sm btn-warning btn-bold" title="Siguiente" ng-click="pagsig()">
-                                                            <i class="ace-icon fa fa-arrow-right bigger-120 orange"></i>
+                                                        <i class="ace-icon fa fa-arrow-right bigger-120 orange"></i>
                                                     </button>
                                                 </td>
                                             </tr>
@@ -217,3 +217,78 @@ and open the template in the editor.
         <!-- PAGE CONTENT ENDS -->
     </div><!-- /.col -->
 </div><!-- /.row -->
+
+
+<!-- Modal Ver y Editar Info Vehiculo-->
+<div id="verInfoVehiculo" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title"><i class="pull-left bigger-130 ace-icon fa fa-automobile"></i> Editar los datos del vehiculo: {{vehiculoseleccionado.name}}</h4> 
+            </div>
+            <div class="modal-body"> 
+                A continuación rellene la información que es obligatoria (*).
+                <table class="table table-bordered table-hover table-responsive table-striped">
+                    <tr> 
+                        <td>
+                            <label>Imei:</label>                            
+                        </td>
+                        <td>
+                            <input disabled type="text" class="form-control" ng-model="vehiculoseleccionado.imei" /> 
+                        </td>
+                    </tr>
+                    <tr> 
+                        <td>
+                            (*) <label>Nombre:</label>                            
+                        </td>
+                        <td>
+                            <input id="name" disabled type="text" class="form-control" ng-model="vehiculoseleccionado.name" /> 
+                        </td>
+                    </tr>                    
+                    <tr>
+                        <td>
+                            <label>Placa:</label>
+                        </td>
+                        <td>
+                            <input id="placa" disabled type="text" class="form-control" ng-model="vehiculoseleccionado.plate_number" /> 
+                        </td>
+                    </tr>                  
+                    <tr>
+                        <td>
+                            <label>Marca/Modelo:</label>                            
+                        </td>
+                        <td>
+                            <input id="marca" disabled type="text" class="form-control" ng-model="vehiculoseleccionado.model" /> 
+                        </td>
+                    </tr>                    
+                    <tr ng-if="!editar">
+                        <td>
+                            <label>Conductor</label>                           
+                        </td>
+                        <td>
+                            <input type="text" disabled class="form-control" ng-model="vehiculoseleccionado.driver_name" /> 
+                        </td>
+                    </tr> 
+                    <tr ng-if="editar">
+                        <td>
+                            <label>Conductores Disponibles</label>                           
+                        </td>
+                        <td>
+                            <select class="form-control" ng-model="vehiculoupdate.driver_id">
+                                <option disabled selected value="">Seleccione un conductor</option>
+                                <option value="{{c.driver_id}}" ng-repeat="c in conductores">{{c.driver_name}}</option>
+                            </select>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="pull-left bigger-130 ace-icon fa fa-times"></i>Cerrar</button>
+                <button type="button" ng-if="!editar" class="btn btn-primary" ng-click="onClickEditar()"><i class="pull-left bigger-130 ace-icon fa fa-edit"></i>Editar</button>
+                <button type="button" ng-if="editar" class="btn btn-primary" ng-click="actualizarVehiculo(vehiculoseleccionado)"><i class="pull-left bigger-130 ace-icon fa fa-save"></i>Actualizar</button>
+            </div>
+        </div>
+    </div>
+</div>
