@@ -62,7 +62,7 @@ ztrack.controller('DespachosController', function ($rootScope, $scope, $filter, 
             min = 0;
             max = 10;
             $scope.maxcount = 0;
-            cargarAsignaciones();
+            //cargarAsignaciones();
         }
         if (tab === 3) {
             cargarConductores();
@@ -437,7 +437,6 @@ ztrack.controller('DespachosController', function ($rootScope, $scope, $filter, 
                         $scope.resultsfound1 = false;
                         $scope.paginationtab2 = false;
                         $scope.hasFiltrosTab2 = false;
-
                     }
 
                 });

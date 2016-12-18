@@ -195,5 +195,20 @@ class VehiculosController extends \BaseController {
             return Response::json(array('mensaje' => "No hay resultados disponibles. " . $e, 'error' => true));
         }
     }
+    
+    public function getInfovehiculo(){
+        $data = Input::all();
+        $sql = "select ob.object_id, ob.imei, obj.name, obj.plate_number, dr.driver_name, dr.driver_phone, dt.hora_llegada "
+                . "from gs_user_objects ob "
+                . "join gs_objects obj on obj.imei = ob.imei "
+                . "join gs_user_object_drivers dr ON dr.driver_id = ob.driver_id "
+                . "join gs_despacho_temporal dt ON dt.object_id = ob.object_id "
+                . "where ob.object_id = " . $data["vehiculo_id"] . " "
+                . "and ob.user_id = " . $data["user_id"] ;
+       
+        $vehiculo = DB::select($sql);
+        return Response::json(array('success' => true, 'vehiculo' => $vehiculo[0]));
+        
+    }
 
 }

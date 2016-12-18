@@ -81,17 +81,15 @@ and open the template in the editor.
                                                     </div>
                                                     <div class="widget-body">
                                                         <div class="widget-main">
-                                                            <div class="input-group">
-                                                                <select class="form-control" ng-model="vehiculoselect" ng-options="veh.name for veh in vehiculos track by veh.name">
-                                                                    <option value="" disabled selected>Seleccione una opción</option>
-                                                                </select>
-                                                                <span class="input-group-btn">
-                                                                    <button class="btn btn-primary" type="button" ng-click="adicionarVehiculo()">
-                                                                        <i class="ace-icon fa fa-arrow-right bigger-110"></i>                                                       
-                                                                    </button>
-                                                                </span>
-                                                            </div>
-
+                                                            <ol class="dd-list">
+                                                                <li class="dd-item" ng-repeat="veh in vehiculos">
+                                                                    <div class="dd-handle">
+                                                                        <i class="pull-left bigger-130 ace-icon fa fa-automobile blue"></i>                                                                        
+                                                                        {{veh.name}}
+                                                                        <a href="" ng-click="adicionarVehiculo(veh.object_id)"><i class="pull-right bigger-130 ace-icon fa fa-arrow-right blue"></i></a>
+                                                                    </div>
+                                                                </li>
+                                                            </ol>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -107,9 +105,9 @@ and open the template in the editor.
                                                                 <ol class="dd-list">
                                                                     <li class="dd-item" ng-repeat="it in vehiculosparadero">
                                                                         <div class="dd-handle">
-                                                                            <i class="pull-left bigger-130 ace-icon fa fa-map-marker blue"></i>
+                                                                            <a href="" ng-click="verInfo(it.object_id)" data-toggle="modal" data-target="#modalInfoParqueadero"><i class="pull-left bigger-130 ace-icon fa fa-search blue"></i></a>
                                                                             {{it.vehiculo}}
-                                                                            <a href="" ng-click="deleteVehiculo(it)"><i class="pull-right bigger-130 ace-icon fa fa-times blue"></i></a>
+                                                                            <a href="" ng-click="deleteVehiculo(it.object_id)"><i class="pull-right bigger-130 ace-icon fa fa-times blue"></i></a>
                                                                         </div>
                                                                     </li>
                                                                 </ol>
@@ -174,8 +172,8 @@ and open the template in the editor.
                                                             <ol class="dd-list">
                                                                 <li class="dd-item" ng-repeat="it in vehiculosdespachados">
                                                                     <div class="dd-handle">
-                                                                        <i class="pull-left bigger-130 ace-icon fa fa-automobile blue"></i>
-                                                                        <i class="pull-left bigger-130 ace-icon fa fa-arrow-right blue"></i>
+                                                                        <a href="" ng-click="cancelarDespacho(it)"><i class="pull-left bigger-130 ace-icon fa fa-arrow-left blue"></i></a>                                                                        
+                                                                        <i class="pull-left bigger-130 ace-icon fa fa-automobile blue"></i>                                                                        
                                                                         Salida: {{it.hora_salida}} / {{it.name}} / Ruta: {{it.route_name}}
                                                                         <a href="" data-toggle="modal" data-target="#modalInfo" ng-click="cargarDatosInfo(it)"><i class="pull-right bigger-130 ace-icon fa fa-search blue"></i></a>
                                                                     </div>
@@ -265,7 +263,7 @@ and open the template in the editor.
 
 <!-- Modal Despachar-->
 <div id="modalDespachos" class="modal fade" role="dialog">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-header">
@@ -318,6 +316,65 @@ and open the template in the editor.
                 <button id="btndespachar" type="button" class="btn btn-primary" ng-click="despachar(vehiculo)"><i class="pull-left bigger-130 ace-icon fa fa-arrow-right"></i>Despachar</button>
                 
                 <button  id="btncerrar" type="button" class="btn btn-default" data-dismiss="modal"><i class="pull-left bigger-130 ace-icon fa fa-times"></i>Cerrar</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Modal Ver Info Llegada-->
+<div id="modalInfoParqueadero" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Información del Vehículo: {{vehiculo.name}}</h4>
+            </div>
+            <div class="modal-body">                
+                <table class="table table-bordered table-hover table-responsive table-striped">
+                    <thead>
+                        <tr>
+                            <th>
+                                Nombre
+                            </th>
+                            <th>
+                                Conductor
+                            </th>
+                            <th>
+                                Hora de Llegada
+                            </th>
+                            <th>
+                                Imei
+                            </th>
+                            <th>
+                                Telefono del Conductor
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                {{vehiculo.name}} 
+                            </td>
+                            <td>
+                                {{vehiculo.driver_name}} 
+                            </td>
+                            <td>
+                                {{vehiculo.hora_llegada}} 
+                            </td>
+                            <td>
+                                {{vehiculo.imei}} 
+                            </td>
+                            <td>
+                                {{vehiculo.driver_phone}} 
+                            </td>
+                        </tr>                        
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="pull-left bigger-130 ace-icon fa fa-times"></i>Cerrar</button>
             </div>
         </div>
 

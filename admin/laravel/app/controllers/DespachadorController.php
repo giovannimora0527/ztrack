@@ -87,7 +87,7 @@ class DespachadorController extends \BaseController {
                         . ", " . $data["group_id"]
                         . ", " . $turno
                         . ", (select now())"
-                        . ", 2"
+                        . ", 2"                  
                         . ");";
                 DB::beginTransaction();
                 DB::insert($insert);
@@ -99,15 +99,17 @@ class DespachadorController extends \BaseController {
             return Response::json(array('mensaje' => "No se puede guardar el registro. " . $e, 'error' => true));
         }
     }
-
+ 
+    
+    //Metodo que consulta los vehiculos que estan disponibles en paradero para ser despachados
     public function getVehiculosdisponibles() {
-        $data = Input::all(); //Hacer filtro q tenga conductor
+        $data = Input::all();
         $sql = "select dt.object_id, gso.name vehiculo from gs_despacho_temporal dt "
                 . "join gs_user_objects ob on dt.object_id = ob.object_id "
                 . "join gs_objects gso on ob.imei = gso.imei "
                 . "where dt.user_id = " . $data["user_id"]
                 . " and dt.grupo_id = " . $data["group_id"]
-                . " and estado = 2;";
+                . " and (estado = 2);";
         $vehiculos = DB::select($sql);
         return Response::json(array('vehiculosparadero' => $vehiculos));
     }
@@ -125,6 +127,7 @@ class DespachadorController extends \BaseController {
         return Response::json(array('vehiculosparadero' => $vehiculos));
     }
 
+    //Metodo que lista los vehiculos pendiente de llegada al paradero y se encuentran en estado 1 Disponible
     public function getInfovehiculo() {
         $data = Input::all();
         $sql = "SELECT gso.object_id, ob.name, ob.imei, ob.plate_number placa, d.driver_name conductor, 
@@ -204,7 +207,7 @@ class DespachadorController extends \BaseController {
                 join gs_user_object_groups ug ON ug.group_id = uo.group_id
                 where d.estado_id = 3 and d.hora_salida>(select CURDATE()) AND d.hora_salida <= (SELECT NOW()) 
                 and d.user_id = " . $info[0]->id 
-                . " ORDER BY d.hora_salida asc;";  // Error esta que no estoy mandando el ID del despachador.... Sugerencia: el dministrador debe ver los despachos
+                . " ORDER BY d.hora_salida asc;";  
         $vehiculosdespachados = DB::select($sql);
         return Response::json(array('vehiculosdespachados' => $vehiculosdespachados));
     }
@@ -252,12 +255,11 @@ class DespachadorController extends \BaseController {
                join gs_user_object_drivers d ON d.driver_id = guo.driver_id
                join gs_objects ob ON ob.imei = guo.imei 
                where dt.user_id = " .$data["user_id"] .
-               " and dt.estado = 4
+               " and (dt.estado = 4)
                order by dt.hora_llegada asc; ";
      
        $llegadavehiculos = DB::select($sql);
-       return Response::json(array('success' => true, 'llegadavehiculos' => $llegadavehiculos));
-             
+       return Response::json(array('success' => true, 'llegadavehiculos' => $llegadavehiculos));             
     }
     
     public function getHistorialrecorrido(){
@@ -274,10 +276,45 @@ class DespachadorController extends \BaseController {
                . " and d.hora_salida>(select CURDATE()) AND d.hora_salida <= (SELECT NOW())"
                . ";"
                ;
+      
        $estadistica = DB::select($sql);  
        $cant = count($estadistica);
+       
        return Response::json(array('success' => true, 'estadistica' => $estadistica, 'conductor' => $estadistica[0]->driver_name, 'vueltas' => $estadistica[$cant-1]->numero_recorrido));
        
+    }
+    
+    
+    public function getDescartarvehiculoparadero(){
+        $data = Input::all();       
+        $sql = "delete from gs_despacho_temporal where object_id = " . $data["vehiculo_id"] . " and user_id = " . $data["user_id"];
+        try {                      
+            DB::beginTransaction();
+            DB::delete($sql);
+            DB::commit();
+            return Response::json(array('success' => true, 'mensaje' => "El vehículo se descartó del paradero."));
+        } catch (Exception $e) {
+            DB::rollback();
+            return Response::json(array('mensaje' => "No se puede modificar el registro. " . $e, 'error' => true));
+        }
+    }
+    
+    public function getCancelardespacho(){
+       $data = Input::all();       
+       $sql = "delete from despachos where despacho_id = " . $data["despacho_id"];       
+       try {                      
+            DB::beginTransaction();
+            DB::delete($sql);
+            $sql = "update gs_despacho_temporal set "
+                    . " estado = 2 "
+                    . "where object_id = " . $data["vehiculo_id"];
+            DB::update($sql);
+            DB::commit();
+            return Response::json(array('success' => true, 'mensaje' => "El vehículo se descartó del despacho."));
+        } catch (Exception $e) {
+            DB::rollback();
+            return Response::json(array('mensaje' => "No se puede modificar el registro. " . $e, 'error' => true));
+        }
     }
 
 }

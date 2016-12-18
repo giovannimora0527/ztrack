@@ -207,7 +207,7 @@ class GrupoZTrackController extends \BaseController {
             DB::beginTransaction();
             DB::update($sql);
             DB::commit();
-            return Response::json(array('success' => "true", 'value' => "Registro guardado con exito."));
+            return Response::json(array('success' => "true", 'mensaje' => "Ok. Registro guardado satisfactoriamente."));
         } catch (Exception $e) {
             return Response::json(array('mensaje' => "No se pudo guardar el registro. " . $e, 'error' => true));
         }
@@ -323,7 +323,7 @@ class GrupoZTrackController extends \BaseController {
             $asignaciones = DB::select($sql);
             DB::commit();
             if (count($asignaciones) > 0) {
-                return Response::json(array('success' => true, 'mensaje' => 'Datos cargados con éxito', 'asignaciones' => $asignaciones, 'min' => intval($min), 'max' => $max - 1, 'count' => $count[0]->conteo,
+                return Response::json(array('success' => true, 'asignaciones' => $asignaciones, 'min' => intval($min), 'max' => $max - 1, 'count' => $count[0]->conteo,
                             'moreresults' => $more_results));
             } else {
                 return Response::json(array('success' => false, 'mensaje' => "No hay resultados disponibles."));

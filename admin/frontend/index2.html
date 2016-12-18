@@ -105,26 +105,26 @@
                     }
                 </script>
                 <ul class="nav nav-list">
-                    <li id="1" class="" onclick="validarUrl(1)">
+                    <li id="25" class="" onclick="validarUrl(25)">
                         <a ui-sref="principal">
                             <i class="menu-icon fa fa-home"></i>
                             <span class="menu-text"> Inicio </span>
                         </a>
                         <b class="arrow"></b>
                     </li>                    
-                    <li id="2" class="" onclick="validarUrl(2)">
+                    <li id="26" class="" onclick="validarUrl(26)">
                         <a ui-sref="modulodespachos" class="dropdown-toggle">
                             <i class="menu-icon fa fa-pencil-square-o"></i>
                             <span class="menu-text"> Despachos </span> 
                         </a>                                               
                     </li>
-                    <li id="3" class="" onclick="validarUrl(3)">
+                    <li id="27" class="" onclick="validarUrl(27)">
                         <a ui-sref="modulonovedades" class="dropdown-toggle">
                             <i class="menu-icon fa fa-exclamation-triangle"></i>
                             <span class="menu-text"> Novedades </span> 
                         </a>                                               
                     </li>
-                    <li id="4" class="" onclick="validarUrl(4)">
+                    <li id="28" class="" onclick="validarUrl(28)">
                         <a ui-sref="salir">
                             <i class="menu-icon fa fa-arrow-left"></i>
                             <span class="menu-text"> Salir </span>                            
@@ -345,9 +345,8 @@
                     }
                     ;
 
-                    function validarUrl(id) {
-                        console.log(id);
-                        for (var i = 1; i <= 20; i++) {
+                    function validarUrl(id) {                        
+                        for (var i = 1; i <= 30; i++) {
                             $("#" + i).removeClass("active");
                         }
                         $("#" + id).addClass("active");

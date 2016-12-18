@@ -109,15 +109,17 @@ class RutasController extends \BaseController {
 
     public function getVehiculosbygroupid() {
         $data = Input::all();
-//Selecciono el id de la empresa para que el despachador trabajo y poder localizar los vehiculos asociados al grupo
+        //Selecciono el id de la empresa para que el despachador trabajo y poder localizar los vehiculos asociados al grupo
         $sql = "select empresa_id from gs_info_despachador where user_id = " . $data["user_id"];
         $result = DB::select($sql);
         $qry = "select gso.object_id, gob.name, gso.imei "
                 . "from gs_user_objects gso "
                 . "join gs_objects gob on gob.imei = gso.imei "
+                . "left join gs_despacho_temporal dt ON gso.object_id = dt.object_id "
                 . "where gso.user_id = " . $result[0]->empresa_id
                 . " and gso.group_id = " . $data["group_id"]
                 . ";";
+        
         $vehiculos = DB::select($qry);
         if (count($vehiculos) > 0) {
             return Response::json(array('vehiculos' => $vehiculos));
