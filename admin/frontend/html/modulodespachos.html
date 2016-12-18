@@ -287,7 +287,7 @@ and open the template in the editor.
                                 Conductor
                             </th>
                             <th>
-                                Teléfono
+                                Ruta
                             </th>
                         </tr>
                     </thead>
@@ -306,7 +306,10 @@ and open the template in the editor.
                                 {{vehiculo.conductor}} 
                             </td>
                             <td>
-                                {{vehiculo.telefono}} 
+                                <select class="form-control" ng-model="vehiculo.rutaselect">
+                                    <option disabled selected value="">Seleccione una ruta</option>
+                                    <option ng-value="{{ruta.route_id}}" ng-repeat="ruta in rutas">{{ruta.route_name}}</option>
+                                </select> 
                             </td>
                         </tr>                        
                     </tbody>

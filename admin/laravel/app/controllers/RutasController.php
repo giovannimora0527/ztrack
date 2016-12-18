@@ -119,7 +119,7 @@ class RutasController extends \BaseController {
                 . "where gso.user_id = " . $result[0]->empresa_id
                 . " and gso.group_id = " . $data["group_id"]
                 . ";";
-        
+
         $vehiculos = DB::select($qry);
         if (count($vehiculos) > 0) {
             return Response::json(array('vehiculos' => $vehiculos));
@@ -128,32 +128,46 @@ class RutasController extends \BaseController {
         }
     }
 
-    public function getVueltasbyruta() { 
+    public function getVueltasbyruta() {
         $user_id = Input::get('user_id');
         $area_id = Input::get('area_id');
         $ruta_id = Input::get('ruta_id');
         $fechac = Input::get('fecha');
-        
+
         $sql = "SELECT DISTINCT numero_recorrido FROM despachos WHERE ruta_id=" . $ruta_id
                 . " AND hora_salida >= (SELECT DATE_FORMAT('" . $fechac . "' , '%Y-%m-%d 00:00:00'))"
-                . " AND estado_id = 4 ORDER BY 1 ASC;";       
+                . " AND estado_id = 4 ORDER BY 1 ASC;";
         $vueltas = DB::select($sql);
         return Response::json(array('vueltas' => $vueltas));
     }
 
-    public function getVehiculosbyruta() {    
+    public function getVehiculosbyruta() {
         $user_id = Input::get('user_id');
         $area_id = Input::get('area_id');
         $ruta_id = Input::get('ruta_id');
         $fechac = Input::get('fecha');
- 
+
         $sql = "SELECT DISTINCT d. imei, go.name "
                 . " FROM despachos d INNER JOIN gs_objects go ON go.imei = d.imei "
                 . " INNER JOIN gs_user_routes gur ON gur.route_id=d.ruta_id WHERE ruta_id=" . $ruta_id
                 . " AND d.hora_salida >= (SELECT DATE_FORMAT('" . $fechac . "', '%Y-%m-%d 00:00:00'))"
                 . " AND d.estado_id = 4 ORDER BY 1 ASC;";
         $vehiculos = DB::select($sql);
-        return Response::json(array('vehiculos' => $vehiculos));        
+        return Response::json(array('vehiculos' => $vehiculos));
+    }
+
+    public function getRutasbygroupid() {
+        $data = Input::all();
+        $sql = "SELECT gub.object_id, gub.group_id, r.route_id, r.route_name
+            FROM gs_user_objects gub 
+            JOIN gs_gruposrutas gr ON gr.group_id = gub.group_id
+            JOIN gs_user_routes r ON r.route_id = gr.route_id
+            WHERE gub.user_id = " . $data["user_id"]
+            . " and gub.object_id = " . $data["vehiculo_id"]
+            . ";";
+        $rutas = DB::select($sql);
+        return Response::json(array('rutas' => $rutas));
+        
     }
 
 }
