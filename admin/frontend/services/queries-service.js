@@ -15,7 +15,7 @@ ztrack.factory('QueriesService', function ($http, $rootScope, $q, toastr) {
         }).success(function (data) {
             if ($method === 'POST') {
                 if (data.success) {
-                   toastr.success(data.mensaje, "INFO");
+                   //toastr.success(data.mensaje, "INFO");
                 }
                 else{
                   toastr.error(data.mensaje, "ERROR");  

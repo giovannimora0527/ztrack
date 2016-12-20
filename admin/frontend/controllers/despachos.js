@@ -44,7 +44,7 @@ ztrack.controller('DespachosController', function ($rootScope, $scope, $filter, 
         conductor: ""
     };
     $scope.puntosdecontrol = {};
-    $scope.activarResultados = false; 
+    $scope.activarResultados = false;
 
     $scope.setActiveTab = function (tab) {
         $scope.activeTab = tab;
@@ -274,7 +274,10 @@ ztrack.controller('DespachosController', function ($rootScope, $scope, $filter, 
         QueriesService.executeRequest('POST', '../laravel/public/gruposrutas/editar', null, $params)
                 .then(function (result) {
                     if (result.success) {
+                        toastr.success(result.mensaje, "OK");
                         cargarGruposRutas();
+                    } else {
+                        toastr.error(result.mensaje, "Error");
                     }
                 });
     };
@@ -294,7 +297,10 @@ ztrack.controller('DespachosController', function ($rootScope, $scope, $filter, 
         QueriesService.executeRequest('POST', '../laravel/public/gruposrutas/eliminar', null, $params)
                 .then(function (result) {
                     if (result.success) {
+                        toastr.success(result.mensaje, "OK");
                         cargarGruposRutas();
+                    } else {
+                        toastr.error(result.mensaje, "Error");
                     }
                 });
     };
@@ -339,17 +345,29 @@ ztrack.controller('DespachosController', function ($rootScope, $scope, $filter, 
                 });
     };
     $scope.actualizargruporuta = function (id) {
-        $params = {
-            user_id: localStorage['ztrack.user_id'],
-            group_id: id,
-            route_id: $scope.gruporutaedit.ruta.route_id,
-            fechaini: $scope.gruporutaedit.fechaini,
-            fechafin: $scope.gruporutaedit.fechafin
-        };
+        if ($scope.gruporutaedit.ruta === undefined) {
+            $params = {
+                user_id: localStorage['ztrack.user_id'],
+                group_id: id,
+                fechaini: $scope.gruporutaedit.fechaini,
+                fechafin: $scope.gruporutaedit.fechafin
+            };
+        } else {
+            $params = {
+                user_id: localStorage['ztrack.user_id'],
+                group_id: id,
+                route_id: $scope.gruporutaedit.ruta.route_id,
+                fechaini: $scope.gruporutaedit.fechaini,
+                fechafin: $scope.gruporutaedit.fechafin
+            };
+        }
         QueriesService.executeRequest('POST', '../laravel/public/gruposrutas/editargruporuta', null, $params)
                 .then(function (result) {
                     if (result.success) {
+                        toastr.success(result.mensaje, "OK");
                         cargarGruposRutas();
+                    } else {
+                        toastr.error(result.mensaje, "Error");
                     }
                 });
     };
@@ -381,7 +399,10 @@ ztrack.controller('DespachosController', function ($rootScope, $scope, $filter, 
         QueriesService.executeRequest('POST', '../laravel/public/gruposrutas/asignacion', null, $params)
                 .then(function (result) {
                     if (result.success) {
+                        toastr.success(result.mensaje, "OK");
                         cargarAsignaciones();
+                    } else {
+                        toastr.error(result.mensaje, "Error");
                     }
                 });
     };
@@ -458,7 +479,10 @@ ztrack.controller('DespachosController', function ($rootScope, $scope, $filter, 
         QueriesService.executeRequest('POST', '../laravel/public/gruposrutas/eliminarasignacion', null, $params)
                 .then(function (result) {
                     if (result.success) {
+                        toastr.success(result.mensaje, "OK");
                         cargarAsignaciones();
+                    } else {
+                        toastr.error(result.mensaje, "Error");
                     }
                 });
     };
@@ -474,7 +498,10 @@ ztrack.controller('DespachosController', function ($rootScope, $scope, $filter, 
         QueriesService.executeRequest('POST', '../laravel/public/gruposrutas/asignacion', null, $params)
                 .then(function (result) {
                     if (result.success) {
+                        toastr.success(result.mensaje, "OK");
                         cargarAsignaciones();
+                    } else {
+                        toastr.error(result.mensaje, "Error");
                     }
                 });
     };
@@ -729,6 +756,7 @@ ztrack.controller('DespachosController', function ($rootScope, $scope, $filter, 
         QueriesService.executeRequest('POST', '../laravel/public/despachos/savepuntoscontrolaruta', $params, null)
                 .then(function (result) {
                     if (result.success) {
+                        toastr.success(result.mensaje, "OK");
                         cargarPuntosControlRuta();
                     }
                 });
@@ -760,19 +788,17 @@ ztrack.controller('DespachosController', function ($rootScope, $scope, $filter, 
                 user_id: localStorage['ztrack.user_id'],
                 route_id: $scope.rutaselecttime.route_id
             };
-        }
-        else{
+        } else {
             return;
         }
 
         QueriesService.executeRequest('GET', '../laravel/public/despachos/cargarpuntoscontrolaruta', null, $params)
                 .then(function (result) {
                     $scope.ptosdecontrol = result.ptosdecontrol;
-                    if($scope.ptosdecontrol.length === 0){
-                       $scope.activarResultados = false; 
-                    }
-                    else{
-                       $scope.activarResultados = true;  
+                    if ($scope.ptosdecontrol.length === 0) {
+                        $scope.activarResultados = false;
+                    } else {
+                        $scope.activarResultados = true;
                     }
                 });
     };
@@ -800,16 +826,16 @@ ztrack.controller('DespachosController', function ($rootScope, $scope, $filter, 
         }
     }
     ;
-    
-    $scope.cargarModalTiempoSelect = function(rz_id, zona_name, time_zone){
+
+    $scope.cargarModalTiempoSelect = function (rz_id, zona_name, time_zone) {
         $scope.tiempos = null;
         $scope.infomodal = {
-            zona_name :  zona_name,
-            time_zone :  time_zone
+            zona_name: zona_name,
+            time_zone: time_zone
         };
         $scope.pcselect = rz_id;
     };
-    
+
 
     //Para cargar los datos de modal de información de tiempos en los puntos de control
     $scope.cargarDatosModalTiempo = function (pcid, rzid) {
@@ -858,7 +884,13 @@ ztrack.controller('DespachosController', function ($rootScope, $scope, $filter, 
 
         QueriesService.executeRequest('POST', '../laravel/public/despachos/guardartiempopc', $params, null)
                 .then(function (result) {
-                    $scope.cargarPtosControlRuta();
+                    if (result.success) {
+                        toastr.success(result.mensaje, "OK");
+                        $scope.cargarPtosControlRuta();
+                    } else {
+                        toastr.error(result.mensaje, "Error");
+                    }
+
                 });
 
     };
@@ -871,6 +903,7 @@ ztrack.controller('DespachosController', function ($rootScope, $scope, $filter, 
         var rta = confirm("¿Desea eliminar el registro?");
         if (rta) {
             console.log("entro a borrar");
+            //Faltante
         } else {
             return;
         }

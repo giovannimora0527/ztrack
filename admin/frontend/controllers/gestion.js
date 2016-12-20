@@ -109,8 +109,12 @@ ztrack.controller('GestionController', function ($rootScope, $scope, AuthService
         QueriesService.executeRequest('POST', '../laravel/public/vehiculos/savevehiculo', $params, null)
                 .then(function (result) {
                     if (result.success) {
+                        toastr.sucess(result.mensaje,"OK");
                         $scope.nuevo();
                         cargarListadoConductores();
+                    }
+                    else{
+                        toastr.error(result.mensaje,"Error");
                     }
                 });
     };
@@ -220,7 +224,6 @@ ztrack.controller('GestionController', function ($rootScope, $scope, AuthService
     };
 
     $scope.actualizarVehiculo = function (vehiculoselect) {
-
         if ($scope.vehiculoupdate.driver_id === "") {
             $params = {
                 hasFilterDriver: 0
@@ -231,7 +234,6 @@ ztrack.controller('GestionController', function ($rootScope, $scope, AuthService
                 driver_id: $scope.vehiculoupdate.driver_id
             };
         }
-
         if (vehiculoselect.name === "") {
             toastr.warning("El vehículo no puede tener el campo nombre vacio. Intente de nuevo.", "Advertencia");
             return;
@@ -255,6 +257,10 @@ ztrack.controller('GestionController', function ($rootScope, $scope, AuthService
                             conductor: "",
                             ruta: ""
                         };
+                        toastr.success(result.mensaje,"OK");
+                    }
+                    else{
+                        toastr.error(result.mensaje,"Error");
                     }
 
                 });

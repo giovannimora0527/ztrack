@@ -71,10 +71,13 @@ class DespachosController extends \BaseController {
         $result = DB::select($sql);
         if (count($result) > 0) {
             for ($i = 0; $i < count($result); $i++) {
-                if ($result[$i]->zone_id == $data["ptocontrol_id"]) {
+                if ($result[$i]->zone_id == $data["ptocontrol_id"] && $result[$i]->route_id == $data["route_id"]) {
                     $esta = true;
                 }
             }
+        }
+        if($esta){
+            return Response::json(array('success' => false, 'mensaje' => "No se pudo guardar el registro. Registro duplicado para el punto de control asignado a la ruta previamente.", 'error' => true)); 
         }
         if (!$esta) {
             date_default_timezone_set('America/Bogota');
@@ -92,11 +95,9 @@ class DespachosController extends \BaseController {
                 return Response::json(array('success' => true, 'mensaje' => "El punto de control se agrego con éxito a la ruta."));
             } catch (Exception $e) {
                 DB::rollback();
-                return Response::json(array('mensaje' => "No se pudo guardar el registro. Intente de nuevo o contacte al administrador del sistema. " . $e, 'error' => true));
+                return Response::json(array('success' => false, 'error' => true,'mensaje' => "No se pudo guardar el registro. Intente de nuevo o contacte al administrador del sistema. " . $e, 'error' => true));
             }
-        } else {
-            return Response::json(array('success' => false, 'error' => true, 'mensaje' => "No se pudo guardar el registro. El registro se encuentra en la base de datos."));
-        }
+        }         
     }
 
     public function getCargarpuntoscontrolaruta() {

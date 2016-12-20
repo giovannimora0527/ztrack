@@ -163,8 +163,11 @@ ztrack.controller('DespachadoresController', function ($rootScope, $scope, AuthS
         QueriesService.executeRequest('GET', '../laravel/public/despachador/descartarvehiculoparadero', null, $params)
                 .then(function (result) {
                     if (result.success) {
+                        toastr.success(result.mensaje, "OK");
                         $scope.cargarVehiculos();
                         cargarVehiculosParadero();
+                    } else {
+                        toastr.error(result.mensaje, "Error");
                     }
                 });
     };
@@ -238,12 +241,12 @@ ztrack.controller('DespachadoresController', function ($rootScope, $scope, AuthS
                 });
     };
 
-    $scope.despachar = function (it) {       
-        if($scope.vehiculo.rutaselect === undefined){
-            toastr.warning("Debe seleccionar una ruta para continuar con el despacho. Intente de nuevo.","Advertencia");
+    $scope.despachar = function (it) {
+        if ($scope.vehiculo.rutaselect === undefined) {
+            toastr.warning("Debe seleccionar una ruta para continuar con el despacho. Intente de nuevo.", "Advertencia");
             return;
-        }        
-        document.getElementById("btndespachar").disabled = true;        
+        }
+        document.getElementById("btndespachar").disabled = true;
         $params = {
             user_id: localStorage['ztrack.despachador_id'],
             imei: it.imei,
@@ -259,6 +262,8 @@ ztrack.controller('DespachadoresController', function ($rootScope, $scope, AuthS
                         cargarVehiculosDespachados();
                         toastr.success("Vehículo despachado con éxito.", "OK");
                         $('#modalDespachos').modal('hide');
+                    } else {
+                         toastr.error(result.mensaje, "Error");
                     }
                 });
     };
@@ -298,7 +303,12 @@ ztrack.controller('DespachadoresController', function ($rootScope, $scope, AuthS
                         cargarVehiculosDespachados();
                         cargarAllVehiculos();
                         cargarVehiculosLLegada();
+                        toastr.success(result.mensaje,"OK");
                     }
+                    else{
+                      toastr.error(result.mensaje,"Error");  
+                    }
+                    
                 });
     };
 
@@ -346,16 +356,20 @@ ztrack.controller('DespachadoresController', function ($rootScope, $scope, AuthS
                     if (result.success) {
                         cargarAllVehiculos();
                         cargarVehiculosDespachados();
+                        toastr.sucess(result.mensaje,"OK");
+                    }
+                    else{
+                       toastr.error(result.mensaje,"Error"); 
                     }
                 });
     };
 
 
-    $scope.cargarRutasByGroup = function (item) {        
+    $scope.cargarRutasByGroup = function (item) {
         $params = {
             user_id: localStorage['ztrack.user_id'],
             vehiculo_id: item.object_id
-        };        
+        };
         QueriesService.executeRequest('GET', '../laravel/public/rutas/rutasbygroupid', null, $params)
                 .then(function (result) {
                     $scope.rutas = result.rutas;

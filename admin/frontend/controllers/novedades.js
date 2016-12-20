@@ -139,9 +139,16 @@ ztrack.controller('NovedadesController', function ($rootScope, $scope, AuthServi
 
         QueriesService.executeRequest('POST', '../laravel/public/novedades/novedadesavehiculo', $params, null)
                 .then(function (result) {
-                    $scope.novedadesselect = [];
-                    $scope.selectnovedad = {};
-                    $('#editarNovedad').modal('hide');
+                    if (result.success) {
+                        $scope.novedadesselect = [];
+                        $scope.selectnovedad = {};
+                        $('#editarNovedad').modal('hide');
+                        toastr.success(result.mensaje,"OK");
+                    } else {
+                        toastr.error(result.mensaje,"Error");
+                    }
+
+
                 });
 
     };
@@ -183,10 +190,9 @@ ztrack.controller('NovedadesController', function ($rootScope, $scope, AuthServi
                 .then(function (result) {
                     $scope.novedadesregistradas = result.novedades;
                     if ($scope.novedadesregistradas.length > 0) {
-                        toastr.success("Información cargada con éxito.","OK");
-                    }
-                    else{
-                        toastr.warning("No hay resultados con el criterio de búsqueda.","Advertencia");
+                        toastr.success("Información cargada con éxito.", "OK");
+                    } else {
+                        toastr.warning("No hay resultados con el criterio de búsqueda.", "Advertencia");
                     }
                 });
 

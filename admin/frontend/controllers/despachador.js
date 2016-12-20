@@ -186,6 +186,7 @@ angular.module('ztrack').controller('AdminDespachosController', function ($rootS
                        toastr.error("No se ha podido guardar el registro. Intente de nuevo.","Error");
                     }
                     else{
+                        toastr.success(result.mensaje,"OK");
                         $scope.itemsselected = [];
                         $scope.despachadorselect = {}; 
                         document.getElementById("selectDespachador").disabled = false;

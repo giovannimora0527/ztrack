@@ -120,11 +120,9 @@ class GrupoZTrackController extends \BaseController {
 
     public function postEditargruporuta() {
         $data = Input::all();
-        $hayfechaini = false;
         $sql = "update gs_gruposrutas set ";
         $count = 0;
-        if (isset($data["route_id"])) {
-            $hayfechaini = true;
+        if (isset($data["route_id"])) {            
             if ($count == 0) {
                 $sql .= "route_id = " . $data["route_id"];
                 $count++;

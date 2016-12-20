@@ -47,7 +47,11 @@ ztrack.controller('GruposController', function ($rootScope, $scope, AuthService,
         QueriesService.executeRequest('POST', '../laravel/public/grupos/savegrupo', $scope.grupo, $params)
                 .then(function (result) {
                     if(result.success){
+                       toastr.success(result.mensaje,"OK");
                        getGrupos(); 
+                    }
+                    else{
+                      toastr.error(result.mensaje,"Error");   
                     }
                 });
     };    
