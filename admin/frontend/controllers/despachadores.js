@@ -245,8 +245,7 @@ ztrack.controller('DespachadoresController', function ($rootScope, $scope, AuthS
         if ($scope.vehiculo.rutaselect === undefined) {
             toastr.warning("Debe seleccionar una ruta para continuar con el despacho. Intente de nuevo.", "Advertencia");
             return;
-        }
-        document.getElementById("btndespachar").disabled = true;
+        }       
         $params = {
             user_id: localStorage['ztrack.despachador_id'],
             imei: it.imei,
@@ -255,6 +254,24 @@ ztrack.controller('DespachadoresController', function ($rootScope, $scope, AuthS
             group_id: it.group_id,
             coordenadas: it.coordenadas
         };
+        if ($scope.vehiculo.ultimavuelta !== undefined) {
+            if($scope.vehiculo.tiempoestimado === undefined){
+                toastr.warning("Selecciono última vuelta, debe asignar un tiempo estimado para la terminación de la vuelta.","Advertencia");
+                return;
+            }
+            $params = {
+                user_id: localStorage['ztrack.despachador_id'],
+                imei: it.imei,
+                object_id: it.object_id,
+                ruta_id: $scope.vehiculo.rutaselect,
+                group_id: it.group_id,
+                coordenadas: it.coordenadas,
+                ultimvuelta : 1,
+                tiempoestimado : $scope.vehiculo.tiempoestimado
+            };
+        }
+        console.log($params);        
+        document.getElementById("btndespachar").disabled = true;
         QueriesService.executeRequest('GET', '../laravel/public/despachador/despachovehiculo', null, $params)
                 .then(function (result) {
                     if (result.success) {
@@ -263,7 +280,7 @@ ztrack.controller('DespachadoresController', function ($rootScope, $scope, AuthS
                         toastr.success("Vehículo despachado con éxito.", "OK");
                         $('#modalDespachos').modal('hide');
                     } else {
-                         toastr.error(result.mensaje, "Error");
+                        toastr.error(result.mensaje, "Error");
                     }
                 });
     };
@@ -303,12 +320,11 @@ ztrack.controller('DespachadoresController', function ($rootScope, $scope, AuthS
                         cargarVehiculosDespachados();
                         cargarAllVehiculos();
                         cargarVehiculosLLegada();
-                        toastr.success(result.mensaje,"OK");
+                        toastr.success(result.mensaje, "OK");
+                    } else {
+                        toastr.error(result.mensaje, "Error");
                     }
-                    else{
-                      toastr.error(result.mensaje,"Error");  
-                    }
-                    
+
                 });
     };
 
@@ -356,10 +372,9 @@ ztrack.controller('DespachadoresController', function ($rootScope, $scope, AuthS
                     if (result.success) {
                         cargarAllVehiculos();
                         cargarVehiculosDespachados();
-                        toastr.sucess(result.mensaje,"OK");
-                    }
-                    else{
-                       toastr.error(result.mensaje,"Error"); 
+                        toastr.sucess(result.mensaje, "OK");
+                    } else {
+                        toastr.error(result.mensaje, "Error");
                     }
                 });
     };

@@ -140,16 +140,16 @@ class VehiculosController extends \BaseController {
                 from gs_user_objects guo
                 join gs_objects gob ON gob.imei = guo.imei
                 join gs_user_object_drivers d ON d.driver_id = guo.driver_id
-                join gs_gruposrutas gr ON gr.group_id = guo.group_id
-                join gs_user_routes r ON r.route_id = gr.route_id
+                left join gs_gruposrutas gr ON gr.group_id = guo.group_id
+                left join gs_user_routes r ON r.route_id = gr.route_id
                 where guo.user_id = " . $data["user_id"];
 
         $sql_count = "select count(guo.object_id) conteo
                 from gs_user_objects guo
                 join gs_objects gob ON gob.imei = guo.imei
                 join gs_user_object_drivers d ON d.driver_id = guo.driver_id
-                join gs_gruposrutas gr ON gr.group_id = guo.group_id
-                join gs_user_routes r ON r.route_id = gr.route_id
+                left join gs_gruposrutas gr ON gr.group_id = guo.group_id
+                left join gs_user_routes r ON r.route_id = gr.route_id
                 where guo.user_id = " . $data["user_id"];
         $filtros = "";
 

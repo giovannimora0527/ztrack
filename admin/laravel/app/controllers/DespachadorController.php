@@ -182,6 +182,21 @@ class DespachadorController extends \BaseController {
                 . ", " . $info[0]->id  // Se cambia el id -> para el nuevo registro se usa el id del despachador 
                 . ", " . $num_vuelta
                 . ");";
+        if(isset($data["ultimvuelta"])){
+            $sql_insert = "insert into despachos(vehiculo_id, latitud, longitud, ruta_id, imei, hora_salida, estado_id, user_id, "
+                . "numero_recorrido, ultimo_recorrido) values("
+                . $data["object_id"]
+                . ", '" . $myArray[0]
+                . "', '" . $myArray[1]
+                . "', " . $data["ruta_id"]
+                . ", '" . $data["imei"]
+                . "', (select now())" 
+                . ", 3"
+                . ", " . $info[0]->id  // Se cambia el id -> para el nuevo registro se usa el id del despachador 
+                . ", " . $num_vuelta
+                . ", 1"
+                . ");";  
+        }        
         try {
             DB::beginTransaction();
             DB::insert($sql_insert);            

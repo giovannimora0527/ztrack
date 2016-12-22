@@ -28,8 +28,14 @@
         <!-- Plugin files -->        
         <link href="https://cdn.rawgit.com/zhaber/datetimepicker/master/datetimepicker.css" type="text/css" rel="stylesheet">
 
-       <!--        DatePicker    -->
+        <!--        DatePicker    -->
         <link rel="stylesheet" href="../assets/css/bootstrap-datepicker3.min.css" />
+        <!-- <CHOVE> -->
+        <!-- css timepicker -->
+        <link rel="stylesheet" href="assets/css/bootstrap-timepicker.min.css" />
+        <link rel="stylesheet" href="assets/css/bootstrap-datetimepicker.min.css" />
+
+        <!-- </CHOVE> -->
 
     </head>
 
@@ -184,8 +190,8 @@
         <script src="assets/js/jquery-1.11.3.min.js"></script><!--
         <![endif]-->
         <script type="text/javascript">
-                    if ('ontouchstart' in document.documentElement)
-                        document.write("<script src='assets/js/jquery.mobile.custom.min.js'>" + "<" + "/script>");
+                        if ('ontouchstart' in document.documentElement)
+                            document.write("<script src='assets/js/jquery.mobile.custom.min.js'>" + "<" + "/script>");
         </script>
         <script src="assets/js/bootstrap.min.js"></script>
 
@@ -210,150 +216,150 @@
 
         <!-- inline scripts related to this page -->
         <script type="text/javascript">
-                    jQuery(function ($) {
-                        $('.easy-pie-chart.percentage').each(function () {
-                            var $box = $(this).closest('.infobox');
-                            var barColor = $(this).data('color') || (!$box.hasClass('infobox-dark') ? $box.css('color') : 'rgba(255,255,255,0.95)');
-                            var trackColor = barColor = 'rgba(255,255,255,0.95)' ? 'rgba(255,255,255,0.25)' : '#E2E2E2';
-                            var size = parseInt($(this).data('size')) || 50;
-                            $(this).easyPieChart({
-                                barColor: barColor,
-                                trackColor: trackColor,
-                                scaleColor: false,
-                                lineCap: 'butt',
-                                lineWidth: parseInt(size / 10),
-                                animate: ace.vars['old_ie'] ? false : 1000,
-                                size: size
+                        jQuery(function ($) {
+                            $('.easy-pie-chart.percentage').each(function () {
+                                var $box = $(this).closest('.infobox');
+                                var barColor = $(this).data('color') || (!$box.hasClass('infobox-dark') ? $box.css('color') : 'rgba(255,255,255,0.95)');
+                                var trackColor = barColor = 'rgba(255,255,255,0.95)' ? 'rgba(255,255,255,0.25)' : '#E2E2E2';
+                                var size = parseInt($(this).data('size')) || 50;
+                                $(this).easyPieChart({
+                                    barColor: barColor,
+                                    trackColor: trackColor,
+                                    scaleColor: false,
+                                    lineCap: 'butt',
+                                    lineWidth: parseInt(size / 10),
+                                    animate: ace.vars['old_ie'] ? false : 1000,
+                                    size: size
+                                });
+                            })
+
+                            $('.sparkline').each(function () {
+                                var $box = $(this).closest('.infobox');
+                                var barColor = !$box.hasClass('infobox-dark') ? $box.css('color') : '#FFF';
+                                $(this).sparkline('html',
+                                        {
+                                            tagValuesAttribute: 'data-values',
+                                            type: 'bar',
+                                            barColor: barColor,
+                                            chartRangeMin: $(this).data('min') || 0
+                                        });
                             });
-                        })
-
-                        $('.sparkline').each(function () {
-                            var $box = $(this).closest('.infobox');
-                            var barColor = !$box.hasClass('infobox-dark') ? $box.css('color') : '#FFF';
-                            $(this).sparkline('html',
-                                    {
-                                        tagValuesAttribute: 'data-values',
-                                        type: 'bar',
-                                        barColor: barColor,
-                                        chartRangeMin: $(this).data('min') || 0
-                                    });
-                        });
 
 
-                        //flot chart resize plugin, somehow manipulates default browser resize event to optimize it!
-                        //but sometimes it brings up errors with normal resize event handlers
-                        $.resize.throttleWindow = false;
-                        var placeholder = $('#piechart-placeholder').css({'width': '90%', 'min-height': '150px'});
+                            //flot chart resize plugin, somehow manipulates default browser resize event to optimize it!
+                            //but sometimes it brings up errors with normal resize event handlers
+                            $.resize.throttleWindow = false;
+                            var placeholder = $('#piechart-placeholder').css({'width': '90%', 'min-height': '150px'});
 
-                        placeholder.on('plothover', function (event, pos, item) {
-                            if (item) {
-                                if (previousPoint !== item.seriesIndex) {
-                                    previousPoint = item.seriesIndex;
-                                    var tip = item.series['label'] + " : " + item.series['percent'] + '%';
-                                    $tooltip.show().children(0).text(tip);
+                            placeholder.on('plothover', function (event, pos, item) {
+                                if (item) {
+                                    if (previousPoint !== item.seriesIndex) {
+                                        previousPoint = item.seriesIndex;
+                                        var tip = item.series['label'] + " : " + item.series['percent'] + '%';
+                                        $tooltip.show().children(0).text(tip);
+                                    }
+                                    $tooltip.css({top: pos.pageY + 10, left: pos.pageX + 10});
+                                } else {
+                                    $tooltip.hide();
+                                    previousPoint = null;
                                 }
-                                $tooltip.css({top: pos.pageY + 10, left: pos.pageX + 10});
-                            } else {
-                                $tooltip.hide();
-                                previousPoint = null;
-                            }
 
-                        });
-
-                        $(document).one('ajaxloadstart.page', function (e) {
-                            $tooltip.remove();
-                        });
-
-                        var d1 = [];
-                        for (var i = 0; i < Math.PI * 2; i += 0.5) {
-                            d1.push([i, Math.sin(i)]);
-                        }
-
-                        var d2 = [];
-                        for (var i = 0; i < Math.PI * 2; i += 0.5) {
-                            d2.push([i, Math.cos(i)]);
-                        }
-
-                        var d3 = [];
-                        for (var i = 0; i < Math.PI * 2; i += 0.2) {
-                            d3.push([i, Math.tan(i)]);
-                        }
-                        $('#recent-box [data-rel="tooltip"]').tooltip({placement: tooltip_placement});
-                        function tooltip_placement(context, source) {
-                            var $source = $(source);
-                            var $parent = $source.closest('.tab-content');
-                            var off1 = $parent.offset();
-                            var w1 = $parent.width();
-
-                            var off2 = $source.offset();
-                            if (parseInt(off2.left) < parseInt(off1.left) + parseInt(w1 / 2))
-                                return 'right';
-                            return 'left';
-                        }
-
-
-                        $('.dialogs,.comments').ace_scroll({
-                            size: 300
-                        });
-
-
-                        //Android's default browser somehow is confused when tapping on label which will lead to dragging the task
-                        //so disable dragging when clicking on label                        
-                        if (ace.vars['touch'] && ace.vars['android']) {
-                            $('#tasks').on('touchstart', function (e) {
-                                var li = $(e.target).closest('#tasks li');
-                                if (li.length === 0)
-                                    return;
-                                var label = li.find('label.inline').get(0);
-                                if (label === e.target || $.contains(label, e.target))
-                                    e.stopImmediatePropagation();
                             });
-                        }
 
-                        $('#tasks').sortable({
-                            opacity: 0.8,
-                            revert: true,
-                            forceHelperSize: true,
-                            placeholder: 'draggable-placeholder',
-                            forcePlaceholderSize: true,
-                            tolerance: 'pointer',
-                            stop: function (event, ui) {
-                                //just for Chrome!!!! so that dropdowns on items don't appear below other items after being moved
-                                $(ui.item).css('z-index', 'auto');
+                            $(document).one('ajaxloadstart.page', function (e) {
+                                $tooltip.remove();
+                            });
+
+                            var d1 = [];
+                            for (var i = 0; i < Math.PI * 2; i += 0.5) {
+                                d1.push([i, Math.sin(i)]);
                             }
-                        }
-                        );
-                    });
 
-                    function goToTrack() {
-                        var userId = localStorage.getItem('ztrack.user_id');
-                        $.ajax({
-                            url: 'php/validate.php',
-                            data: {userId: userId},
-                            dataType: "json",
-                            type: 'POST',
-                            success: function (result) {
-                                if (result[0]["success"]) {
-                                    var url = window.location.origin + "/track/login.php?u=" + result[0]["usuario"] +
-                                            "&p=" + result[0]["password"] + "&rm=true&m=false";
-                                    var windows = window.location.origin + "/track/tracking2.php";
-                                    sessionStorage.setItem('url', windows);
-                                    window.open(url, '_blank');
+                            var d2 = [];
+                            for (var i = 0; i < Math.PI * 2; i += 0.5) {
+                                d2.push([i, Math.cos(i)]);
+                            }
+
+                            var d3 = [];
+                            for (var i = 0; i < Math.PI * 2; i += 0.2) {
+                                d3.push([i, Math.tan(i)]);
+                            }
+                            $('#recent-box [data-rel="tooltip"]').tooltip({placement: tooltip_placement});
+                            function tooltip_placement(context, source) {
+                                var $source = $(source);
+                                var $parent = $source.closest('.tab-content');
+                                var off1 = $parent.offset();
+                                var w1 = $parent.width();
+
+                                var off2 = $source.offset();
+                                if (parseInt(off2.left) < parseInt(off1.left) + parseInt(w1 / 2))
+                                    return 'right';
+                                return 'left';
+                            }
+
+
+                            $('.dialogs,.comments').ace_scroll({
+                                size: 300
+                            });
+
+
+                            //Android's default browser somehow is confused when tapping on label which will lead to dragging the task
+                            //so disable dragging when clicking on label                        
+                            if (ace.vars['touch'] && ace.vars['android']) {
+                                $('#tasks').on('touchstart', function (e) {
+                                    var li = $(e.target).closest('#tasks li');
+                                    if (li.length === 0)
+                                        return;
+                                    var label = li.find('label.inline').get(0);
+                                    if (label === e.target || $.contains(label, e.target))
+                                        e.stopImmediatePropagation();
+                                });
+                            }
+
+                            $('#tasks').sortable({
+                                opacity: 0.8,
+                                revert: true,
+                                forceHelperSize: true,
+                                placeholder: 'draggable-placeholder',
+                                forcePlaceholderSize: true,
+                                tolerance: 'pointer',
+                                stop: function (event, ui) {
+                                    //just for Chrome!!!! so that dropdowns on items don't appear below other items after being moved
+                                    $(ui.item).css('z-index', 'auto');
                                 }
                             }
+                            );
                         });
-                    }
-                    ;
 
-                    function validarUrl(id) {                        
-                        for (var i = 1; i <= 30; i++) {
-                            $("#" + i).removeClass("active");
+                        function goToTrack() {
+                            var userId = localStorage.getItem('ztrack.user_id');
+                            $.ajax({
+                                url: 'php/validate.php',
+                                data: {userId: userId},
+                                dataType: "json",
+                                type: 'POST',
+                                success: function (result) {
+                                    if (result[0]["success"]) {
+                                        var url = window.location.origin + "/track/login.php?u=" + result[0]["usuario"] +
+                                                "&p=" + result[0]["password"] + "&rm=true&m=false";
+                                        var windows = window.location.origin + "/track/tracking2.php";
+                                        sessionStorage.setItem('url', windows);
+                                        window.open(url, '_blank');
+                                    }
+                                }
+                            });
                         }
-                        $("#" + id).addClass("active");
-                    }
-                    $("#25").addClass("active");
+                        ;
+
+                        function validarUrl(id) {
+                            for (var i = 1; i <= 30; i++) {
+                                $("#" + i).removeClass("active");
+                            }
+                            $("#" + id).addClass("active");
+                        }
+                        $("#25").addClass("active");
         </script>
-        
+
 <!--        <script>
         //datepicker plugin
         //link
@@ -367,6 +373,21 @@
             $(this).prev().focus();
         });
         </script>-->
+    
+        <!-- <script timepicker > -->
+        <script src="assets/js/bootstrap-datepicker.min.js"></script>
+        <script src="assets/js/bootstrap-timepicker.min.js"></script>
+        <script src="assets/js/moment.min.js"></script>
+        <script src="assets/js/daterangepicker.min.js"></script>
+
+        <script src="assets/js/autosize.min.js"></script>
+        <script src="assets/js/jquery.inputlimiter.min.js"></script>
+        <script src="assets/js/jquery.maskedinput.min.js"></script>
+        <!-- <script progressbar > -->
+        <script src="assets/js/jquery-ui.min.js"></script>
+        <script src="assets/js/jquery.ui.touch-punch.min.js"></script>
+
+        <!-- </CHOVE> -->
 
         <!--        <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.js"></script>-->
         <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js"></script>

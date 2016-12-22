@@ -289,6 +289,12 @@ and open the template in the editor.
                             <th>
                                 Ruta
                             </th>
+                            <th>
+                                Última Vuelta
+                            </th>
+                            <th>
+                                Tiempo Aprox. Llegada
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
@@ -311,13 +317,24 @@ and open the template in the editor.
                                     <option ng-value="{{ruta.route_id}}" ng-repeat="ruta in rutas">{{ruta.route_name}}</option>
                                 </select> 
                             </td>
+                            <td>
+                                <input type="checkbox" class="form-control" ng-model="vehiculo.ultimavuelta"> 
+                            </td>
+                            <td>
+                                <div class="input-group bootstrap-timepicker">
+                                    <input id="tiempoestimado" type="timepicker"  ng-model="vehiculo.tiempoestimado" class="form-control"/>
+                                    <span class="input-group-addon">
+                                        <i class="fa fa-clock-o bigger-110 border blue"></i>
+                                    </span>
+                                </div>
+                            </td>
                         </tr>                        
                     </tbody>
                 </table>
             </div>
             <div class="modal-footer">
                 <button id="btndespachar" type="button" class="btn btn-primary" ng-click="despachar(vehiculo)"><i class="pull-left bigger-130 ace-icon fa fa-arrow-right"></i>Despachar</button>
-                
+
                 <button  id="btncerrar" type="button" class="btn btn-default" data-dismiss="modal"><i class="pull-left bigger-130 ace-icon fa fa-times"></i>Cerrar</button>
             </div>
         </div>
@@ -503,3 +520,21 @@ and open the template in the editor.
 
     </div>
 </div>
+
+<!--Giovanni-->
+<script>
+    $('#tiempoestimado').timepicker({
+        minuteStep: 1,
+        showSeconds: true,
+        showMeridian: false,
+        disableFocus: true,
+        icons: {
+            up: 'fa fa-chevron-up',
+            down: 'fa fa-chevron-down'
+        }
+    }).on('focus', function () {
+        $('#horaini').timepicker('showWidget');
+    }).next().on(ace.click_event, function () {
+        $(this).prev().focus();
+    });
+</script>
