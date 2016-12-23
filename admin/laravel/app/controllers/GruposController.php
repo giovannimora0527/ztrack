@@ -31,16 +31,7 @@ class GruposController extends \BaseController {
         return Response::json(array('areas' => $areas));
     }
     
-    public function getGruposbyareaid() { 
-        $user_id = Input::get('user_id');
-        $area_id = Input::get('area_id');
-        $sql = "";
         
-        $groups = [];
-        //$groups = DB::select($sql);
-        return Response::json(array('grupos' => $groups));
-    }
-    
     public function postSavegrupo(){
         $data = Input::all();        
         $sql = "select * from gs_user_object_groups where group_name = '" . strtoupper($data["nombre"]) . "';";
@@ -63,6 +54,39 @@ class GruposController extends \BaseController {
             DB::rollback();
             return Response::json(array('error' => "No se puede guardar el registro. " . $e, 'error' => true));
         }
+    }
+    
+    public function postSearchgrupo(){
+        $data = Input::all();
+        $sql = "select * from gs_user_object_groups where user_id = " . $data["user_id"];
+        if(isset($data["nombregrupo"])){
+           $sql .= " and group_name LIKE '%" . strtoupper($data["nombregrupo"]) . "%' "; 
+        }   
+        $sql .= " order by group_name asc;";
+        try {            
+            $results = DB::select($sql);            
+            return Response::json(array('resultados' => $results));
+        } catch (Exception $e) {            
+            return Response::json(array('error' => "No se puede realizar la consulta. Contacte al admin del sistema. " . $e, 'error' => true));
+        }        
+    }
+    
+    public function postActualizargrupo(){
+        $data = Input::all();
+        $sql = "update gs_user_object_groups set "
+                . " group_name = '" .$data["group_name"]
+                . "', group_desc = '" .$data["group_desc"]
+                . "' where group_id = " .$data["group_id"];
+        try {
+            DB::beginTransaction();
+            DB::update($sql);
+            DB::commit();
+            return Response::json(array('success' => true, 'mensaje' => "El registro se ha actualizado correctamente"));
+        } catch (Exception $e) {
+            DB::rollback();
+            return Response::json(array('error' => "No se puede actualizar el registro. " . $e, 'error' => true));
+        }
+        
     }
 
     

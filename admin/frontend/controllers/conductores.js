@@ -18,6 +18,11 @@ ztrack.controller('GestionConductorController', function ($rootScope, $scope, Au
         user_id: localStorage['ztrack.user_id']
     };
     $scope.hayConductores = false;
+    var min = 0;
+    var max = 10;
+    $scope.maxcount = 0;
+    $scope.paginationtab = false;
+    $scope.pag = 1;
     getConductoresInfo();
 
 
@@ -27,7 +32,22 @@ ztrack.controller('GestionConductorController', function ($rootScope, $scope, Au
         if (tab === 1) {
             getConductoresInfo();
         }
+        if (tab === 2) {
+            $scope.filtro = {};
+            getRutas();
+        }
     };
+
+    function getRutas() {
+        $params = {
+            user_id: localStorage['ztrack.user_id']
+        };
+        QueriesService.executeRequest('GET', '../laravel/public/rutas/rutas', null, $params)
+                .then(function (result) {
+                    $scope.rutas = result.rutas;
+                });
+    }
+
 
     function getConductoresInfo() {
         $params = {
@@ -41,9 +61,6 @@ ztrack.controller('GestionConductorController', function ($rootScope, $scope, Au
                     }
                 });
     }
-
-
-
 
     $scope.guardarConductor = function () {
         if ($scope.conductor.nombres === "" || $scope.conductor.direccion === "" || $scope.conductor.identificacion === "" || $scope.conductor.telefono === "") {
@@ -63,9 +80,9 @@ ztrack.controller('GestionConductorController', function ($rootScope, $scope, Au
                     if (result.success) {
                         $('#agregarConductor').modal('hide');
                         getConductoresInfo();
-                        toastr.success(result.mensaje,"OK");
+                        toastr.success(result.mensaje, "OK");
                     } else {
-                        toastr.error(result.mensaje,"Error");
+                        toastr.error(result.mensaje, "Error");
                     }
                 });
     };
@@ -89,14 +106,13 @@ ztrack.controller('GestionConductorController', function ($rootScope, $scope, Au
         }
         QueriesService.executeRequest('POST', '../laravel/public/conductores/updateconductor', $scope.conductorseleccionado, null)
                 .then(function (result) {
-                    if(result.success){
-                         getConductoresInfo();
-                         toastr.success(result.mensaje,"OK");
+                    if (result.success) {
+                        getConductoresInfo();
+                        toastr.success(result.mensaje, "OK");
+                    } else {
+                        toastr.error(result.mensaje, "Error");
                     }
-                    else{
-                        toastr.error(result.mensaje,"Error");
-                    }
-                    
+
                 });
     };
 
@@ -115,14 +131,80 @@ ztrack.controller('GestionConductorController', function ($rootScope, $scope, Au
         };
         QueriesService.executeRequest('POST', '../laravel/public/conductores/deleteconductor', $params, null)
                 .then(function (result) {
-                    if(result.success){
-                         getConductoresInfo();
-                         toastr.success(result.mensaje,"OK");
-                    }
-                    else{
-                        toastr.error(result.mensaje,"Error");
+                    if (result.success) {
+                        getConductoresInfo();
+                        toastr.success(result.mensaje, "OK");
+                    } else {
+                        toastr.error(result.mensaje, "Error");
                     }
                 });
+    };
+    
+    function buscarFiltro(){
+        $scope.buscarConductor();
+    }
+
+
+    $scope.buscarConductor = function () {
+        $params = {
+            user_id: localStorage['ztrack.user_id'],
+            min: min,
+            max: max
+        };
+        QueriesService.executeRequest('POST', '../laravel/public/conductores/searchconductor', $scope.filtro, $params)
+                .then(function (result) {
+                    if (result.success) {
+                        $scope.conductoresfiltro = result.conductores;
+                        if ($scope.conductoresfiltro.length === 0)
+                        {
+                            $scope.resultsfound = false;
+                            $scope.paginationtab = false;
+                            $scope.limpiarFiltros();
+                            toastr.warning("No se encontraron resultados con el criterio de búsqueda. Intente de nuevo.", "Advertencia");
+                        }
+                        $scope.resultsfound = true;
+                        $scope.paginationtab = result.moreresults;                        
+                        $scope.minlabel = min;
+                        $scope.maxlabel = max;
+                        $scope.maxcount = parseInt(result.count);
+                        if ($scope.maxcount > max) {                            
+                            $scope.paginationtab = true;
+                        } else {
+                            $scope.paginationtab = false;
+                        }
+                    }
+                });
+    };
+    
+    $scope.paginationtabant = function () {
+        if ($scope.minlabel === 0) {
+            toastr.warning("Ya se encuentra en la primera página de los resultados", "Advertencia");
+            return;
+        }
+        if ((min - 10) <= 0) {
+            min = 0;
+        } else {
+            min = ((min) - 10);
+        }
+        max = (max - 10);
+        $scope.pag = $scope.pag - 1;
+        buscarFiltro();
+    };
+
+    $scope.paginationtabsig = function () {
+        if ($scope.maxlabel > parseInt($scope.maxcount)) {
+            toastr.warning("Ya se encuentra en la última página de los resultados", "Advertencia");
+            return;
+        }
+        min = max;
+        max = (max) + 10;
+        $scope.pag = $scope.pag + 1;
+        buscarFiltro();
+    };
+
+    $scope.limpiarFiltros = function () {
+        $scope.filtro = {};
+        $scope.conductores = {};
     };
 
 
