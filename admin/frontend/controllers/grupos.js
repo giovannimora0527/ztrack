@@ -98,9 +98,31 @@ ztrack.controller('GruposController', function ($rootScope, $scope, AuthService,
            group_desc : item.group_desc
        }; 
     };
+    
+    $scope.onconfirmdeletegrupo = function(it){
+       var rta = confirm("¿Desea eliminar el registro?");
+        if (rta) {             
+            $scope.borrarGrupo(it);           
+        } else {
+            return;
+        } 
+    };
+    
 
-    $scope.borrarGrupo = function () {
-       
+    $scope.borrarGrupo = function (it) {       
+       $params = {            
+            group_id : it
+        };
+        QueriesService.executeRequest('POST', '../laravel/public/grupos/eliminargrupo', null, $params)
+                .then(function (result) {                    
+                      if(result.success){
+                         toastr.success(result.mensaje,"OK");
+                         getGrupos();
+                      } 
+                      else{
+                         toastr.error(result.mensaje,"Error"); 
+                      }
+                });
     };
 
 });

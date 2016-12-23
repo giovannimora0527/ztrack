@@ -88,7 +88,16 @@ ztrack.controller('GestionConductorController', function ($rootScope, $scope, Au
     };
 
     $scope.cargarModal = function (data) {
-        $scope.conductorseleccionado = data;
+        $scope.conductorseleccionado = {
+            driver_idn : data.driver_idn,
+            driver_name : data.driver_name,
+            driver_assign_id : data.driver_assign_id,
+            driver_address : data.driver_address,
+            driver_phone : data.driver_phone,
+            driver_email : data.driver_email,
+            driver_desc : data.driver_desc,
+            driver_id : data.driver_id
+        };
     };
 
     $scope.actualizarConductor = function () {
@@ -107,12 +116,22 @@ ztrack.controller('GestionConductorController', function ($rootScope, $scope, Au
         QueriesService.executeRequest('POST', '../laravel/public/conductores/updateconductor', $scope.conductorseleccionado, null)
                 .then(function (result) {
                     if (result.success) {
-                        getConductoresInfo();
+                        if($scope.activeTab === 1){                            
+                            getConductoresInfo(); 
+                        }
+                        if($scope.activeTab === 2){                                                      
+                            $('#verInfo').modal('hide');
+                            //$scope.filtro = $scope.conductorseleccionado;
+                            if($scope.filtro.nombreconductor === $scope.conductorseleccionado.driver_name || $scope.filtro.documento === $scope.conductorseleccionado.driver_idn || $scope.filtro.telefono === $scope.conductorseleccionado.driver_phone ){
+                               buscarFiltro();   
+                            }
+                            else{                               
+                                $scope.limpiarFiltros();
+                            }
+                           
+                        }
                         toastr.success(result.mensaje, "OK");
-                    } else {
-                        toastr.error(result.mensaje, "Error");
-                    }
-
+                    } 
                 });
     };
 
@@ -140,7 +159,7 @@ ztrack.controller('GestionConductorController', function ($rootScope, $scope, Au
                 });
     };
     
-    function buscarFiltro(){
+    function buscarFiltro(){        
         $scope.buscarConductor();
     }
 
@@ -150,7 +169,7 @@ ztrack.controller('GestionConductorController', function ($rootScope, $scope, Au
             user_id: localStorage['ztrack.user_id'],
             min: min,
             max: max
-        };
+        };        
         QueriesService.executeRequest('POST', '../laravel/public/conductores/searchconductor', $scope.filtro, $params)
                 .then(function (result) {
                     if (result.success) {
@@ -159,7 +178,7 @@ ztrack.controller('GestionConductorController', function ($rootScope, $scope, Au
                         {
                             $scope.resultsfound = false;
                             $scope.paginationtab = false;
-                            $scope.limpiarFiltros();
+                            $scope.limpiarFiltros();                            
                             toastr.warning("No se encontraron resultados con el criterio de búsqueda. Intente de nuevo.", "Advertencia");
                         }
                         $scope.resultsfound = true;
@@ -204,7 +223,7 @@ ztrack.controller('GestionConductorController', function ($rootScope, $scope, Au
 
     $scope.limpiarFiltros = function () {
         $scope.filtro = {};
-        $scope.conductores = {};
+        $scope.conductoresfiltro = {};
     };
 
 

@@ -88,6 +88,26 @@ class GruposController extends \BaseController {
         }
         
     }
+    
+    public function postEliminargrupo(){
+        $data = Input::all();
+        $sql = "select count(object_id) conteo from gs_user_objects where group_id = " .$data["group_id"];
+        $results = DB::select($sql);
+        if($results[0]->conteo > 0){
+          return Response::json(array('success' => false, 'mensaje' => "El grupo no se puede eliminar porque tienen vehículos asociados."));          
+        }
+        
+        $sql = "delete from gs_user_object_groups where group_id = " .$data["group_id"];
+        try {
+            DB::beginTransaction();
+            DB::delete($sql);
+            DB::commit();
+            return Response::json(array('success' => true, 'mensaje' => "El registro se ha eliminado correctamente"));
+        } catch (Exception $e) {
+            DB::rollback();
+            return Response::json(array('error' => "No se puede eliminar el registro. " . $e, 'error' => true));
+        }
+    }
 
     
 

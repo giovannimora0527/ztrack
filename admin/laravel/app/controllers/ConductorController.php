@@ -54,14 +54,18 @@ class ConductorController extends \BaseController {
     public function postUpdateconductor() {
         $data = Input::all();
         $sql = "update gs_user_object_drivers set "
-                . "driver_name = '" . strtoupper($data["driver_name"])
-                . "', driver_assgin_id = '" . $data["driver_codigo"]
-                . "', driver_address = '" . strtoupper($data["driver_address"])
+                . " driver_idn = '" . $data["driver_idn"]
+                . "', driver_name = '" . strtoupper($data["driver_name"]);
+        
+        if(isset($data["driver_assign_id"])){
+           $sql .= "', driver_assign_id = '" . $data["driver_assign_id"];
+        }
+         $sql  .= "', driver_address = '" . strtoupper($data["driver_address"])
                 . "', driver_phone = '" . $data["driver_phone"]
                 . "', driver_email = '" . $data["driver_email"]
                 . "', driver_desc = '" . $data["driver_desc"]
-                . "' where driver_id = " . $data["driver_id"];
-
+                . "' where driver_id = " . $data["driver_id"];         
+        
         try {
             DB::beginTransaction();
             DB::update($sql);
@@ -106,7 +110,7 @@ class ConductorController extends \BaseController {
                 left join gs_user_object_groups g ON g.group_id = gu.group_id
                 where d.user_id = '" . $data["user_id"] . "' ";
         
-        $sql = "select d.driver_id, d.driver_name, d.driver_address, d.driver_idn, d.driver_phone, d.driver_email, d.driver_desc,
+        $sql = "select d.driver_id, d.driver_name, d.driver_address, d.driver_assign_id, d.driver_idn, d.driver_phone, d.driver_email, d.driver_desc,
                 d.estado_id, ce.descripcion, g.group_name, r.route_name
                 from gs_user_object_drivers d 
                 left join conductor_estado ce ON ce.id = d.estado_id

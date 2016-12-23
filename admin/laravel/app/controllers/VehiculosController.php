@@ -101,7 +101,8 @@ class VehiculosController extends \BaseController {
           DB::update($sql);
          //cambio el registro en la tabla user_objects  
          $sql = "update gs_user_objects guo set "
-                 . "guo.driver_id = '"  .$data["driver_id"]                
+                 . "guo.driver_id = '"  .$data["driver_id"]
+                 
                  . "' where guo.imei = '" .$data["imei"] . "';";         
          DB::update($sql);
          //actualizo el estado del nuevo conductor asignado
@@ -114,10 +115,13 @@ class VehiculosController extends \BaseController {
        $sql = "update gs_objects gob set "
              . "gob.plate_number = '"  .$data["plate_number"] 
              . "', gob.model = '"  .$data["model"]                               
-             . "', gob.name = '"  .$data["name"]
-             . "' where gob.imei = '" .$data["imei"] . "';"; 
-       DB::update($sql);
-       
+             . "', gob.name = '"  .$data["name"];
+       if(isset($data["sim_number"])){
+         $sql .= "', gob.sim_number = '"  .$data["sim_number"];  
+       }
+               
+       $sql .= "' where gob.imei = '" .$data["imei"] . "';";        
+       DB::update($sql);       
        if($actualizado == true){
          return Response::json(array('success' => true, 'mensaje' => "El registro se ha actualizado correctamente"));  
        }
@@ -135,7 +139,7 @@ class VehiculosController extends \BaseController {
         $data = Input::all();
         $hasFiltros = Input::get("hasFiltros");
         $more_results = false;
-        $sql = "select guo.object_id, guo.imei, gob.name, gob.model, gob.plate_number, d.driver_name, d.driver_address, 
+        $sql = "select guo.object_id, guo.imei, gob.name, gob.model, gob.sim_number, gob.plate_number, d.driver_name, d.driver_address, 
                        d.driver_phone, GROUP_CONCAT(r.route_name SEPARATOR ', ')  rutas
                 from gs_user_objects guo
                 join gs_objects gob ON gob.imei = guo.imei

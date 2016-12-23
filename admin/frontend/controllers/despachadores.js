@@ -269,8 +269,7 @@ ztrack.controller('DespachadoresController', function ($rootScope, $scope, AuthS
                 ultimvuelta : 1,
                 tiempoestimado : $scope.vehiculo.tiempoestimado
             };
-        }
-        console.log($params);        
+        }                
         document.getElementById("btndespachar").disabled = true;
         QueriesService.executeRequest('GET', '../laravel/public/despachador/despachovehiculo', null, $params)
                 .then(function (result) {

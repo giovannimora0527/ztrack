@@ -901,12 +901,28 @@ ztrack.controller('DespachosController', function ($rootScope, $scope, $filter, 
 
     $scope.deletePtoControlRuta = function (it) {
         var rta = confirm("¿Desea eliminar el registro?");
-        if (rta) {
-            console.log("entro a borrar");
-            //Faltante
+        if (rta) {             
+            $scope.borrarPC(it);           
         } else {
             return;
         }
+    };
+    
+    $scope.borrarPC = function(it){
+        $params = {            
+            pc: it
+        };        
+        QueriesService.executeRequest('POST', '../laravel/public/despachos/deleterutazona', null, $params)
+                .then(function (result) {
+                   if(result.success){
+                       toastr.success(result.mensaje,"OK");
+                       cargarPuntosControlRuta();
+                   }
+                   else{
+                      toastr.error(result.mensaje,"Error"); 
+                   }
+                });
+        
     };
 
 
