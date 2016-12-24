@@ -107,7 +107,7 @@ and open the template in the editor.
                                                                         <div class="dd-handle">
                                                                             <a href="" ng-click="verInfo(it.object_id)" data-toggle="modal" data-target="#modalInfoParqueadero"><i class="pull-left bigger-130 ace-icon fa fa-search blue"></i></a>
                                                                             {{it.vehiculo}}
-                                                                            <a href="" ng-click="deleteVehiculo(it.object_id)"><i class="pull-right bigger-130 ace-icon fa fa-times blue"></i></a>
+                                                                            <a href="" ng-click="deleteVehiculo(it.object_id)"><i class="pull-right bigger-130 ace-icon fa fa-arrow-left blue"></i></a>
                                                                         </div>
                                                                     </li>
                                                                 </ol>
@@ -318,11 +318,11 @@ and open the template in the editor.
                                 </select> 
                             </td>
                             <td>
-                                <input type="checkbox" class="form-control" ng-model="vehiculo.ultimavuelta"> 
+                                <input type="checkbox" class="form-control" ng-model="vehiculo.ultimavuelta" ng-change="onchangeultimavuelta()"> 
                             </td>
                             <td>
                                 <div class="input-group bootstrap-timepicker">
-                                    <input id="tiempoestimado" type="timepicker"  ng-model="vehiculo.tiempoestimado" class="form-control"/>
+                                    <input id="tiempoestimado" disabled type="timepicker"  ng-model="vehiculo.tiempoestimado" class="form-control"/>
                                     <span class="input-group-addon">
                                         <i class="fa fa-clock-o bigger-110 border blue"></i>
                                     </span>
