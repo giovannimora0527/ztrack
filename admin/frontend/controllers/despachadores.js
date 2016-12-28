@@ -159,13 +159,18 @@ ztrack.controller('DespachadoresController', function ($rootScope, $scope, AuthS
         $params = {
             user_id: localStorage['ztrack.despachador_id'],
             vehiculo_id: vehiculo
-        };
+        };        
         QueriesService.executeRequest('GET', '../laravel/public/despachador/descartarvehiculoparadero', null, $params)
                 .then(function (result) {
                     if (result.success) {
                         toastr.success(result.mensaje, "OK");
-                        $scope.cargarVehiculos();
-                        cargarVehiculosParadero();
+                        if( $scope.activeTab === 2){
+                          cargarAllVehiculos();    
+                        }
+                        else{
+                          $scope.cargarVehiculos();   
+                        }                        
+                        
                     } else {
                         toastr.error(result.mensaje, "Error");
                     }

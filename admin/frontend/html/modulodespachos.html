@@ -147,6 +147,7 @@ and open the template in the editor.
                                                             <ol class="dd-list">
                                                                 <li class="dd-item" ng-repeat="it in vehiculos">
                                                                     <div class="dd-handle">
+                                                                        <a href="" ng-click="deleteVehiculo(it.object_id)"><i class="pull-left bigger-130 ace-icon fa fa-arrow-left blue"></i></a>
                                                                         <i class="pull-left bigger-130 ace-icon fa fa-automobile blue"></i>
                                                                         Turno: {{it.turno}}. {{it.vehiculo}}  / Hora - Llegada: {{it.hora_llegada}}                                                                       
                                                                         <a href="" data-toggle="modal" data-target="#modalDespachos" ng-click="cargarDatosModal(it)"><i class="pull-right bigger-130 ace-icon fa fa-arrow-right blue"></i></a>

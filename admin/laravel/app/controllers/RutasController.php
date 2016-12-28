@@ -25,12 +25,12 @@ class RutasController extends \BaseController {
         $rutas = Ruta::where('user_id', '=', $user_id)->get();
         return Response::json(array('rutas' => $rutas));
     }
-    
-    public function getRutas(){
-       $user_id = Input::get('user_id');
-       $sql = "select route_id, route_name from gs_user_routes where user_id = " . $user_id;
-       $rutas = DB::select($sql);
-       return Response::json(array('rutas' => $rutas));
+
+    public function getRutas() {
+        $user_id = Input::get('user_id');
+        $sql = "select route_id, route_name from gs_user_routes where user_id = " . $user_id;
+        $rutas = DB::select($sql);
+        return Response::json(array('rutas' => $rutas));
     }
 
     public function postSaveasignacionrutas() {
@@ -114,6 +114,7 @@ class RutasController extends \BaseController {
         return Response::json(array('grupos' => $grupos));
     }
 
+    //Metodo que lista los vehiculos que se encuentran libre de despacho temporal y de recorrido
     public function getVehiculosbygroupid() {
         $data = Input::all();
         //Selecciono el id de la empresa para que el despachador trabajo y poder localizar los vehiculos asociados al grupo
@@ -121,15 +122,28 @@ class RutasController extends \BaseController {
         $result = DB::select($sql);
         $qry = "select gso.object_id, gob.name, gso.imei "
                 . "from gs_user_objects gso "
-                . "join gs_objects gob on gob.imei = gso.imei "
+                . "left join gs_objects gob on gob.imei = gso.imei "
                 . "left join gs_despacho_temporal dt ON gso.object_id = dt.object_id "
                 . "where gso.user_id = " . $result[0]->empresa_id
                 . " and gso.group_id = " . $data["group_id"]
                 . ";";
 
         $vehiculos = DB::select($qry);
-        if (count($vehiculos) > 0) {
-            return Response::json(array('vehiculos' => $vehiculos));
+        $sql = "select dt.object_id from gs_despacho_temporal dt where dt.user_id = " . $data["user_id"]
+                . " and dt.estado = 2;"
+        ;        
+        $vehiculos_temporal = DB::select($sql);
+        $array_vehiculos = array();        
+        for ($i = 0; $i < count($vehiculos); $i++) {
+            for ($j = 0; $j < count($vehiculos_temporal); $j++) {              
+              if($vehiculos_temporal[$j]->object_id  != $vehiculos[$i]->object_id){                 
+                 //array_push($array_vehiculos, $vehiculos[$i]);
+                 $array_vehiculos[$i] = $vehiculos[$i];
+              }   
+            }
+        }
+        if (count($array_vehiculos) > 0) {
+            return Response::json(array('vehiculos' => $array_vehiculos));
         } else {
             return Response::json(array('empty' => true, 'mensaje' => 'No hay vehiculos asociados al grupo. Contacte al administrador.'));
         }
@@ -170,11 +184,10 @@ class RutasController extends \BaseController {
             JOIN gs_gruposrutas gr ON gr.group_id = gub.group_id
             JOIN gs_user_routes r ON r.route_id = gr.route_id
             WHERE gub.user_id = " . $data["user_id"]
-            . " and gub.object_id = " . $data["vehiculo_id"]
-            . ";";
+                . " and gub.object_id = " . $data["vehiculo_id"]
+                . ";";
         $rutas = DB::select($sql);
         return Response::json(array('rutas' => $rutas));
-        
     }
 
 }
