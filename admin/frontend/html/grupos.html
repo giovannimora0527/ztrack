@@ -72,7 +72,7 @@ and open the template in the editor.
                                                 </td>
                                                 <td align="center">
                                                     <div class="btn-group">
-                                                        <button class="btn btn-white btn-sm btn-info btn-bold" title="Editar Grupo" data-toggle="modal" data-target="#verInfo" ng-click="cargarModal(c)">
+                                                        <button class="btn btn-white btn-sm btn-info btn-bold" title="Editar Grupo" data-toggle="modal" data-target="#verInfo" ng-click="cargarModal(g)">
                                                             <i class="ace-icon fa fa-edit"></i>
                                                         </button> 
                                                         <button class="btn btn-white btn-sm btn-warning btn-bold" title="Eliminar Grupo" ng-click="onconfirmdeletegrupo(g.group_id)">
@@ -89,14 +89,62 @@ and open the template in the editor.
                         <!-- Pestaña de consulta de grupos-->
                         <div ng-class="{'tab-pane active': activeTab === 2, 'tab-pane' : activeTab !== 2}">
                             <div class="container-fluid">
-                                <h3>
-                                    Ver Información
-                                </h3>
-                                * Filtros.
+                                * Para consultar la información de los conductores puede filtrar por los siguientes items a continuación                                
                                 <br><br>
                                 <div class="row">
-                                   
-                                </div>                                 
+                                    <div class="col-md-8">
+                                        <table class="table table bordered">
+                                            <tr>
+                                                <td>
+                                                    Nombre:
+                                                </td>
+                                                <td>
+                                                    <input type="text" class="form-control" ng-model="filtro.nombregrupo"/>
+                                                </td> 
+                                                <td colspan="4">
+                                                    <button class="btn btn-primary" ng-click="buscarGrupo()">Buscar</button>
+                                                    <button class="btn btn-default" ng-click="limpiarFiltros()">Limpiar Campos</button>  
+                                                </td>
+                                            </tr> 
+                                        </table> 
+                                    </div>
+                                </div> 
+
+                                <table class="table table-bordered table-condensed table-responsive table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>
+                                                Nombre de Grupo 
+                                            </th>
+                                            <th>
+                                                Descripción 
+                                            </th>
+                                            <th>
+                                                Acciones
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="g in resultados">
+                                            <td>
+                                                {{g.group_name}}
+                                            </td>
+                                            <td>
+                                                {{g.group_desc}} 
+                                            </td>
+                                            <td align="center">
+                                                <div class="btn-group">
+                                                    <button class="btn btn-white btn-sm btn-info btn-bold" title="Editar Grupo" data-toggle="modal" data-target="#verInfo" ng-click="cargarModal(g)">
+                                                        <i class="ace-icon fa fa-edit"></i>
+                                                    </button> 
+                                                    <button class="btn btn-white btn-sm btn-warning btn-bold" title="Eliminar Grupo" ng-click="onconfirmdeletegrupo(g.group_id)">
+                                                        <i class="ace-icon fa fa-trash-o bigger-120 orange"></i>
+                                                    </button>  
+                                                </div>
+                                            </td> 
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div> 
                         </div>                                                
                     </div>
@@ -134,7 +182,6 @@ and open the template in the editor.
                             <textarea class="form-control" ng-model = "grupo.descripcion"></textarea>
                         </td>
                     </tr>
-
                 </table>
             </div>
             <div class="modal-footer">
@@ -145,80 +192,39 @@ and open the template in the editor.
     </div>
 </div>
 
-<!-- Modal Ver y Editar Info Conductor-->
+<!-- Modal Ver y Editar Info Grupos-->
 <div id="verInfo" class="modal fade" role="dialog">
     <div class="modal-dialog">
         <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title"><i class="pull-left bigger-130 ace-icon fa fa-user"></i> Editar los datos del conductor: {{conductorseleccionado.driver_name}}</h4> 
+                <h4 class="modal-title"><i class="pull-left bigger-130 ace-icon fa fa-user"></i> Editar los datos del grupo: </h4> 
             </div>
             <div class="modal-body"> 
                 A continuación rellene la información que es obligatoria (*).
                 <table class="table table-bordered table-hover table-responsive table-striped">
                     <tr> 
                         <td>
-                            (*) <label>Número de Identificación:</label>                            
+                            (*) <label>Nombre del Grupo:</label>                            
                         </td>
                         <td>
-                            <input disabled type="text" class="form-control" ng-model="conductorseleccionado.driver_idn" /> 
+                            <input type="text" class="form-control" ng-model="gruposelect.group_name" /> 
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            (*) <label>Nombres y Apellidos:</label>
+                            <label>Descripción:</label>
                         </td>
                         <td>
-                            <input type="text" class="form-control" ng-model="conductorseleccionado.driver_name" /> 
+                            <textarea type="text" class="form-control" ng-model="gruposelect.group_desc"></textarea> 
                         </td>
-                    </tr>                     
-                    <tr>
-                        <td>
-                            (*)  <label>Dirección:</label>                            
-                        </td>
-                        <td>
-                            <input type="text" class="form-control" ng-model="conductorseleccionado.driver_address" /> 
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            (*)    <label>Teléfono:</label>                           
-                        </td>
-                        <td>
-                            <input type="text" class="form-control" ng-model="conductorseleccionado.driver_phone" /> 
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <label>Código</label>                            
-                        </td>
-                        <td>
-                            <input type="text" class="form-control" ng-model="conductorseleccionado.driver_codigo" /> 
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <label>Email:</label>                           
-                        </td>
-                        <td>
-                            <input type="text" class="form-control" ng-model="conductorseleccionado.driver_email" /> 
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <label>Descripción:</label>                           
-                        </td>
-                        <td>
-                            <textarea class="form-control" ng-model = "conductorseleccionado.driver_desc"></textarea>
-                        </td>
-                    </tr>
-
+                    </tr>  
                 </table>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal"><i class="pull-left bigger-130 ace-icon fa fa-times"></i>Cerrar</button>
-                <button type="button" class="btn btn-primary" ng-click="actualizarConductor()"><i class="pull-left bigger-130 ace-icon fa fa-save"></i>Actualizar</button>
+                <button type="button" class="btn btn-primary" ng-click="actualizarGrupo()"><i class="pull-left bigger-130 ace-icon fa fa-save"></i>Actualizar</button>
             </div>
         </div>
     </div>

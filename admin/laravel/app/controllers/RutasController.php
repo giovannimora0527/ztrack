@@ -25,6 +25,13 @@ class RutasController extends \BaseController {
         $rutas = Ruta::where('user_id', '=', $user_id)->get();
         return Response::json(array('rutas' => $rutas));
     }
+    
+    public function getRutas(){
+       $user_id = Input::get('user_id');
+       $sql = "select route_id, route_name from gs_user_routes where user_id = " . $user_id;
+       $rutas = DB::select($sql);
+       return Response::json(array('rutas' => $rutas));
+    }
 
     public function postSaveasignacionrutas() {
         $data = Input::all();

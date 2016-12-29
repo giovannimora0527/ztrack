@@ -108,6 +108,7 @@ and open the template in the editor.
                                                         </div>
                                                     </td> 
                                                 </tr>
+
                                             </tbody>
                                         </table>
                                     </div>
@@ -129,7 +130,7 @@ and open the template in the editor.
                                                 <input type="text" class="form-control" ng-model="filtro.nombreconductor"/>
                                             </td>
                                             <td>
-                                                Documento de Identidad:
+                                                Cédula:
                                             </td>
                                             <td>
                                                 <input type="text" class="form-control" ng-model="filtro.documento"/>
@@ -140,13 +141,16 @@ and open the template in the editor.
                                                 Ruta:
                                             </td>
                                             <td>
-                                                <input type="text" class="form-control" ng-model="filtro.ruta"/>
+                                                <select class="form-control" ng-model="filtro.ruta">
+                                                    <option disabled selected value="">Seleccione una ruta.</option>
+                                                    <option ng-repeat="ruta in rutas" value="{{ruta.route_id}}">{{ruta.route_name}}</option>
+                                                </select>
                                             </td>
                                             <td>
                                                 Teléfono:
                                             </td>
                                             <td>
-                                                <input type="text" class="form-control" ng-model="filtro.documento"/>
+                                                <input type="text" class="form-control" ng-model="filtro.telefono"/>
                                             </td>
                                         </tr>  
                                         <tr>
@@ -168,21 +172,59 @@ and open the template in the editor.
                                                     Dirección de Residencia
                                                 </th>
                                                 <th>
-                                                    D.I
+                                                    Cédula
                                                 </th>
                                                 <th>
-                                                    Teléfonos
+                                                    Teléfono
                                                 </th>
                                                 <th>
-                                                    Asignado a
+                                                    Estado
                                                 </th>
                                                 <th>
-                                                   Acciones
+                                                    Acciones
                                                 </th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            
+                                            <tr ng-repeat="conductor in conductoresfiltro">
+                                                <td>
+                                                    {{conductor.driver_name}}  
+                                                </td>
+                                                <td>
+                                                    {{conductor.driver_address}}
+                                                </td>
+                                                <td>
+                                                    {{conductor.driver_idn}}
+                                                </td> 
+                                                <td>
+                                                    {{conductor.driver_phone}}
+                                                </td>
+                                                <td>
+                                                    {{conductor.descripcion}}
+                                                </td>
+                                                <td align="center">
+                                                    <div class="btn-group">
+                                                        <button class="btn btn-white btn-sm btn-info btn-bold" title="Editar Conductor" data-toggle="modal" data-target="#verInfo" ng-click="cargarModal(conductor)">
+                                                            <i class="ace-icon fa fa-edit"></i>
+                                                        </button> 
+                                                        <button class="btn btn-white btn-sm btn-warning btn-bold" title="Eliminar Conductor" ng-click="onconfirmdeleteconductor(conductor.driver_id)">
+                                                            <i class="ace-icon fa fa-trash-o bigger-120 orange"></i>
+                                                        </button>  
+                                                    </div>
+                                                </td> 
+                                            </tr>
+                                            <tr ng-if="paginationtab">                                    
+                                                <td colspan="7" align="center">
+                                                    <div class="btn-group">
+                                                        <button id="btnant" class="btn btn-white btn-sm btn-info btn-bold" title="Anterior" ng-click="paginationtabant()">
+                                                            <i class="ace-icon fa fa-arrow-left"></i>
+                                                        </button>                                            
+                                                        <button id="btnsig" class="btn btn-white btn-sm btn-warning btn-bold" title="Siguiente" ng-click="paginationtabsig()">
+                                                            <i class="ace-icon fa fa-arrow-right bigger-120 orange"></i>
+                                                        </button>  
+                                                    </div>
+                                                </td>                                
+                                            </tr>
                                         </tbody>
                                     </table>
                                 </div>
@@ -211,7 +253,7 @@ and open the template in the editor.
                 <table class="table table-bordered table-hover table-responsive table-striped">
                     <tr>
                         <td>
-                           (*) <label>Nombres y Apellidos:</label>
+                            (*) <label>Nombres y Apellidos:</label>
                         </td>
                         <td>
                             <input type="text" class="form-control" ng-model="conductor.nombres" /> 
@@ -219,7 +261,7 @@ and open the template in the editor.
                     </tr>
                     <tr> 
                         <td>
-                          (*) <label>Número de Identificacióon:</label>                            
+                            (*) <label>Cédula:</label>                            
                         </td>
                         <td>
                             <input type="text" class="form-control" ng-model="conductor.identificacion" /> 
@@ -235,7 +277,7 @@ and open the template in the editor.
                     </tr>
                     <tr>
                         <td>
-                        (*)  <label>Dirección:</label>                            
+                            (*)  <label>Dirección:</label>                            
                         </td>
                         <td>
                             <input type="text" class="form-control" ng-model="conductor.direccion" /> 
@@ -243,7 +285,7 @@ and open the template in the editor.
                     </tr>
                     <tr>
                         <td>
-                        (*)    <label>Teléfono:</label>                           
+                            (*)    <label>Teléfono:</label>                           
                         </td>
                         <td>
                             <input type="text" class="form-control" ng-model="conductor.telefono" /> 
@@ -290,15 +332,15 @@ and open the template in the editor.
                 <table class="table table-bordered table-hover table-responsive table-striped">
                     <tr> 
                         <td>
-                          (*) <label>Número de Identificación:</label>                            
+                            (*) <label>Cédula:</label>                            
                         </td>
                         <td>
-                            <input disabled type="text" class="form-control" ng-model="conductorseleccionado.driver_idn" /> 
+                            <input type="text" class="form-control" ng-model="conductorseleccionado.driver_idn" /> 
                         </td>
                     </tr>
                     <tr>
                         <td>
-                           (*) <label>Nombres y Apellidos:</label>
+                            (*) <label>Nombres y Apellidos:</label>
                         </td>
                         <td>
                             <input type="text" class="form-control" ng-model="conductorseleccionado.driver_name" /> 
@@ -306,7 +348,7 @@ and open the template in the editor.
                     </tr>                     
                     <tr>
                         <td>
-                        (*)  <label>Dirección:</label>                            
+                            (*)  <label>Dirección:</label>                            
                         </td>
                         <td>
                             <input type="text" class="form-control" ng-model="conductorseleccionado.driver_address" /> 
@@ -314,7 +356,7 @@ and open the template in the editor.
                     </tr>
                     <tr>
                         <td>
-                        (*)    <label>Teléfono:</label>                           
+                            (*)    <label>Teléfono:</label>                           
                         </td>
                         <td>
                             <input type="text" class="form-control" ng-model="conductorseleccionado.driver_phone" /> 
@@ -322,10 +364,10 @@ and open the template in the editor.
                     </tr>
                     <tr>
                         <td>
-                          <label>Código</label>                            
+                            <label>Código</label>                            
                         </td>
                         <td>
-                            <input type="text" class="form-control" ng-model="conductorseleccionado.driver_codigo" /> 
+                            <input type="text" class="form-control" ng-model="conductorseleccionado.driver_assign_id" /> 
                         </td>
                     </tr>
                     <tr>

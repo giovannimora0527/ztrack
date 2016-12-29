@@ -158,5 +158,19 @@ class DespachosController extends \BaseController {
         $rutazonainfo = DB::select($sql);
         return Response::json(array('rutazona' => $rutazonainfo[0]));
     }
+    
+    public function postDeleterutazona(){
+        $data = Input::all();
+        $sql = "delete from gs_rutazonas where rz_id = " .$data["pc"];        
+        try {
+            DB::beginTransaction();
+            DB::delete($sql);
+            DB::commit();
+            return Response::json(array('success' => true, 'mensaje' => "El registro se ha eliminado con éxito."));
+        } catch (Exception $e) {
+            DB::rollback();
+            return Response::json(array('mensaje' => "No se pudo eliminar el registro. Intente de nuevo o contacte al administrador del sistema. " . $e, 'error' => true));
+        }
+    }
 
 }

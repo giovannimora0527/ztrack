@@ -221,6 +221,7 @@ ztrack.controller('GestionController', function ($rootScope, $scope, AuthService
         document.getElementById("marca").disabled = false;
         document.getElementById("placa").disabled = false;
         document.getElementById("name").disabled = false;
+        document.getElementById("telefono").disabled = false;
     };
 
     $scope.actualizarVehiculo = function (vehiculoselect) {
@@ -241,6 +242,7 @@ ztrack.controller('GestionController', function ($rootScope, $scope, AuthService
         QueriesService.executeRequest('POST', '../laravel/public/vehiculos/actualizarvehiculo', vehiculoselect, $params)
                 .then(function (result) {
                     //Ocultando el modal
+                   $('#verInfoVehiculo').modal('hide');
                     if (result.success) {
                         $('#verInfoVehiculo').modal('hide');
                         $scope.vehiculoseleccionado = {};
@@ -248,6 +250,7 @@ ztrack.controller('GestionController', function ($rootScope, $scope, AuthService
                         document.getElementById("marca").disabled = true;
                         document.getElementById("placa").disabled = true;
                         document.getElementById("name").disabled = true;
+                        document.getElementById("telefono").disabled = true;
                         $scope.editar = false;
                         $scope.vehiculosresultados = {};
                         cargarListadoConductoresAsignados();

@@ -18,7 +18,7 @@ ztrack.factory('QueriesService', function ($http, $rootScope, $q, toastr) {
                    //toastr.success(data.mensaje, "INFO");
                 }
                 else{
-                  toastr.error(data.mensaje, "ERROR");  
+                  //toastr.error(data.mensaje, "ERROR");  
                 }               
             }
             deferred.resolve(data);
