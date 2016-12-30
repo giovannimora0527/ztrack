@@ -122,30 +122,37 @@ class RutasController extends \BaseController {
         $result = DB::select($sql);
         $qry = "select gso.object_id, gob.name, gso.imei "
                 . "from gs_user_objects gso "
-                . "left join gs_objects gob on gob.imei = gso.imei "
-                . "left join gs_despacho_temporal dt ON gso.object_id = dt.object_id "
+                . "join gs_objects gob on gob.imei = gso.imei "
                 . "where gso.user_id = " . $result[0]->empresa_id
                 . " and gso.group_id = " . $data["group_id"]
                 . ";";
 
-        $vehiculos = DB::select($qry);
+        $vehiculos = DB::select($qry);       
         $sql = "select dt.object_id from gs_despacho_temporal dt where dt.user_id = " . $data["user_id"]
-                . " and dt.estado = 2;"
-        ;        
-        $vehiculos_temporal = DB::select($sql);
-        $array_vehiculos = array();        
-        for ($i = 0; $i < count($vehiculos); $i++) {
-            for ($j = 0; $j < count($vehiculos_temporal); $j++) {              
-              if($vehiculos_temporal[$j]->object_id  != $vehiculos[$i]->object_id){                 
-                 //array_push($array_vehiculos, $vehiculos[$i]);
-                 $array_vehiculos[$i] = $vehiculos[$i];
-              }   
+                . " and dt.estado = 2 or dt.estado = 3 or dt.estado = 4;"
+        ;
+        $vehiculos_temporal = DB::select($sql); 
+        $vehiculos_aux = $vehiculos;
+        //Si hay vehiculos en despacho temporal descartarlos de la lista general de vehiculos        
+        if (count($vehiculos_temporal) > 0) {                        
+            for ($i = 0; $i < count($vehiculos); $i++) {
+                $j = 0;
+                $bandera = false;
+                while ($j < count($vehiculos_temporal)) {
+                    if ($vehiculos[$i]->object_id == $vehiculos_temporal[$j]->object_id) {                        
+                        if($bandera == false){
+                           unset($vehiculos_aux[array_search($vehiculos[$i], $vehiculos)]); 
+                           $bandera = true;                           
+                        }
+                    }
+                    $j++;
+                }
             }
-        }
-        if (count($array_vehiculos) > 0) {
-            return Response::json(array('vehiculos' => $array_vehiculos));
-        } else {
-            return Response::json(array('empty' => true, 'mensaje' => 'No hay vehiculos asociados al grupo. Contacte al administrador.'));
+            if (count($vehiculos_aux) > 0) {
+                return Response::json(array('vehiculos' => $vehiculos_aux));
+            } else {
+                return Response::json(array('empty' => true, 'mensaje' => 'No hay vehiculos asociados al grupo. Contacte al administrador.'));
+            }
         }
     }
 
