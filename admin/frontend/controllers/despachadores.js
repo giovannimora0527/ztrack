@@ -9,14 +9,12 @@ ztrack.controller('DespachadoresController', function ($rootScope, $scope, AuthS
     $scope.activeTab = 1;
     $scope.despachador = {};
     cargarRutas();
-    $scope.hayvehiculos;
-    $scope.onchange = false;
+    $scope.hayvehiculos;    
 
     $scope.setActiveTab = function (tab) {
         $scope.activeTab = tab;
         if (tab === 1) {
-            $scope.limpiarCampos();
-            
+            $scope.limpiarCampos();            
         }
         if (tab === 2) {
             cargarAllVehiculos();
