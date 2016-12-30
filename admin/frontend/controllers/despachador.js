@@ -5,9 +5,9 @@
  */
 var ztrack = angular.module('ztrack');
 angular.module('ztrack').controller('AdminDespachosController', function ($rootScope, $scope, $filter, AuthService, SessionService, $state, QueriesService, toastr) {
-    
+
     $scope.title = "Gestión de Despachadores";
-    $scope.activeTab = 1;    
+    $scope.activeTab = 1;
     $scope.hasSelected = false;
     getFechahoy();
 
@@ -19,21 +19,19 @@ angular.module('ztrack').controller('AdminDespachosController', function ($rootS
             cargarAreas();
         }
     };
-    
-    function getFechahoy(){
-       var str = "" + new Date();
-       str = str.slice(3,15);
-       //$scope.fechaptos = str;      
+
+    function getFechahoy() {
+        var str = "" + new Date();
+        str = str.slice(3, 15);
     }
 
     $scope.dateTimeNow = function () {
-        $scope.date = new Date();       
+        $scope.date = new Date();
     };
     $scope.dateTimeNow();
 
     $scope.toggleMinDate = function () {
         var minDate = new Date();
-        // set to yesterday
         minDate.setDate(minDate.getDate() - 1);
         $scope.dateOptions.minDate = $scope.dateOptions.minDate ? null : minDate;
     };
@@ -82,6 +80,12 @@ angular.module('ztrack').controller('AdminDespachosController', function ($rootS
     };
 
     $scope.guardarDespachador = function () {
+        if ($scope.despachador.direccion === undefined || $scope.despachador.direccion === '' || $scope.despachador.username === undefined || $scope.despachador.username === '' || $scope.despachador.password === undefined || $scope.despachador.password === '' ||
+                $scope.despachador.nombre === undefined || $scope.despachador.nombre === '' || $scope.despachador.apellidos === undefined || $scope.despachador.apellidos === '' || $scope.despachador.telefono === undefined || $scope.despachador.telefono === '')
+        {
+           toastr.warning("Todos los campos son obligatorios para poder crear un despachador. Intente de nuevo.","Advertencia");
+           return;
+        }
         $params = {
             user_id: localStorage['ztrack.user_id'],
             username: $scope.despachador.username,
@@ -90,7 +94,7 @@ angular.module('ztrack').controller('AdminDespachosController', function ($rootS
             apellidos: $scope.despachador.apellidos,
             telefono: $scope.despachador.telefono,
             direccion: $scope.despachador.direccion
-        };
+        };        
         QueriesService.executeRequest('GET', '../laravel/public/despachador/despachador', null, $params)
                 .then(function (result) {
                     if (result.error) {
@@ -141,8 +145,8 @@ angular.module('ztrack').controller('AdminDespachosController', function ($rootS
 
     $scope.itemsselected = [];
     $scope.seleccionarRuta = function () {
-        if($scope.rutaselect === undefined){
-            toastr.error("Debe seleccionar una ruta para continuar. Intente de nuevo","Error");
+        if ($scope.rutaselect === undefined) {
+            toastr.error("Debe seleccionar una ruta para continuar. Intente de nuevo", "Error");
             return;
         }
         if ($scope.itemsselected.length === 0) {
@@ -174,23 +178,22 @@ angular.module('ztrack').controller('AdminDespachosController', function ($rootS
     };
 
 
-    $scope.asignarRuta = function () {        
+    $scope.asignarRuta = function () {
         $params = {
             user_id: localStorage['ztrack.user_id'],
             area_id: $scope.areaselect.id,
-            despachador_id: $scope.despachadorselect.id                      
-        };                
+            despachador_id: $scope.despachadorselect.id
+        };
         QueriesService.executeRequest('POST', '../laravel/public/rutas/saveasignacionrutas', $scope.itemsselected, $params)
                 .then(function (result) {
-                    if(!result.success){
-                       toastr.error("No se ha podido guardar el registro. Intente de nuevo.","Error");
-                    }
-                    else{
-                        toastr.success(result.mensaje,"OK");
+                    if (!result.success) {
+                        toastr.error("No se ha podido guardar el registro. Intente de nuevo.", "Error");
+                    } else {
+                        toastr.success(result.mensaje, "OK");
                         $scope.itemsselected = [];
-                        $scope.despachadorselect = {}; 
+                        $scope.despachadorselect = {};
                         document.getElementById("selectDespachador").disabled = false;
-                    }                    
+                    }
                 });
     };
 
