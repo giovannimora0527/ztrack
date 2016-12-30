@@ -121,7 +121,7 @@ class DespachadorController extends \BaseController {
                 join gs_user_objects ob on dt.object_id = ob.object_id 
                 join gs_objects gso on ob.imei = gso.imei
                 join gs_user_object_drivers d ON d.driver_id = ob.driver_id
-                where dt.user_id =  ". $data["user_id"] ." and (estado = 2 or estado = 4)
+                where dt.user_id =  ". $data["user_id"] ." and estado in (2, 4)
                 order by dt.turno asc;";
         $vehiculos = DB::select($sql);
         return Response::json(array('vehiculosparadero' => $vehiculos));
