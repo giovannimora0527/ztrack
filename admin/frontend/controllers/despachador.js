@@ -10,6 +10,8 @@ angular.module('ztrack').controller('AdminDespachosController', function ($rootS
     $scope.activeTab = 1;
     $scope.hasSelected = false;
     getFechahoy();
+    $scope.hasfilterdesp = false;
+    $scope.hasfilterruta = false;
 
 
     $scope.setActiveTab = function (tab) {
@@ -17,6 +19,10 @@ angular.module('ztrack').controller('AdminDespachosController', function ($rootS
         if (tab === 2) {
             cargarDespachadores();
             cargarAreas();
+        }
+        if (tab === 3) {
+            cargarDespachadores();
+            cargarRutas();
         }
     };
 
@@ -83,8 +89,8 @@ angular.module('ztrack').controller('AdminDespachosController', function ($rootS
         if ($scope.despachador.direccion === undefined || $scope.despachador.direccion === '' || $scope.despachador.username === undefined || $scope.despachador.username === '' || $scope.despachador.password === undefined || $scope.despachador.password === '' ||
                 $scope.despachador.nombre === undefined || $scope.despachador.nombre === '' || $scope.despachador.apellidos === undefined || $scope.despachador.apellidos === '' || $scope.despachador.telefono === undefined || $scope.despachador.telefono === '')
         {
-           toastr.warning("Todos los campos son obligatorios para poder crear un despachador. Intente de nuevo.","Advertencia");
-           return;
+            toastr.warning("Todos los campos son obligatorios para poder crear un despachador. Intente de nuevo.", "Advertencia");
+            return;
         }
         $params = {
             user_id: localStorage['ztrack.user_id'],
@@ -94,7 +100,7 @@ angular.module('ztrack').controller('AdminDespachosController', function ($rootS
             apellidos: $scope.despachador.apellidos,
             telefono: $scope.despachador.telefono,
             direccion: $scope.despachador.direccion
-        };        
+        };
         QueriesService.executeRequest('GET', '../laravel/public/despachador/despachador', null, $params)
                 .then(function (result) {
                     if (result.error) {
@@ -135,6 +141,7 @@ angular.module('ztrack').controller('AdminDespachosController', function ($rootS
             user_id: localStorage['ztrack.user_id'],
             area_id: $scope.areaselect.id
         };
+        $scope.cargarRutasAsignadasDespachador();
         QueriesService.executeRequest('GET', '../laravel/public/rutas/rutasbyid', null, $params)
                 .then(function (result) {
                     $scope.rutas = result.rutas;
@@ -199,6 +206,137 @@ angular.module('ztrack').controller('AdminDespachosController', function ($rootS
 
     $scope.cancelar = function () {
         $scope.itemsselected = [];
+    };
+
+    $scope.cargarRutasAsignadasDespachador = function () {
+        $params = {
+            user_id: localStorage['ztrack.user_id'],
+            area_id: $scope.areaselect.id,
+            despachador_id: $scope.despachadorselect.id
+        };
+        QueriesService.executeRequest('GET', '../laravel/public/rutas/rutasbydespachadorid', null, $params)
+                .then(function (result) {
+                    if (result.success) {
+                        $scope.itemsselected = result.rutasasignadas;
+                    }
+                });
+
+    };
+
+    function cargarRutas() {
+        $params = {
+            user_id: localStorage['ztrack.user_id']
+        };
+        QueriesService.executeRequest('GET', '../laravel/public/rutas/allinforutasbyid', null, $params)
+                .then(function (result) {
+                    $scope.rutas = {};
+                    $scope.rutas = result.rutas;
+                });
+    }
+
+    $scope.hasSelectedFilterRuta = function () {
+        $scope.hasfilterruta = true;
+        document.getElementById("selectdesp").disabled = true;
+    };
+
+    $scope.hasSelectedFilterDespachador = function () {
+        $scope.hasfilterdesp = true;
+        document.getElementById("selectRuta").disabled = true;
+    };
+
+    $scope.limpiarFiltros = function () {
+        document.getElementById("selectdesp").disabled = false;
+        document.getElementById("selectRuta").disabled = false;
+        $scope.rutaselect = [];
+        $scope.despachadorselect = [];
+        $scope.hasfilterruta = false;
+        $scope.hasfilterdesp = false;
+    };
+
+
+    $scope.buscarDespachador = function () {
+        if ($scope.hasfilterruta) {
+            $params = {
+                ruta_id: $scope.rutaselect.route_id,
+                filter_ruta: true
+            };
+        }
+        if ($scope.hasfilterdesp) {
+            $params = {
+                despachador_id: $scope.despachadorselect.id,
+                filter_desp: true
+            };
+        }
+
+        QueriesService.executeRequest('GET', '../laravel/public/despachador/despachadorinfo', null, $params)
+                .then(function (result) {
+                    if (result.success) {
+                        $scope.despachadoresfiltro = result.resultados;
+                    }
+                });
+    };
+
+    $scope.cargarModal = function (item) {
+        $scope.despachadorseleccionado = {
+            nombre: item.nombre,
+            apellido: item.apellido,
+            direccion: item.direccion,
+            telefono: item.telefono,
+            id: item.id
+        };
+    };
+
+
+    $scope.actualizarDespachador = function () { 
+        if($scope.despachadorseleccionado.direccion === ''){
+           toastr.warning("El campo dirección no puede estar vacio. Intente de nuevo.","Advertencia"); 
+           return;
+        }
+        if($scope.despachadorseleccionado.telefono === ''){
+           toastr.warning("El campo teléfono no puede estar vacio. Intente de nuevo.","Advertencia");  
+           return;
+        }
+        $params = {
+            nombre: $scope.despachadorseleccionado.nombre,
+            apellido: $scope.despachadorseleccionado.apellido,
+            direccion: $scope.despachadorseleccionado.direccion,
+            telefono: $scope.despachadorseleccionado.telefono,
+            id: $scope.despachadorseleccionado.id
+        };
+        QueriesService.executeRequest('POST', '../laravel/public/despachador/updateinfodespachador', $params, null)
+                .then(function (result) {
+                    if (result.success) {
+                        toastr.success(result.mensaje,"OK");
+                        $scope.buscarDespachador();
+                    }
+                    else{
+                       toastr.error(result.mensaje,"Error");  
+                    }
+                });
+    };
+    
+    $scope.onconfirmdeletedespachador = function (desp_id) {
+        var rta = confirm("¿Desea eliminar el registro?");
+        if (rta) {
+            $scope.eliminardespachador(desp_id);
+        } else {
+            return;
+        }
+    };
+
+    $scope.eliminardespachador = function (desp_id) {
+        $params = {
+            desp_id: desp_id
+        };        
+        QueriesService.executeRequest('POST', '../laravel/public/despachador/deletedespachador', $params, null)
+                .then(function (result) {
+                    if (result.success) {
+                        toastr.success(result.mensaje,"OK");
+                          $scope.buscarDespachador();
+                    } else {
+                        toastr.error(result.mensaje, "Error");
+                    }
+                });
     };
 
 

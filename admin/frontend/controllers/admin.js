@@ -198,6 +198,16 @@ ztrack.config(['$stateProvider', '$urlRouterProvider', '$httpProvider',
                         }
                     }
                 })
+                .state('modulonovedadesconductores', {
+                    url: '/novedades_conductores',
+                    templateUrl: 'html/novedadesconductores.html',
+                    controller: 'NovedadesController',
+                    onEnter: function (SessionService, $state) {
+                        if (!SessionService.isLoged()) {
+                            $state.go('salir');
+                        }
+                    }
+                })
                 .state('perfil', {
                     url: '/perfil',
                     templateUrl: 'html/perfil.html',

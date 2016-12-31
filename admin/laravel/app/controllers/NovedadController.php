@@ -72,7 +72,7 @@ class NovedadController extends \BaseController {
           $hasvehiculo = true;  
         }
         $countfilter = 0;
-        $sql = "SELECT d.nombre, d.apellido, n.descripcion, rn.vehiculo_id, gob.name, rn.fecha_registro
+        $sql = "SELECT d.nombre, d.apellido, n.descripcion, rn.id, rn.vehiculo_id, gob.name, rn.fecha_registro
                 FROM registro_novedades rn
                 JOIN gs_info_despachador d ON rn.despachador_id = d.id
                 JOIN novedades n ON rn.novedad_id = n.novedad_id  
@@ -101,8 +101,27 @@ class NovedadController extends \BaseController {
         }        
         $sql .= ";";
         $novedades = DB::select($sql);
-        return Response::json(array('novedades' => $novedades));       
-       
+        return Response::json(array('novedades' => $novedades));  
+    }
+    
+    
+    public function postSolucionarnovedad(){
+        $data = Input::all();
+//        registro_novedades
+        $sql = "update registro_novedades set "
+                . "estado = 1"
+                . ", descripcion = '" . strtoupper($data["descripcion"])
+                . "' where id = " . $data["id"]
+                ;       
+        try {
+                DB::beginTransaction();
+                DB::update($sql);
+                DB::commit();                
+                return Response::json(array('success' => true, 'mensaje' => "La novedad ha sido solucionada con éxito."));
+            } catch (Exception $e) {
+                DB::rollback();
+                return Response::json(array('mensaje' => "No se puede registrar la solución. Contacte al administrador de sistema. " . $e, 'error' => true));
+            }
     }
 
 }

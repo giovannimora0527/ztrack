@@ -127,32 +127,32 @@ class RutasController extends \BaseController {
                 . " and gso.group_id = " . $data["group_id"]
                 . ";";
 
-        $vehiculos = DB::select($qry);       
+        $vehiculos = DB::select($qry);
         $sql = "select dt.object_id from gs_despacho_temporal dt where dt.user_id = " . $data["user_id"]
                 . " and dt.estado = 2 or dt.estado = 3 or dt.estado = 4;"
         ;
-        $vehiculos_temporal = DB::select($sql); 
+        $vehiculos_temporal = DB::select($sql);
         $vehiculos_aux = $vehiculos;
         //Si hay vehiculos en despacho temporal descartarlos de la lista general de vehiculos        
-        if (count($vehiculos_temporal) > 0) {                        
+        if (count($vehiculos_temporal) > 0) {
             for ($i = 0; $i < count($vehiculos); $i++) {
                 $j = 0;
                 $bandera = false;
                 while ($j < count($vehiculos_temporal)) {
-                    if ($vehiculos[$i]->object_id == $vehiculos_temporal[$j]->object_id) {                        
-                        if($bandera == false){
-                           unset($vehiculos_aux[array_search($vehiculos[$i], $vehiculos)]); 
-                           $bandera = true;                           
+                    if ($vehiculos[$i]->object_id == $vehiculos_temporal[$j]->object_id) {
+                        if ($bandera == false) {
+                            unset($vehiculos_aux[array_search($vehiculos[$i], $vehiculos)]);
+                            $bandera = true;
                         }
                     }
                     $j++;
                 }
             }
-            if (count($vehiculos_aux) > 0) {
-                return Response::json(array('vehiculos' => $vehiculos_aux));
-            } else {
-                return Response::json(array('empty' => true, 'mensaje' => 'No hay vehiculos asociados al grupo. Contacte al administrador.'));
-            }
+        }
+        if (count($vehiculos_aux) > 0) {
+            return Response::json(array('vehiculos' => $vehiculos_aux));
+        } else {
+            return Response::json(array('empty' => true, 'mensaje' => 'No hay vehiculos asociados al grupo. Contacte al administrador.'));
         }
     }
 
@@ -195,6 +195,16 @@ class RutasController extends \BaseController {
                 . ";";
         $rutas = DB::select($sql);
         return Response::json(array('rutas' => $rutas));
+    }
+    
+    
+    public function getRutasbydespachadorid(){
+        $data = Input::all();
+        $sql = "select dr.route_id, r.route_name, dr.fecha_asignacion"
+                . " from gs_despachador_ruta dr join gs_user_routes r ON r.route_id = dr.route_id"
+                . " where dr.user_id = " . $data["user_id"] . " and dr.area_id = " . $data["area_id"] . " and dr.desp_id = " . $data["despachador_id"];
+        $result = DB::select($sql);
+        return Response::json(array('rutasasignadas' => $result , 'success' => true));
     }
 
 }
