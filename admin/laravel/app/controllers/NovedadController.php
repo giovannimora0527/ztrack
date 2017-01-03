@@ -72,7 +72,12 @@ class NovedadController extends \BaseController {
           $hasvehiculo = true;  
         }
         $countfilter = 0;
-        $sql = "SELECT d.nombre, d.apellido, n.descripcion, rn.id, rn.vehiculo_id, gob.name, rn.fecha_registro
+        //Filtrar pendiente por el usuario que creo las novedades
+        $sql = "SELECT d.nombre, d.apellido, n.descripcion, rn.id, rn.vehiculo_id, gob.name, rn.fecha_registro,
+                 CASE 
+                        WHEN rn.estado = 0 THEN 'Pendiente'
+                        ELSE 'Solucionado'
+                        END AS estado
                 FROM registro_novedades rn
                 JOIN gs_info_despachador d ON rn.despachador_id = d.id
                 JOIN novedades n ON rn.novedad_id = n.novedad_id  
@@ -91,15 +96,19 @@ class NovedadController extends \BaseController {
         }
         if($hasfecha){
             if($countfilter == 0){
-               $sql .= " WHERE rn.fecha_registro LIKE '%" .$data["fecha"] . "%'"; 
+               $sql .= " WHERE rn.fecha_registro <= '" .$data["fecha"] . "'"; 
                $countfilter++;
             }
             else{
-               $sql .= " AND rn.fecha_registro LIKE '%" .$data["fecha"] . "%'"; 
+               $sql .= " AND rn.fecha_registro <= '" .$data["fecha"] . "'"; 
                $countfilter++;
             }
-        }        
-        $sql .= ";";
+        } 
+        if($data["active_tab"] == 2){
+           $sql .= " and rn.estado = 0;";   
+        }
+        $sql .= " and rn.despachador_id = " . $data["user_id"];
+        
         $novedades = DB::select($sql);
         return Response::json(array('novedades' => $novedades));  
     }

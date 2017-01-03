@@ -16,15 +16,12 @@ ztrack.controller('NovedadesController', function ($rootScope, $scope, AuthServi
 
 
     $scope.setActiveTab = function (tab) {
-        $scope.activeTab = tab;
-        if (tab === 1) {
-
-        }
+        $scope.activeTab = tab;       
         if (tab === 2) {
-
+           $scope.limpiarCamposFilter();
         }
         if (tab === 3) {
-
+           $scope.limpiarCamposFilter();
         }
 
     };
@@ -172,26 +169,33 @@ ztrack.controller('NovedadesController', function ($rootScope, $scope, AuthServi
         $scope.areaselect = {};
         $scope.rutaselect = {};
         $scope.fechafilter = "";
+        $scope.novedadesregistradas = {};
     };
 
 
     $scope.filtrar = function () {
         if ($scope.fechafilter !== undefined) {
             $params = {
-                fecha: $scope.fechafilter                
+                user_id: localStorage['ztrack.user_id'],
+                fecha: $scope.fechafilter,
+                active_tab : $scope.activeTab
             };
         }       
         if ($scope.vehiculofilter !== undefined && $scope.vehiculofilter !== null) {
             $params = {
-                vehiculoid: $scope.vehiculofilter.object_id
+                user_id: localStorage['ztrack.user_id'],
+                vehiculoid: $scope.vehiculofilter.object_id,
+                active_tab : $scope.activeTab
             };
         }  
         if (($scope.vehiculofilter !== undefined && $scope.vehiculofilter !== null) && $scope.fechafilter !== undefined) {
             $params = {
+                user_id: localStorage['ztrack.user_id'],
                 fecha: $scope.fechafilter,
-                vehiculoid: $scope.vehiculofilter.object_id
+                vehiculoid: $scope.vehiculofilter.object_id,
+                active_tab : $scope.activeTab
             };
-        }        
+        }
         QueriesService.executeRequest('GET', '../laravel/public/novedades/novedadesavehiculoxfiltro', null, $params)
                 .then(function (result) {
                     $scope.novedadesregistradas = result.novedades;
@@ -235,6 +239,32 @@ ztrack.controller('NovedadesController', function ($rootScope, $scope, AuthServi
                        $('#editarSolucionNovedad').modal('hide');
                     }                    
                 });
+    };
+    
+    
+    $scope.filtrarregistros = function(){
+       if($scope.novedadesregistradas.length === 0){
+           toastr.warning("No se puede filtrar. No hay resultados encontrados","Advertencia");
+           return;
+       }
+       if($scope.activeTab === 3){
+           if($scope.filtro !== undefined){
+//               console.log($scope.filtro);
+//               console.log($scope.novedadesregistradas);
+               if($scope.filtro.filtroestado !== undefined){
+                   if($scope.filtro.filtroestado === 0){
+                     var index = $scope.novedadesregistradas.indexOf("Solucionado");
+                     console.log("El indice es: " + index);
+                   }
+                   
+               }
+               
+           }
+       } 
+       else{
+           
+       }
+       
     };
 
 

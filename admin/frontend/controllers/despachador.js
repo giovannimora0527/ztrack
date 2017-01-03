@@ -85,22 +85,31 @@ angular.module('ztrack').controller('AdminDespachosController', function ($rootS
         $scope.date.setHours(1);
     };
 
+    
     $scope.guardarDespachador = function () {
         if ($scope.despachador.direccion === undefined || $scope.despachador.direccion === '' || $scope.despachador.username === undefined || $scope.despachador.username === '' || $scope.despachador.password === undefined || $scope.despachador.password === '' ||
-                $scope.despachador.nombre === undefined || $scope.despachador.nombre === '' || $scope.despachador.apellidos === undefined || $scope.despachador.apellidos === '' || $scope.despachador.telefono === undefined || $scope.despachador.telefono === '')
+                $scope.despachador.nombre === undefined || $scope.despachador.nombre === '' || $scope.despachador.apellidos === undefined || $scope.despachador.apellidos === '' || $scope.despachador.telefono === undefined || $scope.despachador.telefono === ''
+                || $scope.despachador.cedula === undefined || $scope.despachador.cedula === '')
         {
             toastr.warning("Todos los campos son obligatorios para poder crear un despachador. Intente de nuevo.", "Advertencia");
             return;
         }
+        if(isNaN($scope.despachador.cedula)){
+           toastr.warning("El campo cédula debe ser un valor numérico. Intente de nuevo", "Advertencia");
+           return; 
+        }
+        
         $params = {
             user_id: localStorage['ztrack.user_id'],
             username: $scope.despachador.username,
             password: $scope.despachador.password,
+            cedula: $scope.despachador.cedula,
             nombre: $scope.despachador.nombre,
             apellidos: $scope.despachador.apellidos,
             telefono: $scope.despachador.telefono,
             direccion: $scope.despachador.direccion
         };
+        
         QueriesService.executeRequest('GET', '../laravel/public/despachador/despachador', null, $params)
                 .then(function (result) {
                     if (result.error) {
@@ -150,63 +159,46 @@ angular.module('ztrack').controller('AdminDespachosController', function ($rootS
     }
     ;
 
-    $scope.itemsselected = [];
-    $scope.seleccionarRuta = function () {
-        if ($scope.rutaselect === undefined) {
-            toastr.error("Debe seleccionar una ruta para continuar. Intente de nuevo", "Error");
-            return;
-        }
-        if ($scope.itemsselected.length === 0) {
-            $scope.itemsselected.push({
-                route_id: $scope.rutaselect.route_id,
-                route_name: $scope.rutaselect.route_name
-            });
-            toastr.success("Ruta preseleccionada con exito.", "Exito");
-        } else {
-            var esta = false;
-            for (var i = 0; i < $scope.itemsselected.length; i++) {
-                if (parseInt($scope.itemsselected[i].route_id) === parseInt($scope.rutaselect.route_id)) {
-                    esta = true;
-                }
-            }
-            if (!esta) {
-                $scope.itemsselected.push({
-                    route_id: $scope.rutaselect.route_id,
-                    route_name: $scope.rutaselect.route_name
-                });
-            } else {
-                toastr.warning("La ruta ya se encuentra preseleccionada. Intente de nuevo con otra.", "Atención");
-            }
-        }
-    };
-
-    $scope.deleteRuta = function (item) {
-        $scope.itemsselected.splice($scope.itemsselected.indexOf(item), 1);
-    };
-
-
-    $scope.asignarRuta = function () {
+    $scope.deleteRuta = function (id) {
         $params = {
             user_id: localStorage['ztrack.user_id'],
             area_id: $scope.areaselect.id,
-            despachador_id: $scope.despachadorselect.id
+            despachador_id: $scope.despachadorselect.id,
+            route_id: id
         };
-        QueriesService.executeRequest('POST', '../laravel/public/rutas/saveasignacionrutas', $scope.itemsselected, $params)
+        QueriesService.executeRequest('POST', '../laravel/public/rutas/deleteasignacionrutas', $params, null)
+                .then(function (result) {
+                    if (result.success) {
+                        toastr.success(result.mensaje, "OK");
+                        $scope.cargarRutasAsignadasDespachador();
+                    } else {
+                        toastr.error(result.mensaje, "Error");
+                    }
+
+                });
+    };
+
+
+    $scope.asignarRuta = function (id) {
+        $params = {
+            user_id: localStorage['ztrack.user_id'],
+            area_id: $scope.areaselect.id,
+            despachador_id: $scope.despachadorselect.id,
+            route_id: id
+        };
+
+        QueriesService.executeRequest('POST', '../laravel/public/rutas/saveasignacionrutas', $params, null)
                 .then(function (result) {
                     if (!result.success) {
-                        toastr.error("No se ha podido guardar el registro. Intente de nuevo.", "Error");
+                        toastr.error(result.mensaje, "Error");
                     } else {
                         toastr.success(result.mensaje, "OK");
-                        $scope.itemsselected = [];
-                        $scope.despachadorselect = {};
                         document.getElementById("selectDespachador").disabled = false;
+                        $scope.cargarRutasAsignadasDespachador();
                     }
                 });
     };
 
-    $scope.cancelar = function () {
-        $scope.itemsselected = [];
-    };
 
     $scope.cargarRutasAsignadasDespachador = function () {
         $params = {
@@ -280,6 +272,7 @@ angular.module('ztrack').controller('AdminDespachosController', function ($rootS
         $scope.despachadorseleccionado = {
             nombre: item.nombre,
             apellido: item.apellido,
+            cedula: item.cedula,
             direccion: item.direccion,
             telefono: item.telefono,
             id: item.id
@@ -287,18 +280,35 @@ angular.module('ztrack').controller('AdminDespachosController', function ($rootS
     };
 
 
-    $scope.actualizarDespachador = function () { 
-        if($scope.despachadorseleccionado.direccion === ''){
-           toastr.warning("El campo dirección no puede estar vacio. Intente de nuevo.","Advertencia"); 
-           return;
+    $scope.actualizarDespachador = function () {
+        if ($scope.despachadorseleccionado.nombre === '') {
+            toastr.warning("El campo nombre no puede estar vacio. Intente de nuevo.", "Advertencia");
+            return;
         }
-        if($scope.despachadorseleccionado.telefono === ''){
-           toastr.warning("El campo teléfono no puede estar vacio. Intente de nuevo.","Advertencia");  
-           return;
+        if ($scope.despachadorseleccionado.apellido === '') {
+            toastr.warning("El campo teléfono no puede estar vacio. Intente de nuevo.", "Advertencia");
+            return;
+        }
+        if ($scope.despachadorseleccionado.cedula === '') {
+            toastr.warning("El campo cedula no puede estar vacio. Intente de nuevo.", "Advertencia");
+            return;
+        }
+        if ($scope.despachadorseleccionado.telefono === '') {
+            toastr.warning("El campo teléfono no puede estar vacio. Intente de nuevo.", "Advertencia");
+            return;
+        }
+        if ($scope.despachadorseleccionado.direccion === '') {
+            toastr.warning("El campo dirección no puede estar vacio. Intente de nuevo.", "Advertencia");
+            return;
+        }
+        if ($scope.despachadorseleccionado.telefono === '') {
+            toastr.warning("El campo teléfono no puede estar vacio. Intente de nuevo.", "Advertencia");
+            return;
         }
         $params = {
             nombre: $scope.despachadorseleccionado.nombre,
             apellido: $scope.despachadorseleccionado.apellido,
+            cedula: $scope.despachadorseleccionado.cedula,
             direccion: $scope.despachadorseleccionado.direccion,
             telefono: $scope.despachadorseleccionado.telefono,
             id: $scope.despachadorseleccionado.id
@@ -306,15 +316,14 @@ angular.module('ztrack').controller('AdminDespachosController', function ($rootS
         QueriesService.executeRequest('POST', '../laravel/public/despachador/updateinfodespachador', $params, null)
                 .then(function (result) {
                     if (result.success) {
-                        toastr.success(result.mensaje,"OK");
+                        toastr.success(result.mensaje, "OK");
                         $scope.buscarDespachador();
-                    }
-                    else{
-                       toastr.error(result.mensaje,"Error");  
+                    } else {
+                        toastr.error(result.mensaje, "Error");
                     }
                 });
     };
-    
+
     $scope.onconfirmdeletedespachador = function (desp_id) {
         var rta = confirm("¿Desea eliminar el registro?");
         if (rta) {
@@ -327,14 +336,31 @@ angular.module('ztrack').controller('AdminDespachosController', function ($rootS
     $scope.eliminardespachador = function (desp_id) {
         $params = {
             desp_id: desp_id
-        };        
+        };
         QueriesService.executeRequest('POST', '../laravel/public/despachador/deletedespachador', $params, null)
                 .then(function (result) {
                     if (result.success) {
-                        toastr.success(result.mensaje,"OK");
-                          $scope.buscarDespachador();
+                        toastr.success(result.mensaje, "OK");
+                        $scope.buscarDespachador();
                     } else {
                         toastr.error(result.mensaje, "Error");
+                    }
+                });
+    };
+
+
+    $scope.validarDocumento = function () {
+        if ($scope.despachador === undefined || $scope.despachador.cedula === "") {
+            toastr.warning("Para validar la cédula, este campo no puede estar vacio. Intente de nuevo.", "Advertencia");
+            return;
+        }
+        $params = {
+            cedula: $scope.despachador.cedula
+        };
+        QueriesService.executeRequest('GET', '../laravel/public/despachador/buscarporcedula', null, $params)
+                .then(function (result) {
+                    if (result.esta) {
+                        toastr.warning(result.mensaje, "Advertencia");
                     }
                 });
     };

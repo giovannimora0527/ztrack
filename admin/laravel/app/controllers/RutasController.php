@@ -34,38 +34,38 @@ class RutasController extends \BaseController {
     }
 
     public function postSaveasignacionrutas() {
-        $data = Input::all();
         $user_id = Input::get("user_id");
         $area_id = Input::get("area_id");
+        $route_id = Input::get("route_id");
         $despachador_id = Input::get("despachador_id");
         date_default_timezone_set('America/Bogota');
         $time = time();
         $fecharegistro = date("Y-m-d H:i:s", $time);
-        $insert = false;
 
 //Insertar el registro de la asignacion del despachador a la ruta(s)
-        for ($i = 0; $i < count($data) - 3; $i++) {
-            $route_id = ($data[$i]["route_id"]);
-            $sql = "insert into gs_despachador_ruta(desp_id, user_id, area_id, route_id, fecha_asignacion) values("
-                    . "" . $despachador_id
-                    . "," . $user_id
-                    . "," . $area_id
-                    . "," . $route_id
-                    . ",'" . $fecharegistro
-                    . "')";
-            try {
-                DB::beginTransaction();
-                DB::insert($sql);
-                $insert = true;
-                DB::commit();
-            } catch (Exception $e) {
-                DB::rollback();
-                $insert = false;
-                return Response::json(array('error' => "No se puede guardar el registro. " . $e, 'error' => true));
-            }
+        //verificamos que el registro no se encuentre en la BD
+        $sql = "select count(*) conteo from gs_despachador_ruta where desp_id = " . $despachador_id . " and area_id = " . $area_id
+                . " and route_id = " . $route_id;
+        $results = DB::select($sql);
+        if ($results[0]->conteo > 0) {
+            return Response::json(array('success' => false, 'mensaje' => "No se puede guardar. Ya existe la ruta seleccionada a este despachador. Intente de nuevo."));
         }
-        if ($insert) {
+
+        $sql = "insert into gs_despachador_ruta(desp_id, user_id, area_id, route_id, fecha_asignacion) values("
+                . "" . $despachador_id
+                . "," . $user_id
+                . "," . $area_id
+                . "," . $route_id
+                . ",'" . $fecharegistro
+                . "')";
+        try {
+            DB::beginTransaction();
+            DB::insert($sql);
+            DB::commit();
             return Response::json(array('success' => true, 'mensaje' => "El registro se ha guardado correctamente"));
+        } catch (Exception $e) {
+            DB::rollback();
+            return Response::json(array('error' => "No se puede guardar el registro. " . $e, 'error' => true));
         }
     }
 
@@ -196,15 +196,29 @@ class RutasController extends \BaseController {
         $rutas = DB::select($sql);
         return Response::json(array('rutas' => $rutas));
     }
-    
-    
-    public function getRutasbydespachadorid(){
+
+    public function getRutasbydespachadorid() {
         $data = Input::all();
         $sql = "select dr.route_id, r.route_name, dr.fecha_asignacion"
                 . " from gs_despachador_ruta dr join gs_user_routes r ON r.route_id = dr.route_id"
                 . " where dr.user_id = " . $data["user_id"] . " and dr.area_id = " . $data["area_id"] . " and dr.desp_id = " . $data["despachador_id"];
         $result = DB::select($sql);
-        return Response::json(array('rutasasignadas' => $result , 'success' => true));
+        return Response::json(array('rutasasignadas' => $result, 'success' => true));
+    }
+
+    public function postDeleteasignacionrutas() {
+        $data = Input::all();
+        $sql = "delete from gs_despachador_ruta where desp_id = " . $data["despachador_id"] . " and area_id = " . $data["area_id"]
+                . " and route_id = " . $data["route_id"];
+        
+        try {
+            DB::beginTransaction();
+            DB::delete($sql);
+            DB::commit();
+            return Response::json(array('success' => true, 'mensaje' => "El registro fue borrado satisfactoriamente."));
+        } catch (Exception $e) {
+            return Response::json(array('mensaje' => "No se pudo borrar el registro de la BD: " . $e, 'error' => true));
+        }
     }
 
 }
