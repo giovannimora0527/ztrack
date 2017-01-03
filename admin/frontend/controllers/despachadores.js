@@ -9,12 +9,12 @@ ztrack.controller('DespachadoresController', function ($rootScope, $scope, AuthS
     $scope.activeTab = 1;
     $scope.despachador = {};
     cargarRutas();
-    $scope.hayvehiculos;    
+    $scope.hayvehiculos;
 
     $scope.setActiveTab = function (tab) {
         $scope.activeTab = tab;
         if (tab === 1) {
-            $scope.limpiarCampos();            
+            $scope.limpiarCampos();
         }
         if (tab === 2) {
             cargarAllVehiculos();
@@ -106,7 +106,7 @@ ztrack.controller('DespachadoresController', function ($rootScope, $scope, AuthS
     };
 
 
-    $scope.cargarVehiculos = function () {        
+    $scope.cargarVehiculos = function () {
         if ($scope.gruposelect === undefined) {
             toastr.warning("Debe seleccionar un grupo para poder continuar.", "Advertencia.");
             return;
@@ -121,11 +121,10 @@ ztrack.controller('DespachadoresController', function ($rootScope, $scope, AuthS
                     if (result.empty) {
                         toastr.warning(result.mensaje, "Advertencia");
                         return;
-                    } 
-                    else{
-                       $scope.vehiculos1 = {};
-                       $scope.vehiculos1 = result.vehiculos; 
-                    }                    
+                    } else {
+                        $scope.vehiculos1 = {};
+                        $scope.vehiculos1 = result.vehiculos;
+                    }
                 });
         document.getElementById("selectvehiculos").disabled = true;
         document.getElementById("selectruta").disabled = true;
@@ -148,18 +147,17 @@ ztrack.controller('DespachadoresController', function ($rootScope, $scope, AuthS
         $params = {
             user_id: localStorage['ztrack.despachador_id'],
             vehiculo_id: vehiculo
-        };        
+        };
         QueriesService.executeRequest('GET', '../laravel/public/despachador/descartarvehiculoparadero', null, $params)
                 .then(function (result) {
                     if (result.success) {
                         toastr.success(result.mensaje, "OK");
-                        if( $scope.activeTab === 2){
-                          cargarAllVehiculos();    
+                        if ($scope.activeTab === 2) {
+                            cargarAllVehiculos();
+                        } else {
+                            $scope.cargarVehiculos();
                         }
-                        else{
-                          $scope.cargarVehiculos();   
-                        }                        
-                        
+
                     } else {
                         toastr.error(result.mensaje, "Error");
                     }
@@ -183,14 +181,14 @@ ztrack.controller('DespachadoresController', function ($rootScope, $scope, AuthS
         };
         QueriesService.executeRequest('GET', '../laravel/public/despachador/vehiculosparadero', null, $params)
                 .then(function (result) {
-                    if (result.success) {                        
-                        $scope.cargarVehiculos();                        
+                    if (result.success) {
+                        $scope.cargarVehiculos();
                     } else {
                         toastr.warning(result.mensaje, "OK");
                     }
                 });
-    };    
-   
+    };
+
     function cargarVehiculosParadero() {
         if ($scope.gruposelect === undefined) {
             return;
@@ -232,23 +230,23 @@ ztrack.controller('DespachadoresController', function ($rootScope, $scope, AuthS
                     $scope.vehiculo = result.vehiculo;
                 });
     };
-    
-    $scope.onchangeultimavuelta = function(){
+
+    $scope.onchangeultimavuelta = function () {
         console.log($scope.vehiculo.ultimavuelta);
-        if ($scope.vehiculo.ultimavuelta !== undefined) { 
-            document.getElementById("tiempoestimado").disabled = false;  
+        if ($scope.vehiculo.ultimavuelta !== undefined) {
+            document.getElementById("tiempoestimado").disabled = false;
         }
-        if($scope.vehiculo.ultimavuelta === false){
-           document.getElementById("tiempoestimado").disabled = true;    
+        if ($scope.vehiculo.ultimavuelta === false) {
+            document.getElementById("tiempoestimado").disabled = true;
         }
-       
+
     };
 
     $scope.despachar = function (it) {
         if ($scope.vehiculo.rutaselect === undefined) {
             toastr.warning("Debe seleccionar una ruta para continuar con el despacho. Intente de nuevo.", "Advertencia");
             return;
-        }       
+        }
         $params = {
             user_id: localStorage['ztrack.despachador_id'],
             imei: it.imei,
@@ -256,10 +254,10 @@ ztrack.controller('DespachadoresController', function ($rootScope, $scope, AuthS
             ruta_id: $scope.vehiculo.rutaselect,
             group_id: it.group_id,
             coordenadas: it.coordenadas
-        };               
-        if ($scope.vehiculo.ultimavuelta !== undefined) {            
-            if($scope.vehiculo.tiempoestimado === undefined && $scope.vehiculo.ultimavuelta !== false){
-                toastr.warning("Selecciono última vuelta, debe asignar un tiempo estimado para la terminación de la vuelta.","Advertencia");
+        };
+        if ($scope.vehiculo.ultimavuelta !== undefined) {
+            if ($scope.vehiculo.tiempoestimado === undefined && $scope.vehiculo.ultimavuelta !== false) {
+                toastr.warning("Selecciono última vuelta, debe asignar un tiempo estimado para la terminación de la vuelta.", "Advertencia");
                 return;
             }
             $params = {
@@ -269,10 +267,10 @@ ztrack.controller('DespachadoresController', function ($rootScope, $scope, AuthS
                 ruta_id: $scope.vehiculo.rutaselect,
                 group_id: it.group_id,
                 coordenadas: it.coordenadas,
-                ultimvuelta : 1,
-                tiempoestimado : $scope.vehiculo.tiempoestimado
+                ultimvuelta: 1,
+                tiempoestimado: $scope.vehiculo.tiempoestimado
             };
-        }         
+        }
         document.getElementById("btndespachar").disabled = true;
         QueriesService.executeRequest('GET', '../laravel/public/despachador/despachovehiculo', null, $params)
                 .then(function (result) {
@@ -391,6 +389,25 @@ ztrack.controller('DespachadoresController', function ($rootScope, $scope, AuthS
         QueriesService.executeRequest('GET', '../laravel/public/rutas/rutasbygroupid', null, $params)
                 .then(function (result) {
                     $scope.rutas = result.rutas;
+                });
+    };
+
+
+    $scope.cancelarFalsaLlegada = function (item) {        
+        $params = {
+            user_id: localStorage['ztrack.user_id'],
+            vehiculo_id: item.object_id,
+            hora_llegada: item.hora_llegada,
+            id_dt : item.id
+        };
+        QueriesService.executeRequest('POST', '../laravel/public/despachador/cancelarfalsallegada', null, $params)
+                .then(function (result) {
+                    if (result.success) {
+                       cargarVehiculosDespachados();
+                       cargarVehiculosLLegada(); 
+                    } else {
+                        toastr.error(result.mensaje,"Error");
+                    }
                 });
     };
 

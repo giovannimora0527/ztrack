@@ -94,11 +94,8 @@ and open the template in the editor.
                                                     <td align="center">
                                                         <div class="btn-group">
                                                             <button class="btn btn-white btn-sm btn-info btn-bold" title="Agregar Novedad" data-toggle="modal" data-target="#editarNovedad" ng-click="cargarModal(veh)">
-                                                                <i class="ace-icon fa fa-edit"></i>
-                                                            </button> 
-                                                            <button class="btn btn-white btn-sm btn-warning btn-bold" title="Eliminar" ng-click="onconfirmdeletegr(veh.object_id)">
-                                                                <i class="ace-icon fa fa-trash-o bigger-120 orange"></i>
-                                                            </button>  
+                                                                <i class="ace-icon fa fa-plus"></i>
+                                                            </button>                                                              
                                                         </div>
                                                     </td> 
                                                 </tr>
@@ -221,7 +218,7 @@ and open the template in the editor.
                                                     </td>
                                                     <td align="center">
                                                         <div class="btn-group">
-                                                            <button class="btn btn-white btn-sm btn-info btn-bold" title="Solucionar Novedad" data-toggle="modal" data-target="#editarSolucionNovedad" ng-click="cargarModalSolucion(veh)">
+                                                            <button class="btn btn-white btn-sm btn-info btn-bold" title="Solucionar Novedad" data-toggle="modal" data-target="#editarSolucionNovedad" ng-click="cargarModalSolucion(nov)">
                                                                 <i class="ace-icon fa fa-edit"></i>
                                                             </button>                                                              
                                                         </div>
@@ -285,10 +282,51 @@ and open the template in the editor.
                     <button  id="btncerrar" type="button" class="btn btn-default" data-dismiss="modal"><i class="pull-left bigger-130 ace-icon fa fa-times"></i>Cerrar</button>
                 </div>
             </div>
-
+        </div>
+    </div>
+    
+    <!-- Modal Editar y Solucionar Novedades-->
+    <div id="editarSolucionNovedad" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Solucionar Novedad {{novedadseleccionada.descripcion}} <br>
+                        Para el vehículo {{novedadseleccionada.name}}
+                    </h4>
+                </div>
+                <div class="modal-body"> 
+                    <table class="table table-bordered table-condensed table-responsive">
+                        <tr>
+                            <td>
+                                ¿Solucionada?
+                            </td>
+                            <td>
+                                <input class="form-control" type="checkbox" ng-model="respuesta.check"/>
+                            </td>                            
+                        </tr>
+                        <tr>
+                            <td>
+                                Descripción de la solución
+                            </td>
+                            <td>
+                                <textarea class="autosize-transition form-control" ng-model="respuesta.descripcion" maxlength="150"></textarea>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button id="btnregistrar" type="button" class="btn btn-primary" ng-click="solucionarNovedad(respuesta)"><i class="pull-left bigger-130 ace-icon fa fa-arrow-right"></i>Registrar solución de la novedad</button>                
+                    <button  id="btncerrar" type="button" class="btn btn-default" data-dismiss="modal"><i class="pull-left bigger-130 ace-icon fa fa-times"></i>Cerrar</button>
+                </div>
+            </div>
         </div>
     </div>
 </div> 
+
+
+
 
 <script>
     //datepicker plugin

@@ -29,11 +29,14 @@ and open the template in the editor.
                         Nuevo Despachador
                     </a>
                 </li> 
-                <li ng-class="{
-                        'active'
-                        : activeTab === 2}"><a href="" ng-click="setActiveTab(2)">
-                        <i class="blue fa fa-users bigger-120"></i>
+                <li ng-class="{'active': activeTab === 2}"><a href="" ng-click="setActiveTab(2)">
+                        <i class="blue fa fa-edit bigger-120"></i>
                         Asignar despachador a ruta.
+                    </a>
+                </li>
+                <li ng-class="{'active': activeTab === 3}"><a href="" ng-click="setActiveTab(3)">
+                        <i class="blue fa fa-search bigger-120"></i>
+                        Ver información despachador
                     </a>
                 </li>
             </ul>
@@ -211,17 +214,145 @@ and open the template in the editor.
                         </div>
                     </div> 
                 </div>
+                <div ng-class="{'tab-pane active' : activeTab === 3, 'tab-pane' : activeTab !== 3}">
+                    <div class="container-fluid">
+                        <label>
+                            *Filtre un despachador y edite la información correspondiente
+                        </label>
+                        <table class="table table-responsive table-bordered table-striped"> 
+                            <tr>
+                                <td>
+                                    Lista de Despachadores 
+                                </td>
+                                <td>
+                                    <select id="selectdesp" ng-model="despachadorselect" class="form-control" ng-options="desp.nombre + ' ' + desp.apellido for desp in despachadores track by desp.nombre" ng-change="hasSelectedFilterDespachador()">
+                                        <option value="" disabled selected>Seleccione una opción</option>                                        
+                                    </select> 
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                   Ruta 
+                                </td>
+                                <td>
+                                    <select id="selectRuta" ng-model="rutaselect" class="form-control" ng-options="r.route_name for r in rutas track by r.route_name " ng-change="hasSelectedFilterRuta()">
+                                        <option value="" disabled selected>Seleccione una opción</option>                                        
+                                    </select> 
+                                </td>                                
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                    <button class="btn btn-primary" ng-click="buscarDespachador()">Buscar</button>  
+                                    <button class="btn btn-default" ng-click="limpiarFiltros()">Limpiar</button> 
+                                </td>
+                            </tr>                                                       
+                        </table>
+                        <div class="row">
+                            <table class="table table-responsive table-condensed table-striped table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            Nombres
+                                        </th>
+                                        <th>
+                                            Apellidos
+                                        </th>
+                                        <th>
+                                            Dirección
+                                        </th>
+                                        <th>
+                                            Teléfono
+                                        </th>
+                                        <th>
+                                            Acciones
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="d in despachadoresfiltro">
+                                        <td>
+                                            {{d.nombre}}
+                                        </td>
+                                        <td>
+                                            {{d.apellido}}
+                                        </td>
+                                        <td>
+                                            {{d.direccion}}
+                                        </td>
+                                        <td>
+                                            {{d.telefono}}
+                                        </td>
+                                        <td align="center">
+                                            <div class="btn-group">
+                                                <button class="btn btn-white btn-sm btn-info btn-bold" title="Editar Despachador" data-toggle="modal" data-target="#verInfo" ng-click="cargarModal(d)">
+                                                    <i class="ace-icon fa fa-edit"></i>
+                                                </button> 
+                                                <button class="btn btn-white btn-sm btn-warning btn-bold" title="Eliminar Despachador" ng-click="onconfirmdeletedespachador(d.id)">
+                                                    <i class="ace-icon fa fa-trash-o bigger-120 orange"></i>
+                                                </button>  
+                                            </div>
+                                        </td> 
+                                    </tr>
+                                </tbody>
+                            </table>                           
+                        </div>                        
+                    </div> 
+                </div>
             </div>
         </div> <!-- Fin de Tabs -->
 
     </div><!-- /.col -->
 </div><!-- /.row -->
+
+
+<!-- Modal Ver y Editar Info Despachador-->
+<div id="verInfo" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title"><i class="pull-left bigger-130 ace-icon fa fa-user"></i> Editar los datos del despachador {{despachadorseleccionado.nombre}} {{despachadorseleccionado.apellido}}</h4> 
+            </div>
+            <div class="modal-body"> 
+                A continuación rellene la información que es obligatoria (*).
+                <table class="table table-bordered table-hover table-responsive table-striped">
+                    <tr> 
+                        <td>
+                            (*) <label>Dirección</label>                            
+                        </td>
+                        <td>
+                            <input type="text" class="form-control" ng-model="despachadorseleccionado.direccion" /> 
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            (*) <label>Teléfono:</label>
+                        </td>
+                        <td>
+                            <input type="text" class="form-control" ng-model="despachadorseleccionado.telefono" /> 
+                        </td>
+                    </tr>                                         
+
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="pull-left bigger-130 ace-icon fa fa-times"></i>Cerrar</button>
+                <button type="button" class="btn btn-primary" ng-click="actualizarDespachador()"><i class="pull-left bigger-130 ace-icon fa fa-save"></i>Actualizar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <script>
-   function hasSelectedChange(){
-     document.getElementById("selectDespachador").disabled = true; 
-   };
-   
-    function cancel(){
-     document.getElementById("selectDespachador").disabled = false; 
-   };
+    function hasSelectedChange() {
+        document.getElementById("selectDespachador").disabled = true;
+    }
+    ;
+
+    function cancel() {
+        document.getElementById("selectDespachador").disabled = false;
+    }
+    ;
 </script>

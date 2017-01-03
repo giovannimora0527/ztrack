@@ -196,5 +196,15 @@ class RutasController extends \BaseController {
         $rutas = DB::select($sql);
         return Response::json(array('rutas' => $rutas));
     }
+    
+    
+    public function getRutasbydespachadorid(){
+        $data = Input::all();
+        $sql = "select dr.route_id, r.route_name, dr.fecha_asignacion"
+                . " from gs_despachador_ruta dr join gs_user_routes r ON r.route_id = dr.route_id"
+                . " where dr.user_id = " . $data["user_id"] . " and dr.area_id = " . $data["area_id"] . " and dr.desp_id = " . $data["despachador_id"];
+        $result = DB::select($sql);
+        return Response::json(array('rutasasignadas' => $result , 'success' => true));
+    }
 
 }

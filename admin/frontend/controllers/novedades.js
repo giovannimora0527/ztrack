@@ -176,16 +176,22 @@ ztrack.controller('NovedadesController', function ($rootScope, $scope, AuthServi
 
 
     $scope.filtrar = function () {
-        $params = {
-            fecha: $scope.fechafilter
-        };
-        if ($scope.vehiculofilter !== null) {
+        if ($scope.fechafilter !== undefined) {
+            $params = {
+                fecha: $scope.fechafilter                
+            };
+        }       
+        if ($scope.vehiculofilter !== undefined && $scope.vehiculofilter !== null) {
+            $params = {
+                vehiculoid: $scope.vehiculofilter.object_id
+            };
+        }  
+        if (($scope.vehiculofilter !== undefined && $scope.vehiculofilter !== null) && $scope.fechafilter !== undefined) {
             $params = {
                 fecha: $scope.fechafilter,
                 vehiculoid: $scope.vehiculofilter.object_id
             };
-        }
-        console.log($params);
+        }        
         QueriesService.executeRequest('GET', '../laravel/public/novedades/novedadesavehiculoxfiltro', null, $params)
                 .then(function (result) {
                     $scope.novedadesregistradas = result.novedades;
@@ -195,7 +201,40 @@ ztrack.controller('NovedadesController', function ($rootScope, $scope, AuthServi
                         toastr.warning("No hay resultados con el criterio de búsqueda.", "Advertencia");
                     }
                 });
-
+    };
+    
+    $scope.cargarModalSolucion = function(novedad){        
+        $scope.novedadseleccionada = {
+            descripcion : novedad.descripcion,
+            id : novedad.id,
+            name: novedad.name
+        };        
+    };
+    
+    
+    $scope.solucionarNovedad = function(rta){
+        if(rta === undefined){
+            toastr.warning("Debe seleccionar si ya la novedad fue solucionada, si fue así, debe agregar una descripción de la solución","Advertencia");
+            return;
+        }
+        if(rta.check !== undefined){            
+            if(rta.descripcion === undefined){
+              toastr.warning("Debe agregar una descripción de la solución para continuar.","Advertencia");
+              return;
+            }
+            $params = {
+               id : $scope.novedadseleccionada.id,
+               solucionada : true,
+               descripcion : rta.descripcion
+            };           
+        }     
+        QueriesService.executeRequest('POST', '../laravel/public/novedades/solucionarnovedad', $params, null)
+                .then(function (result) {
+                    if(result.success){
+                       toastr.success(result.mensaje, "OK"); 
+                       $('#editarSolucionNovedad').modal('hide');
+                    }                    
+                });
     };
 
 

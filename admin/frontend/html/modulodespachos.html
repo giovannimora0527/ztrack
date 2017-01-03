@@ -212,7 +212,7 @@ and open the template in the editor.
                                                                 <li class="dd-item" ng-repeat="item in vehiculosdespachados">
                                                                     <div class="dd-handle">
                                                                         <i class="pull-left bigger-130 ace-icon fa fa-automobile blue"></i>
-                                                                        <i class="pull-left bigger-130 ace-icon fa fa-arrow-right blue"></i>
+                                                                        <i class="pull-left bigger-130 ace-icon fa fa-road blue"></i>
                                                                         Salida: {{item.hora_salida}} / {{item.name}} / Ruta: {{item.route_name}}
                                                                         <a href="" ng-click="registrarLlegada(item)"><i class="pull-right bigger-130 ace-icon fa fa-arrow-right blue"></i></a>
                                                                     </div>
@@ -237,6 +237,7 @@ and open the template in the editor.
                                                             <ol class="dd-list">
                                                                 <li class="dd-item" ng-repeat="lleg in llegadavehiculos">
                                                                     <div class="dd-handle">
+                                                                        <a href="" ng-click="cancelarFalsaLlegada(lleg)"><i class="pull-left bigger-130 ace-icon fa fa-arrow-left blue"></i></a>
                                                                         <i class="pull-left bigger-130 ace-icon fa fa-automobile blue"></i>
                                                                         <i class="pull-left bigger-130 ace-icon fa fa-hand-paper-o blue"></i>
                                                                         Hora Llegada: {{lleg.hora_llegada}} / {{lleg.vehiculo}}
