@@ -96,11 +96,11 @@ class NovedadController extends \BaseController {
         }
         if($hasfecha){
             if($countfilter == 0){
-               $sql .= " WHERE rn.fecha_registro <= '" .$data["fecha"] . "'"; 
+               $sql .= " WHERE rn.fecha_registro <= '" .$data["fecha"] . " 23:59:59'"; 
                $countfilter++;
             }
             else{
-               $sql .= " AND rn.fecha_registro <= '" .$data["fecha"] . "'"; 
+               $sql .= " AND rn.fecha_registro <= '" .$data["fecha"] . " 23:59:59'"; 
                $countfilter++;
             }
         } 
