@@ -431,10 +431,13 @@ class DespachadorController extends \BaseController {
     
     public function getBuscarporcedula(){
        $data = Input::all();
-       $sql = "select count(id) from gs_info_despachador where cedula = " . $data["cedula"];
+       $sql = "select count(id) conteo from gs_info_despachador where cedula = " . $data["cedula"];
        $result = DB::select($sql);
-       if(count($result)>0){
+       if($result[0]->conteo>0){           
            return Response::json(array('esta' => true, 'mensaje' => "La cédula se encuentra registrada en la BD."));
+       }
+       else{
+          return Response::json(array('esta' => false)); 
        }
     }
     

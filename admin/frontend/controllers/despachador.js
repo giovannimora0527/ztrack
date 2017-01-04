@@ -364,6 +364,15 @@ angular.module('ztrack').controller('AdminDespachosController', function ($rootS
                     }
                 });
     };
+    
+    $scope.cancelar = function (){
+        document.getElementById("areaselect2").disabled = false;
+        document.getElementById("selectDespachador").disabled = false;
+        $scope.despachadorselect = {};
+        $scope.areaselect = {};
+        $scope.rutaselect = {};
+        $scope.itemsselected = {};
+    };
 
 
 

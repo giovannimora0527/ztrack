@@ -49,21 +49,21 @@ and open the template in the editor.
                         </label>
                         <div align="center">
                             <form class="form-horizontal" role="form">
-                                <table class="table-bordered table-condensed table-responsive">
+                                <table class="table-bordered table-condensed table-responsive col-md-12">
                                     <tr>
                                         <td colspan="4" class="col-md-12" >
                                             <h4 class="smaller blue" align="center">Datos Personales</h4> 
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td colspan="2" class="col-md-4">
+                                        <td class="col-md-2">
                                             <label> Cédula </label>                                            
                                         </td>
                                         <td class="col-md-4">
                                             <input type="text" placeholder="Cédula" class="form-control" ng-model="despachador.cedula"/>
                                         </td> 
-                                        <td class="col-md-4">
-                                            <button class="btn btn-primary" ng-click="validarDocumento()">Validar Documento</button> 
+                                        <td colspan="2" class="col-md-6" align="center">
+                                            <button class="btn btn-primary" ng-click="validarDocumento()" >Validar Documento</button> 
                                         </td>
                                     </tr>
                                     <tr>
@@ -114,7 +114,7 @@ and open the template in the editor.
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td colspan="4">                                            
+                                        <td colspan="2" class="col-md-6">                                            
                                             <div class="btn-group" align="center">
                                                 <button type="button" class="btn btn-warning btn-white btn-primary" ng-click="cancelarDespachador()"> 
                                                     <i class="ace-icon fa fa-times align-top bigger-125"></i>
@@ -153,7 +153,7 @@ and open the template in the editor.
                                     Seleccion de Área 
                                 </td>
                                 <td>
-                                    <select class="form-control" ng-model="areaselect.id" ng-change="onChangeSelectedArea()">                                        
+                                    <select id="areaselect2" class="form-control" ng-model="areaselect.id" ng-change="onChangeSelectedArea()">                                        
                                         <option value="" selected disabled>Seleccionar</option>
                                         <option ng-repeat="ar in areas" value="{{ar.id}}">{{ar.name}}</option>
                                     </select>
@@ -178,7 +178,6 @@ and open the template in the editor.
                                                     </button>
                                                 </span>
                                             </div>
-
                                         </div>
                                     </div>
                                 </div>
@@ -206,7 +205,8 @@ and open the template in the editor.
                                 </div>
                             </div>                            
                         </div>
-                        <br><br>                        
+                        <br><br> 
+                        <button class="btn btn-default" ng-click="cancelar()">Limpiar Campos</button>
                     </div> 
                 </div>
                 <div ng-class="{'tab-pane active' : activeTab === 3, 'tab-pane' : activeTab !== 3}">
@@ -247,10 +247,10 @@ and open the template in the editor.
                                 <thead>
                                     <tr>
                                         <th>
-                                            Nombres
+                                            Nombre Completo
                                         </th>
                                         <th>
-                                            Apellidos
+                                            Cédula
                                         </th>
                                         <th>
                                             Dirección
@@ -266,10 +266,10 @@ and open the template in the editor.
                                 <tbody>
                                     <tr ng-repeat="d in despachadoresfiltro">
                                         <td>
-                                            {{d.nombre}}
+                                            {{d.nombre}} {{d.apellido}}
                                         </td>
                                         <td>
-                                            {{d.apellido}}
+                                            {{d.cedula}}
                                         </td>
                                         <td>
                                             {{d.direccion}}
