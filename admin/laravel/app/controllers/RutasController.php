@@ -33,6 +33,7 @@ class RutasController extends \BaseController {
         return Response::json(array('rutas' => $rutas));
     }
 
+    //Metodo que permite asignar rutas a un despachador
     public function postSaveasignacionrutas() {
         $user_id = Input::get("user_id");
         $area_id = Input::get("area_id");
@@ -42,7 +43,7 @@ class RutasController extends \BaseController {
         $time = time();
         $fecharegistro = date("Y-m-d H:i:s", $time);
 
-//Insertar el registro de la asignacion del despachador a la ruta(s)
+        //Insertar el registro de la asignacion del despachador a la ruta(s)
         //verificamos que el registro no se encuentre en la BD
         $sql = "select count(*) conteo from gs_despachador_ruta where desp_id = " . $despachador_id . " and area_id = " . $area_id
                 . " and route_id = " . $route_id;
@@ -69,13 +70,42 @@ class RutasController extends \BaseController {
         }
     }
 
+    //MEtodo que carga las rutas que el despachador tiene asignadas por area
     public function getRutasdespachador() {
         $data = Input::all();
-        $sql = "select dr.route_id, ur.route_name from gs_despachador_ruta dr "
-                . " join gs_info_despachador i ON dr.desp_id = i.id"
-                . " join gs_user_routes ur ON dr.route_id = ur.route_id"
-                . " where i.user_id = " . $data["user_id"]
-                . ";";
+        $sql = "select * from gs_info_despachador where user_id = " . $data["user_id"];
+        $result = DB::select($sql);
+        if (count($result) > 0) {
+            $sql = "select dr.route_id, ur.route_name from gs_despachador_ruta dr "
+                    . " left join gs_user_routes ur ON dr.route_id = ur.route_id"
+                    . " where dr.desp_id = " . $result[0]->id
+                    . " and dr.area_id = " . $data["area_id"];
+        } else {
+            return;
+        }
+
+        try {
+            DB::beginTransaction();
+            $rutas = DB::select($sql);
+            DB::commit();
+            return Response::json(array('rutas' => $rutas));
+        } catch (Exception $e) {
+            return Response::json(array('mensaje' => "No se pudo cargar los registro de la BD: " . $e, 'error' => true));
+        }
+    }
+
+    public function getRutasxdespachadorid() {
+        $data = Input::all();
+        $sql = "select * from gs_info_despachador where user_id = " . $data["user_id"];
+        $result = DB::select($sql);
+        if (count($result) > 0) {
+            $sql = "select dr.route_id, ur.route_name from gs_despachador_ruta dr "
+                    . " left join gs_user_routes ur ON dr.route_id = ur.route_id"
+                    . " where dr.desp_id = " . $result[0]->id;
+        } else {
+            return;
+        }
+
         try {
             DB::beginTransaction();
             $rutas = DB::select($sql);
@@ -210,7 +240,7 @@ class RutasController extends \BaseController {
         $data = Input::all();
         $sql = "delete from gs_despachador_ruta where desp_id = " . $data["despachador_id"] . " and area_id = " . $data["area_id"]
                 . " and route_id = " . $data["route_id"];
-        
+
         try {
             DB::beginTransaction();
             DB::delete($sql);

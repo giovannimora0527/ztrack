@@ -362,6 +362,9 @@ angular.module('ztrack').controller('AdminDespachosController', function ($rootS
                     if (result.esta) {
                         toastr.warning(result.mensaje, "Advertencia");
                     }
+                    else{
+                        toastr.success("La cédula no se encuentra registrada.","OK");
+                    }
                 });
     };
     
