@@ -15,13 +15,60 @@ and open the template in the editor.
 </div>
 <div class="page-header">
     <h1>
-       Perfil de Usuario
+        Perfil de Usuario
     </h1>
 </div><!-- /.page-header -->
 
 <div class="row">
-    <div class="col-xs-12">
-      
+    <div class="col-xs-12">      
         <!-- PAGE CONTENT ENDS -->
+        <table class="table table-bordered table-condensed table-responsive col-md-8">
+            <tr>                
+                <td colspan="2">
+                    Empresa
+                </td>
+                <td colspan="2">
+                    <label>{{user.name}}</label>
+                </td>                
+            </tr> 
+            <tr>
+                <td>
+                    Usuario Logueo
+                </td>
+                <td>
+                    {{user.username}}
+                </td>
+                <td>
+                    Email
+                </td>
+                <td>
+                    {{user.email}}
+                </td>                
+            </tr> 
+            <tr>
+                <td>
+                    Perfil
+                </td>
+                <td>
+                    {{user.profile}}
+                </td>
+                <td>
+                    Expiración de la cuenta
+                </td>
+                <td>
+                    {{user.account_expire_dt}}
+                </td>                
+            </tr>
+            <tr>
+                <td colspan="4" align="center">                   
+                        <button class="btn btn-primary" title="Editar" data-toggle="modal" data-target="#editarInfo" ng-click="cargarModal(user)">
+                            <i class="ace-icon fa fa-edit"></i> Editar
+                        </button> 
+                        <button class="btn btn-default" title="Cancelar" ng-click="cancelar()"> 
+                            <i class="ace-icon fa fa-trash-o"></i> Cancelar
+                        </button> 
+                </td>
+            </tr>
+        </table>
     </div><!-- /.col -->
 </div><!-- /.row -->

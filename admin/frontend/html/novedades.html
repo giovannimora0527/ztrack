@@ -298,10 +298,7 @@ and open the template in the editor.
                                                     </td>
                                                     <td>
                                                         Novedad  
-                                                    </td>
-                                                    <td>
-                                                        Despachador Encargado 
-                                                    </td>
+                                                    </td>                                                   
                                                     <td>
                                                         Fecha y Hora de Registro
                                                     </td>
@@ -309,34 +306,32 @@ and open the template in the editor.
                                                         Estado
                                                     </td>
                                                     <td>
-                                                        Acción
+                                                        Fecha Solución
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td>
-                                                        <input class="form-control"  ng-model="filtro.filtrovehiculo" />  
-                                                    </td>
-                                                    <td>
-                                                        <select class="form-control" ng-model="filtro.filtronovedad" >
-                                                            <option value="" disabled selected>Seleccione una novedad</option>
+                                                        <select id="selectveh" class="form-control" ng-model="filtro.vehiculo" ng-options="veh.name for veh in vehiculosnovedad track by veh.name" onchange="bloquear()" ng-change="filtrarregistros()">                                           
+                                                            <option value="" selected disabled>Seleccionar</option>                                                
                                                         </select>  
                                                     </td>
                                                     <td>
-                                                        <select class="form-control" ng-model="filtro.filtrodespachador" >
-                                                            <option value="" disabled selected>Seleccione un despachador</option>
+                                                        <select class="form-control" ng-model="filtro.novedad" ng-options="nov.descripcion for nov in novedades track by nov.descripcion" ng-change="filtrarregistros()">
+                                                            <option value="" selected disabled>Seleccione una opción</option>
                                                         </select> 
+                                                    </td>                                                    
+                                                    <td>
+                                                        <input class="form-control date-picker" ng-model="filtro.filtrofecha" id="id-fecha" type="text" data-date-format="yyyy-mm-dd" placeholder="yyyy-mm-dd" ng-change="filtrarregistros()"/>
                                                     </td>
                                                     <td>
-                                                        <input class="form-control date-picker" ng-model="filtro.filtrofecha" id="id-fecha" type="text" data-date-format="yyyy-mm-dd" placeholder="yyyy-mm-dd"/>
-                                                    </td>
-                                                    <td>
-                                                        <select class="form-control" ng-model="filtro.filtroestado">
-                                                            <option selected value="0">Pendientes</option>
+                                                        <select class="form-control" ng-model="filtro.filtroestado" ng-change="filtrarregistros()">
+                                                            <option selected value="">Seleccione una opción</option>
+                                                            <option value="0">Pendientes</option>
                                                             <option value="1">Solucionado</option>
                                                         </select>
                                                     </td>
                                                     <td>
-                                                        <button class="btn btn-primary" ng-click="filtrarregistros()">Filtrar</button> 
+                                                        <input class="form-control date-picker" ng-model="filtro.fechasolucion" id="id-fecha" type="text" data-date-format="yyyy-mm-dd" ng-change="filtrarregistros()" placeholder="yyyy-mm-dd" />                                                        
                                                     </td>
                                                 </tr>
                                             </thead>
@@ -347,10 +342,7 @@ and open the template in the editor.
                                                     </td>
                                                     <td>
                                                         {{nov.descripcion}}  
-                                                    </td>
-                                                    <td>
-                                                        {{nov.nombre}} {{nov.apellido}} 
-                                                    </td>
+                                                    </td>                                                  
                                                     <td>
                                                         {{nov.fecha_registro}}
                                                     </td>
@@ -358,7 +350,7 @@ and open the template in the editor.
                                                         {{nov.estado}}
                                                     </td>
                                                     <td>
-
+                                                        {{nov.fecha_solucion}}
                                                     </td>
                                                 </tr>
                                             </tbody>

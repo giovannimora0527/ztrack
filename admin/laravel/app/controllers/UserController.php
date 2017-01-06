@@ -92,8 +92,19 @@ class UserController extends \BaseController {
      * @return Response
      */
     public function getUser() {
-        $user_id = Auth::user()->id;
-        return Response::json(array('user' => User::find($user_id)));
+        $data = Input::all();
+        $sql = "select name, username, account_expire_dt, 
+                    CASE 
+                        WHEN profile_id = 1 THEN 'Administrador'
+                        ELSE 'Despachador'
+                        END AS profile, 
+                    CASE 
+                        WHEN email = '' || null THEN 'N/A'
+                        ELSE email
+                        END AS email "
+                . " from gs_users where id = " . $data["user_id"];
+        $user = DB::select($sql);
+        return Response::json(array('user' => $user[0]));
     }
 
     public function postPassword() {

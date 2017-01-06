@@ -67,11 +67,15 @@ class NovedadController extends \BaseController {
         }
         $countfilter = 0;
         //Filtrar pendiente por el usuario que creo las novedades
-        $sql = "SELECT d.nombre, d.apellido, n.descripcion, rn.id, rn.vehiculo_id, gob.name, rn.fecha_registro,
+        $sql = "SELECT d.nombre, d.apellido, n.descripcion, rn.id, rn.vehiculo_id, gob.name, rn.fecha_registro, 
                  CASE 
                         WHEN rn.estado = 0 THEN 'Pendiente'
                         ELSE 'Solucionado'
-                        END AS estado
+                        END AS estado,
+                 CASE 
+                        WHEN rn.fecha_solucion = '0000-00-00 00:00:00' THEN 'N/R'
+                        ELSE rn.fecha_solucion
+                        END AS fecha_solucion
                 FROM registro_novedades rn
                 JOIN gs_info_despachador d ON d.user_id = rn.despachador_id
                 JOIN novedades n ON rn.novedad_id = n.novedad_id  
@@ -111,6 +115,7 @@ class NovedadController extends \BaseController {
         $sql = "update registro_novedades set "
                 . "estado = 1"
                 . ", descripcion = '" . strtoupper($data["descripcion"])
+                . "', fecha_solucion = (SELECT NOW())"
                 . "' where id = " . $data["id"]
         ;
         try {
@@ -140,5 +145,19 @@ class NovedadController extends \BaseController {
             return Response::json(array('mensaje' => "No se puede actualizar la novedad. Contacte al administrador de sistema. " . $e, 'error' => true, 'success' => false));
         }
     }
+    
+    public function getVehiculosnovedades(){
+       $data = Input::all();
+       $sql = "select distinct guo.object_id, gob.name  "
+               . "from registro_novedades rn "
+               . "join gs_user_objects guo ON guo.object_id = rn.vehiculo_id "
+               . "join gs_objects gob ON gob.imei = guo.imei "
+               . "where rn.despachador_id = " .$data["user_id"] 
+               . ";"
+               ;
+       $results =  DB::select($sql);
+       return Response::json(array('success' => true, 'vehiculosnovedad' => $results));
+    }
+    
 
 }

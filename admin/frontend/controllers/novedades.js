@@ -7,7 +7,7 @@ var ztrack = angular.module('ztrack');
 ztrack.controller('NovedadesController', function ($rootScope, $scope, AuthService, SessionService, $state, QueriesService, toastr) {
     $scope.title = "Registro de Novedades";
     $scope.activeTab = 1;
-    cargarAreas();
+    cargarAreas();    
     $scope.novedadesselect = [];
     $scope.hayResultados = false;
     $scope.hayNovedades = false;
@@ -21,7 +21,7 @@ ztrack.controller('NovedadesController', function ($rootScope, $scope, AuthServi
            $scope.limpiarCamposFilter();
         }
         if (tab === 3) {
-           $scope.limpiarCamposFilter();
+           $scope.limpiarCamposFilter();           
         }
 
     };
@@ -201,6 +201,8 @@ ztrack.controller('NovedadesController', function ($rootScope, $scope, AuthServi
                     $scope.novedadesregistradas = result.novedades;
                     if ($scope.novedadesregistradas.length > 0) {
                         toastr.success("Información cargada con éxito.", "OK");
+                        cargarVehiculosXnovedades();
+                        $scope.cargarNovedades();
                     } else {
                         toastr.warning("No hay resultados con el criterio de búsqueda.", "Advertencia");
                     }
@@ -249,17 +251,50 @@ ztrack.controller('NovedadesController', function ($rootScope, $scope, AuthServi
        }
        if($scope.activeTab === 3){
            if($scope.filtro !== undefined){
-//               console.log($scope.filtro);
-//               console.log($scope.novedadesregistradas);
-               if($scope.filtro.filtroestado !== undefined){
-                   if($scope.filtro.filtroestado === 0){
-                     var index = $scope.novedadesregistradas.indexOf("Solucionado");
-                     console.log("El indice es: " + index);
-                   }
-                   
+               var filtros = [];
+               var i = 0;
+               if($scope.filtro.vehiculo !== undefined){
+                  var obj = {
+                      vehiculo :  $scope.filtro.vehiculo.object_id,
+                      user_id: localStorage['ztrack.despachador_id']
+                  };
+                  filtros[i] =  obj;
+                  i++;
                }
-               
+               if($scope.filtro.novedad !== undefined){
+                  var obj = {
+                      novedad :  $scope.filtro.novedad.novedad_id,
+                      user_id: localStorage['ztrack.despachador_id']
+                  };
+                  filtros[i] =  obj;
+                  i++;
+               }
+               if($scope.filtro.filtrofecha !== undefined){
+                  var obj = {
+                      fecha :  $scope.filtro.filtrofecha,
+                      user_id: localStorage['ztrack.despachador_id']
+                  };
+                  filtros[i] =  obj;
+                  i++;
+               }
+               if($scope.filtro.filtroestado !== undefined){
+                  var obj = {
+                      estado :  $scope.filtro.filtroestado,
+                      user_id: localStorage['ztrack.despachador_id'],
+                  };
+                  filtros[i] =  obj;
+                  i++;
+               } 
+               if($scope.filtro.fechasolucion !== undefined){
+                  var obj = {
+                      fecha :  $scope.filtro.fechasolucion,
+                      user_id: localStorage['ztrack.despachador_id']
+                  };
+                  filtros[i] =  obj;
+                  i++;
+               }
            }
+           console.log(filtros);
        } 
        else{
            
@@ -308,14 +343,27 @@ ztrack.controller('NovedadesController', function ($rootScope, $scope, AuthServi
                     else{
                       toastr.error(result.mensaje, "Error");   
                     }
-                });
-       
+                });       
     };
     
     $scope.cerrarModal = function(){
         $scope.selectnovedad = {};
     };
+    
+    
+    function cargarVehiculosXnovedades(){
+       $params = {
+          user_id: localStorage['ztrack.despachador_id'] 
+       };
+       QueriesService.executeRequest('GET', '../laravel/public/novedades/vehiculosnovedades', null, $params)
+                .then(function (result) {
+                    if(result.success){                       
+                      $scope.vehiculosnovedad = result.vehiculosnovedad;                        
+                    } 
+                }); 
+    }
 
+    
 
 
 
