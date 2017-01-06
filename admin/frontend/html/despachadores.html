@@ -51,61 +51,71 @@ and open the template in the editor.
                             <form class="form-horizontal" role="form">
                                 <table class="table-bordered table-condensed table-responsive col-md-12">
                                     <tr>
-                                        <td colspan="4" align="center">
-                                            <h4 class="smaller blue">Datos Personales</h4> 
+                                        <td colspan="4" class="col-md-12" >
+                                            <h4 class="smaller blue" align="center">Datos Personales</h4> 
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td class="col-md-2" align="center">
+                                        <td class="col-md-2">
+                                            <label> Cédula </label>                                            
+                                        </td>
+                                        <td class="col-md-4">
+                                            <input type="text" placeholder="Cédula" class="form-control" ng-model="despachador.cedula"/>
+                                        </td> 
+                                        <td colspan="2" class="col-md-6" align="center">
+                                            <button class="btn btn-primary" ng-click="validarDocumento()" >Validar Documento</button> 
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-2">
                                             <label> Nombres </label> 
                                         </td>
                                         <td class="col-md-4">
                                             <input type="text" placeholder="Nombre Despachador" class="form-control" ng-model="despachador.nombre"/>
                                         </td>
-                                        <td class="col-md-2" align="center">
+                                        <td class="col-md-2"> 
                                             <label> Apellidos </label> 
                                         </td>
                                         <td class="col-md-4">
                                             <input type="text" placeholder="Apellidos Despachador" class="form-control" ng-model="despachador.apellidos"/>
                                         </td>
-                                    </tr> 
+                                    </tr>                                     
                                     <tr>                                    
-                                        <td  align="center">
+                                        <td class="col-md-2">
                                             <label> Dirección </label> 
                                         </td>
-                                        <td>
+                                        <td class="col-md-4">
                                             <input type="text"  placeholder="Dirección" class="form-control" ng-model="despachador.direccion"/>
                                         </td>
-                                        <td  align="center">
+                                        <td class="col-md-2">
                                             <label> Teléfono o Celular</label> 
                                         </td>
-                                        <td>
+                                        <td class="col-md-4">
                                             <input type="text" placeholder="Teléfono" class="form-control" ng-model="despachador.telefono"/>
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td colspan="4" align="center">
-                                            <h4 class="smaller blue">Datos de inicio de sesión</h4>
+                                        <td colspan="4">
+                                            <h4 class="smaller blue" align="center">Datos de inicio de sesión</h4>
                                         </td>
                                     </tr>
                                     <tr>                                    
-                                        <td  align="center">
+                                        <td class="col-md-2">
                                             <label>Usuario </label> 
                                         </td>
-                                        <td>
+                                        <td class="col-md-4">
                                             <input type="text" placeholder="Nombre de Usuario" class="form-control" ng-model="despachador.username"/>
                                         </td>
-                                        <td  align="center">
+                                        <td class="col-md-2">
                                             <label> Contraseña </label> 
                                         </td>
-                                        <td>
+                                        <td class="col-md-4">
                                             <input type="password" placeholder="Contraseña" class="form-control" ng-model="despachador.password"/>
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td colspan="4" align="center">
-                                            <br><br>
-                                            <div class="btn-group">
+                                        <td colspan="2" class="col-md-6">                                            
+                                            <div class="btn-group" align="center">
                                                 <button type="button" class="btn btn-warning btn-white btn-primary" ng-click="cancelarDespachador()"> 
                                                     <i class="ace-icon fa fa-times align-top bigger-125"></i>
                                                     Cancelar
@@ -143,7 +153,7 @@ and open the template in the editor.
                                     Seleccion de Área 
                                 </td>
                                 <td>
-                                    <select class="form-control" ng-model="areaselect.id" ng-change="onChangeSelectedArea()">                                        
+                                    <select id="areaselect2" class="form-control" ng-model="areaselect.id" ng-change="onChangeSelectedArea()">                                        
                                         <option value="" selected disabled>Seleccionar</option>
                                         <option ng-repeat="ar in areas" value="{{ar.id}}">{{ar.name}}</option>
                                     </select>
@@ -163,12 +173,11 @@ and open the template in the editor.
                                                     <option value="" disabled selected>Seleccione una opción</option>
                                                 </select>
                                                 <span class="input-group-btn">
-                                                    <button class="btn btn-primary" type="button" ng-click="seleccionarRuta()">
+                                                    <button class="btn btn-primary" type="button" ng-click="asignarRuta(rutaselect.route_id)">
                                                         <i class="ace-icon fa fa-arrow-right bigger-110"></i>                                                       
                                                     </button>
                                                 </span>
                                             </div>
-
                                         </div>
                                     </div>
                                 </div>
@@ -186,7 +195,7 @@ and open the template in the editor.
                                                         <div class="dd-handle">
                                                             <i class="pull-left bigger-130 ace-icon fa fa-map-marker blue"></i>
                                                             {{it.route_name}}
-                                                            <a href="" ng-click="deleteRuta(it)"><i class="pull-right bigger-130 ace-icon fa fa-times blue"></i></a>
+                                                            <a href="" ng-click="deleteRuta(it.route_id)"><i class="pull-right bigger-130 ace-icon fa fa-times blue"></i></a>
                                                         </div>
                                                     </li>
                                                 </ol>
@@ -196,22 +205,8 @@ and open the template in the editor.
                                 </div>
                             </div>                            
                         </div>
-                        <br><br>
-                        <div class="row">
-                            <div class="col-xs-12 col-sm-12" align="right">
-                                <div class="btn-group">
-                                    <button type="button" class="btn btn-warning btn-white btn-primary" ng-click="cancelar()" onclick="cancel()"> 
-                                        <i class="ace-icon fa fa-times align-top bigger-125"></i>
-                                        Cancelar
-                                    </button>
-                                    <button type="button" class="btn btn-info btn-white btn-primary" ng-click="asignarRuta()">
-                                        <i class="ace-icon fa fa-save align-top bigger-125"></i>
-                                        Guardar                                                    
-                                    </button>
-
-                                </div>    
-                            </div>
-                        </div>
+                        <br><br> 
+                        <button class="btn btn-default" ng-click="cancelar()">Limpiar Campos</button>
                     </div> 
                 </div>
                 <div ng-class="{'tab-pane active' : activeTab === 3, 'tab-pane' : activeTab !== 3}">
@@ -232,7 +227,7 @@ and open the template in the editor.
                             </tr>
                             <tr>
                                 <td>
-                                   Ruta 
+                                    Ruta 
                                 </td>
                                 <td>
                                     <select id="selectRuta" ng-model="rutaselect" class="form-control" ng-options="r.route_name for r in rutas track by r.route_name " ng-change="hasSelectedFilterRuta()">
@@ -252,10 +247,10 @@ and open the template in the editor.
                                 <thead>
                                     <tr>
                                         <th>
-                                            Nombres
+                                            Nombre Completo
                                         </th>
                                         <th>
-                                            Apellidos
+                                            Cédula
                                         </th>
                                         <th>
                                             Dirección
@@ -271,10 +266,10 @@ and open the template in the editor.
                                 <tbody>
                                     <tr ng-repeat="d in despachadoresfiltro">
                                         <td>
-                                            {{d.nombre}}
+                                            {{d.nombre}} {{d.apellido}}
                                         </td>
                                         <td>
-                                            {{d.apellido}}
+                                            {{d.cedula}}
                                         </td>
                                         <td>
                                             {{d.direccion}}
@@ -317,6 +312,30 @@ and open the template in the editor.
             <div class="modal-body"> 
                 A continuación rellene la información que es obligatoria (*).
                 <table class="table table-bordered table-hover table-responsive table-striped">
+                    <tr> 
+                        <td>
+                            (*) <label>Nombres</label>                            
+                        </td>
+                        <td>
+                            <input type="text" class="form-control" ng-model="despachadorseleccionado.nombre" /> 
+                        </td>
+                    </tr>
+                    <tr> 
+                        <td>
+                            (*) <label>Apellidos</label>                            
+                        </td>
+                        <td>
+                            <input type="text" class="form-control" ng-model="despachadorseleccionado.apellido" /> 
+                        </td>
+                    </tr>
+                    <tr> 
+                        <td>
+                            (*) <label>Cédula</label>                            
+                        </td>
+                        <td>
+                            <input type="text" class="form-control" ng-model="despachadorseleccionado.cedula" /> 
+                        </td>
+                    </tr>
                     <tr> 
                         <td>
                             (*) <label>Dirección</label>                            

@@ -8,6 +8,7 @@
 
 class DespachadorController extends \BaseController {
 
+    //Metodo que permite agregar un despachador al sistema
     public function getDespachador() {
         $data = Input::all();
         $sql = "select id, username from gs_users where username = '" . strtolower($data["username"]) . "';";
@@ -44,8 +45,9 @@ class DespachadorController extends \BaseController {
                 DB::commit();
                 $select = "select id, empresa_id from gs_users where username = '" . $data["username"] . "';";
                 $inforesult = DB::select($select);
-                $insertinfo = "insert into gs_info_despachador (user_id, nombre, apellido, direccion, telefono, empresa_id) values ("
+                $insertinfo = "insert into gs_info_despachador (user_id, cedula, nombre, apellido, direccion, telefono, empresa_id) values ("
                         . "'" . $inforesult[0]->id
+                        . "', '" . $data["cedula"]
                         . "', '" . strtoupper($data["nombre"])
                         . "', '" . strtoupper($data["apellidos"])
                         . "', '" . strtoupper($data["direccion"])
@@ -381,10 +383,14 @@ class DespachadorController extends \BaseController {
     public function postUpdateinfodespachador(){
         $data = Input::all();
         $sql="update gs_info_despachador set "
-                . "direccion = '" . strtoupper($data["direccion"])
+                . "nombre = '" . strtoupper($data["nombre"])
+                . "', apellido = '" . strtoupper($data["apellido"])
+                . "', cedula = '" . $data["cedula"]
+                . "', direccion = '" . strtoupper($data["direccion"])
                 . "', telefono = '" . $data["telefono"]
                 . "' where id = " . $data["id"]
-                . ";";        
+                . ";"; 
+        
         try {
             DB::beginTransaction();
             DB::update($sql);
@@ -420,6 +426,19 @@ class DespachadorController extends \BaseController {
                 return Response::json(array('mensaje' => "No se puede elminar el registro. Contacte con el administrador. Error: " . $e, 'error' => true));
             }          
        }       
+    }
+    
+    
+    public function getBuscarporcedula(){
+       $data = Input::all();
+       $sql = "select count(id) conteo from gs_info_despachador where cedula = " . $data["cedula"];
+       $result = DB::select($sql);
+       if($result[0]->conteo>0){           
+           return Response::json(array('esta' => true, 'mensaje' => "La cédula se encuentra registrada en la BD."));
+       }
+       else{
+          return Response::json(array('esta' => false)); 
+       }
     }
     
     

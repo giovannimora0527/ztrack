@@ -16,15 +16,12 @@ ztrack.controller('NovedadesController', function ($rootScope, $scope, AuthServi
 
 
     $scope.setActiveTab = function (tab) {
-        $scope.activeTab = tab;
-        if (tab === 1) {
-
-        }
+        $scope.activeTab = tab;       
         if (tab === 2) {
-
+           $scope.limpiarCamposFilter();
         }
         if (tab === 3) {
-
+           $scope.limpiarCamposFilter();
         }
 
     };
@@ -47,10 +44,10 @@ ztrack.controller('NovedadesController', function ($rootScope, $scope, AuthServi
 
     function cargarRutas() {
         $params = {
-            user_id: localStorage['ztrack.user_id'],
+            user_id: localStorage['ztrack.despachador_id'],
             area_id: $scope.areaselect.id
         };
-        QueriesService.executeRequest('GET', '../laravel/public/rutas/rutasbyid', null, $params)
+        QueriesService.executeRequest('GET', '../laravel/public/rutas/rutasdespachador', null, $params)
                 .then(function (result) {
                     $scope.rutas = {};
                     $scope.rutas = result.rutas;
@@ -172,26 +169,33 @@ ztrack.controller('NovedadesController', function ($rootScope, $scope, AuthServi
         $scope.areaselect = {};
         $scope.rutaselect = {};
         $scope.fechafilter = "";
+        $scope.novedadesregistradas = {};
     };
 
 
     $scope.filtrar = function () {
         if ($scope.fechafilter !== undefined) {
             $params = {
-                fecha: $scope.fechafilter                
+                user_id: localStorage['ztrack.despachador_id'],
+                fecha: $scope.fechafilter,
+                active_tab : $scope.activeTab
             };
         }       
         if ($scope.vehiculofilter !== undefined && $scope.vehiculofilter !== null) {
             $params = {
-                vehiculoid: $scope.vehiculofilter.object_id
+                user_id: localStorage['ztrack.despachador_id'],
+                vehiculoid: $scope.vehiculofilter.object_id,
+                active_tab : $scope.activeTab
             };
         }  
         if (($scope.vehiculofilter !== undefined && $scope.vehiculofilter !== null) && $scope.fechafilter !== undefined) {
             $params = {
+                user_id: localStorage['ztrack.despachador_id'],
                 fecha: $scope.fechafilter,
-                vehiculoid: $scope.vehiculofilter.object_id
+                vehiculoid: $scope.vehiculofilter.object_id,
+                active_tab : $scope.activeTab
             };
-        }        
+        }
         QueriesService.executeRequest('GET', '../laravel/public/novedades/novedadesavehiculoxfiltro', null, $params)
                 .then(function (result) {
                     $scope.novedadesregistradas = result.novedades;
@@ -235,6 +239,81 @@ ztrack.controller('NovedadesController', function ($rootScope, $scope, AuthServi
                        $('#editarSolucionNovedad').modal('hide');
                     }                    
                 });
+    };
+    
+    
+    $scope.filtrarregistros = function(){
+       if($scope.novedadesregistradas.length === 0){
+           toastr.warning("No se puede filtrar. No hay resultados encontrados","Advertencia");
+           return;
+       }
+       if($scope.activeTab === 3){
+           if($scope.filtro !== undefined){
+//               console.log($scope.filtro);
+//               console.log($scope.novedadesregistradas);
+               if($scope.filtro.filtroestado !== undefined){
+                   if($scope.filtro.filtroestado === 0){
+                     var index = $scope.novedadesregistradas.indexOf("Solucionado");
+                     console.log("El indice es: " + index);
+                   }
+                   
+               }
+               
+           }
+       } 
+       else{
+           
+       }       
+    };   
+    
+    
+    $scope.cargarModalEditar = function(novedad){
+        $scope.novedadeditar = {            
+            id : novedad.id,
+            descripcion : novedad.descripcion,
+            name: novedad.name
+        };
+        $scope.cargarNovedades();
+    };
+    
+    $scope.actualizarNovedad = function(data){
+//       console.log(data);
+       if(data.fecha === undefined){
+         toastr.warning("La fecha es un campo obligatorio. Intente de nuevo","Advertencia");  
+         return;
+       }
+       if(data.hora === undefined){
+         toastr.warning("La hora es un campo obligatorio. Intente de nuevo","Advertencia");  
+         return;
+       }
+       if(data.novedad === undefined){
+         toastr.warning("La novedad es un campo obligatorio. Intente de nuevo","Advertencia");  
+         return;
+       }
+       
+       $params = {
+           id : $scope.novedadeditar.id,
+           novedad_id : data.novedad.novedad_id,
+           fecha : data.fecha,
+           hora : data.hora
+       };
+       
+       QueriesService.executeRequest('POST', '../laravel/public/novedades/updatenovedad', $params, null)
+                .then(function (result) {
+                    if(result.success){                       
+                       $('#actualizarNovedad').modal('hide');                       
+                       $scope.cerrarModal();
+                       $scope.filtrar();
+                    }   
+                    else{
+                      toastr.error(result.mensaje, "Error");   
+                    }
+                });
+       
+    };
+    
+    $scope.cerrarModal = function(){
+        $scope.selectnovedad = {};
     };
 
 

@@ -87,7 +87,7 @@ ztrack.controller('DespachadoresController', function ($rootScope, $scope, AuthS
         $params = {
             user_id: localStorage['ztrack.despachador_id']
         };
-        QueriesService.executeRequest('GET', '../laravel/public/rutas/rutasdespachador', null, $params)
+        QueriesService.executeRequest('GET', '../laravel/public/rutas/rutasxdespachadorid', null, $params)
                 .then(function (result) {
                     $scope.rutas = result.rutas;
                 });

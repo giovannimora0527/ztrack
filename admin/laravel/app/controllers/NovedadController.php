@@ -32,18 +32,12 @@ class NovedadController extends \BaseController {
     }
 
     public function postNovedadesavehiculo() {
-        $data = Input::all();        
-        $sql = "select id from gs_info_despachador where user_id = " . $data["despachador_id"];
-        $result = DB::select($sql);
-        if(count($result)== 0){
-            return;
-        }
-        
+        $data = Input::all();
         $sql = "";
         for ($i = 0; $i < count($data["novedades_list"]); $i++) {
             $sql = "insert into registro_novedades(vehiculo_id, despachador_id, novedad_id, fecha_registro) values ("
                     . "" . $data["vehiculo_id"]
-                    . "," . $result[0]->id
+                    . "," . $data["despachador_id"]
                     . "," . $data["novedades_list"][$i]["novedad_id"]
                     . ", (select now())"
                     . ");";
@@ -51,77 +45,100 @@ class NovedadController extends \BaseController {
                 DB::beginTransaction();
                 DB::insert($sql);
                 DB::commit();
-                if($i == intval(count($data["novedades_list"])-1)){
-                   return Response::json(array('success' => true, 'mensaje' => "Las novedades han sido registradas con éxito."));   
-                }                
+                if ($i == intval(count($data["novedades_list"]) - 1)) {
+                    return Response::json(array('success' => true, 'mensaje' => "Las novedades han sido registradas con éxito."));
+                }
             } catch (Exception $e) {
                 DB::rollback();
                 return Response::json(array('mensaje' => "No se pueden registrar la(s) novedad(es). Contacte al administrador de sistema. " . $e, 'error' => true));
             }
         }
     }
-    
-    public function getNovedadesavehiculoxfiltro(){
-        $data = Input::all(); 
+
+    public function getNovedadesavehiculoxfiltro() {
+        $data = Input::all();
         $hasfecha = false;
         $hasvehiculo = false;
-        if($data["fecha"] != ""){           
-           $hasfecha = true; 
+        if ($data["fecha"] != "") {
+            $hasfecha = true;
         }
-        if(isset($data["vehiculoid"])){
-          $hasvehiculo = true;  
+        if (isset($data["vehiculoid"])) {
+            $hasvehiculo = true;
         }
         $countfilter = 0;
-        $sql = "SELECT d.nombre, d.apellido, n.descripcion, rn.id, rn.vehiculo_id, gob.name, rn.fecha_registro
+        //Filtrar pendiente por el usuario que creo las novedades
+        $sql = "SELECT d.nombre, d.apellido, n.descripcion, rn.id, rn.vehiculo_id, gob.name, rn.fecha_registro,
+                 CASE 
+                        WHEN rn.estado = 0 THEN 'Pendiente'
+                        ELSE 'Solucionado'
+                        END AS estado
                 FROM registro_novedades rn
-                JOIN gs_info_despachador d ON rn.despachador_id = d.id
+                JOIN gs_info_despachador d ON d.user_id = rn.despachador_id
                 JOIN novedades n ON rn.novedad_id = n.novedad_id  
                 JOIN gs_user_objects guo ON rn.vehiculo_id = guo.object_id
                 JOIN gs_objects gob ON guo.imei = gob.imei
-                "; 
-        if($hasvehiculo){
-            if($countfilter == 0){
-               $sql .= " WHERE rn.vehiculo_id = " .$data["vehiculoid"]; 
-               $countfilter++;
-            }
-            else{
-               $sql .= " AND rn.vehiculo_id = " .$data["vehiculoid"]; 
-               $countfilter++;
+                ";
+        if ($hasvehiculo) {
+            if ($countfilter == 0) {
+                $sql .= " WHERE rn.vehiculo_id = " . $data["vehiculoid"];
+                $countfilter++;
+            } else {
+                $sql .= " AND rn.vehiculo_id = " . $data["vehiculoid"];
+                $countfilter++;
             }
         }
-        if($hasfecha){
-            if($countfilter == 0){
-               $sql .= " WHERE rn.fecha_registro LIKE '%" .$data["fecha"] . "%'"; 
-               $countfilter++;
+        if ($hasfecha) {
+            if ($countfilter == 0) {
+                $sql .= " WHERE rn.fecha_registro <= '" . $data["fecha"] . " 23:59:59'";
+                $countfilter++;
+            } else {
+                $sql .= " AND rn.fecha_registro <= '" . $data["fecha"] . " 23:59:59'";
+                $countfilter++;
             }
-            else{
-               $sql .= " AND rn.fecha_registro LIKE '%" .$data["fecha"] . "%'"; 
-               $countfilter++;
-            }
-        }        
-        $sql .= ";";
+        }
+        if ($data["active_tab"] == 2) {
+            $sql .= " and rn.estado = 0 ";
+        }
+        $sql .= " and rn.despachador_id = " . $data["user_id"];
+
         $novedades = DB::select($sql);
-        return Response::json(array('novedades' => $novedades));  
+        return Response::json(array('novedades' => $novedades));
     }
-    
-    
-    public function postSolucionarnovedad(){
+
+    public function postSolucionarnovedad() {
         $data = Input::all();
 //        registro_novedades
         $sql = "update registro_novedades set "
                 . "estado = 1"
                 . ", descripcion = '" . strtoupper($data["descripcion"])
                 . "' where id = " . $data["id"]
-                ;       
+        ;
         try {
-                DB::beginTransaction();
-                DB::update($sql);
-                DB::commit();                
-                return Response::json(array('success' => true, 'mensaje' => "La novedad ha sido solucionada con éxito."));
-            } catch (Exception $e) {
-                DB::rollback();
-                return Response::json(array('mensaje' => "No se puede registrar la solución. Contacte al administrador de sistema. " . $e, 'error' => true));
-            }
+            DB::beginTransaction();
+            DB::update($sql);
+            DB::commit();
+            return Response::json(array('success' => true, 'mensaje' => "La novedad ha sido solucionada con éxito."));
+        } catch (Exception $e) {
+            DB::rollback();
+            return Response::json(array('mensaje' => "No se puede registrar la solución. Contacte al administrador de sistema. " . $e, 'error' => true));
+        }
+    }
+
+    public function postUpdatenovedad() {
+        $data = Input::all();
+        $sql = "update registro_novedades set "
+                . "novedad_id = " . $data["novedad_id"]
+                . ", fecha_registro = '" . $data["fecha"] . " " . $data["hora"] . "'"
+                . " where id = " . $data["id"];        
+        try {
+            DB::beginTransaction();
+            DB::update($sql);
+            DB::commit();
+            return Response::json(array('success' => true, 'mensaje' => "La novedad ha sido actualizada con éxito."));
+        } catch (Exception $e) {
+            DB::rollback();
+            return Response::json(array('mensaje' => "No se puede actualizar la novedad. Contacte al administrador de sistema. " . $e, 'error' => true, 'success' => false));
+        }
     }
 
 }

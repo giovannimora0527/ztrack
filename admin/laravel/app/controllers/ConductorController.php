@@ -56,16 +56,16 @@ class ConductorController extends \BaseController {
         $sql = "update gs_user_object_drivers set "
                 . " driver_idn = '" . $data["driver_idn"]
                 . "', driver_name = '" . strtoupper($data["driver_name"]);
-        
-        if(isset($data["driver_assign_id"])){
-           $sql .= "', driver_assign_id = '" . $data["driver_assign_id"];
+
+        if (isset($data["driver_assign_id"])) {
+            $sql .= "', driver_assign_id = '" . $data["driver_assign_id"];
         }
-         $sql  .= "', driver_address = '" . strtoupper($data["driver_address"])
+        $sql .= "', driver_address = '" . strtoupper($data["driver_address"])
                 . "', driver_phone = '" . $data["driver_phone"]
                 . "', driver_email = '" . $data["driver_email"]
                 . "', driver_desc = '" . $data["driver_desc"]
-                . "' where driver_id = " . $data["driver_id"];         
-        
+                . "' where driver_id = " . $data["driver_id"];
+
         try {
             DB::beginTransaction();
             DB::update($sql);
@@ -104,47 +104,83 @@ class ConductorController extends \BaseController {
         $sqlcount = "select count(d.driver_id) conteo
                 from gs_user_object_drivers d 
                 left join conductor_estado ce ON ce.id = d.estado_id
-                left join gs_user_objects gu ON gu.driver_id = d.driver_id
-                left join gs_gruposrutas gr ON gr.group_id = gu.group_id
-                left join gs_user_routes r ON r.route_id = gr.route_id
-                left join gs_user_object_groups g ON g.group_id = gu.group_id
-                where d.user_id = '" . $data["user_id"] . "' ";
-        
+                left join gs_user_objects gu ON gu.driver_id = d.driver_id                
+                ";
+
         $sql = "select d.driver_id, d.driver_name, d.driver_address, d.driver_assign_id, d.driver_idn, d.driver_phone, d.driver_email, d.driver_desc,
-                d.estado_id, ce.descripcion, g.group_name, r.route_name
+                d.estado_id, ce.descripcion 
                 from gs_user_object_drivers d 
                 left join conductor_estado ce ON ce.id = d.estado_id
-                left join gs_user_objects gu ON gu.driver_id = d.driver_id
-                left join gs_gruposrutas gr ON gr.group_id = gu.group_id
-                left join gs_user_routes r ON r.route_id = gr.route_id
-                left join gs_user_object_groups g ON g.group_id = gu.group_id
-                where d.user_id = '" . $data["user_id"] . "' ";
+                left join gs_user_objects gu ON gu.driver_id = d.driver_id                
+                ";
+        $cant = 0;
         if (isset($data["ruta"])) {
-            $sql .= "and r.route_id = " . $data["ruta"] . " ";
-            $sqlcount .= "and r.route_id = " . $data["ruta"] . " ";
+            $sql .= "left join gs_gruposrutas gr ON gr.group_id = gu.group_id
+                     left join gs_user_routes r ON r.route_id = gr.route_id
+                     left join gs_user_object_groups g ON g.group_id = gu.group_id ";
+            $sqlcount .= "left join gs_gruposrutas gr ON gr.group_id = gu.group_id
+                     left join gs_user_routes r ON r.route_id = gr.route_id
+                     left join gs_user_object_groups g ON g.group_id = gu.group_id ";
+            if ($cant == 0) {
+                $sql .= "where r.route_id = " . $data["ruta"] . " ";
+                $sqlcount .= "where r.route_id = " . $data["ruta"] . " ";
+                $cant++;
+            } else {
+                $sql .= " and r.route_id = " . $data["ruta"] . " ";
+                $sqlcount .= "and r.route_id = " . $data["ruta"] . " ";
+                $cant++;
+            }
         }
         if (isset($data["nombreconductor"])) {
-            $sql .= "and d.driver_name LIKE '%" . strtoupper($data["nombreconductor"]) . "%' ";
-            $sqlcount .= "and d.driver_name LIKE '%" . strtoupper($data["nombreconductor"]) . "%' ";
+            if ($cant == 0) {
+                $sql .= "where d.driver_name LIKE '%" . strtoupper($data["nombreconductor"]) . "%' ";
+                $sqlcount .= "where d.driver_name LIKE '%" . strtoupper($data["nombreconductor"]) . "%' ";
+                $cant++;
+            } else {
+                $sql .= " and d.driver_name LIKE '%" . strtoupper($data["nombreconductor"]) . "%' ";
+                $sqlcount .= " and d.driver_name LIKE '%" . strtoupper($data["nombreconductor"]) . "%' ";
+                $cant++;
+            }
         }
         if (isset($data["documento"])) {
-            $sql .= "and d.driver_idn = '" . $data["documento"] . "' ";
-            $sqlcount .= "and d.driver_idn = '" . $data["documento"] . "' ";
+            if ($cant == 0) {
+                $sql .= "where d.driver_idn = '" . $data["documento"] . "' ";
+                $sqlcount .= "where d.driver_idn = '" . $data["documento"] . "' ";                
+                $cant++;
+            }
+            else{
+                $sql .= "and d.driver_idn = '" . $data["documento"] . "' ";
+                $sqlcount .= "and d.driver_idn = '" . $data["documento"] . "' ";
+                $cant++;
+            }
         }
         if (isset($data["telefono"])) {
-            $sql .= "and r.driver_phone = '" . $data["telefono"] . "' ";
-            $sqlcount .= "and r.driver_phone = '" . $data["telefono"] . "' ";
+            if ($cant == 0) {
+               $sql .= "where r.driver_phone = '" . $data["telefono"] . "' ";
+               $sqlcount .= "where r.driver_phone = '" . $data["telefono"] . "' ";
+               $cant++;
+            }else{
+               $sql .= "and r.driver_phone = '" . $data["telefono"] . "' ";
+               $sqlcount .= "and r.driver_phone = '" . $data["telefono"] . "' "; 
+               $cant++;
+            }            
         }
-        $sql .= " order by d.driver_name asc";
+        if($cant == 0){
+          $sql .= "where d.user_id = '" . $data["user_id"] . "' order by d.driver_name asc "; 
+          $sqlcount .= "where d.user_id = '" . $data["user_id"] . "' order by d.driver_name asc "; 
+        }
+        else{
+          $sql .= " AND d.user_id = '" . $data["user_id"] . "' order by d.driver_name asc ";
+          $sqlcount .= "AND d.user_id = '" . $data["user_id"] . "' order by d.driver_name asc "; 
+        }        
         $count = DB::select($sqlcount);
         if ($count[0]->conteo > $max) {
-           $sql .= " LIMIT " . $min . "," . $max . ";";
-           $more_results = true;
+            $sql .= " LIMIT " . $min . "," . $max . ";";
+            $more_results = true;
         }
-         
         $result = DB::select($sql);
         return Response::json(array('conductores' => $result, 'min' => intval($min), 'max' => $max - 1, 'count' => $count[0]->conteo,
-                            'moreresults' => $more_results, 'success' => true));
+                    'moreresults' => $more_results, 'success' => true));
     }
 
 }
