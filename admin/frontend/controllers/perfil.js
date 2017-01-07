@@ -58,10 +58,7 @@ ztrack.controller('PerfilController', function ($rootScope, $scope, AuthService,
                     }
                 });
     };
-
-    $scope.cargarModalPass = function (user) {
-
-    };
+    
 
     $scope.limpiarCampos = function () {
         $scope.editinfo = {};

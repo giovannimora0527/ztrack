@@ -170,6 +170,7 @@ ztrack.controller('NovedadesController', function ($rootScope, $scope, AuthServi
         $scope.rutaselect = {};
         $scope.fechafilter = "";
         $scope.novedadesregistradas = {};
+        $scope.filtro = {};
     };
 
 
@@ -251,54 +252,33 @@ ztrack.controller('NovedadesController', function ($rootScope, $scope, AuthServi
        }
        if($scope.activeTab === 3){
            if($scope.filtro !== undefined){
-               var filtros = [];
-               var i = 0;
-               if($scope.filtro.vehiculo !== undefined){
-                  var obj = {
-                      vehiculo :  $scope.filtro.vehiculo.object_id,
-                      user_id: localStorage['ztrack.despachador_id']
-                  };
-                  filtros[i] =  obj;
-                  i++;
-               }
-               if($scope.filtro.novedad !== undefined){
-                  var obj = {
-                      novedad :  $scope.filtro.novedad.novedad_id,
-                      user_id: localStorage['ztrack.despachador_id']
-                  };
-                  filtros[i] =  obj;
-                  i++;
-               }
-               if($scope.filtro.filtrofecha !== undefined){
-                  var obj = {
-                      fecha :  $scope.filtro.filtrofecha,
-                      user_id: localStorage['ztrack.despachador_id']
-                  };
-                  filtros[i] =  obj;
-                  i++;
-               }
-               if($scope.filtro.filtroestado !== undefined){
-                  var obj = {
-                      estado :  $scope.filtro.filtroestado,
-                      user_id: localStorage['ztrack.despachador_id'],
-                  };
-                  filtros[i] =  obj;
-                  i++;
-               } 
-               if($scope.filtro.fechasolucion !== undefined){
-                  var obj = {
-                      fecha :  $scope.filtro.fechasolucion,
-                      user_id: localStorage['ztrack.despachador_id']
-                  };
-                  filtros[i] =  obj;
-                  i++;
-               }
-           }
-           console.log(filtros);
+             $params = {
+                 user_id: localStorage['ztrack.despachador_id'],
+                 tab : 3
+             };             
+           }           
        } 
        else{
-           
-       }       
+           if($scope.filtro !== undefined){
+             $params = {
+                 user_id: localStorage['ztrack.despachador_id'],
+                 tab : 2
+             };             
+           }  
+       } 
+       if($scope.filtro === undefined){
+           return;
+       }  
+       
+       QueriesService.executeRequest('POST', '../laravel/public/novedades/filtrarresultadosnovedad', $scope.filtro, $params)
+                .then(function (result) {
+                    if(result.success){
+                        $scope.novedadesregistradas = result.novedades;                       
+                    }  
+                    else{
+                        toastr.warning("No hay resultados disponibles. Intente de nuevo","Advertencia");
+                    }
+                });
     };   
     
     
@@ -312,7 +292,6 @@ ztrack.controller('NovedadesController', function ($rootScope, $scope, AuthServi
     };
     
     $scope.actualizarNovedad = function(data){
-//       console.log(data);
        if(data.fecha === undefined){
          toastr.warning("La fecha es un campo obligatorio. Intente de nuevo","Advertencia");  
          return;
