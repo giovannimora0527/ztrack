@@ -161,4 +161,39 @@ class UserController extends \BaseController {
     public function getConfigprofile(){
         
     }
+    
+    public function postUpdateinfouser(){
+        $data = Input::all();
+        $sql = "update gs_users set "        
+                . "email = '" .$data["email"]
+                . "', username = '" .$data["username"]
+                . "' where user_id = " . $data["user_id"];        
+        try {
+            DB::beginTransaction();
+            DB::update($sql);
+            DB::commit();
+            return Response::json(array('success' => true, 'mensaje' => "La informacion ha sido actualizada con éxito."));
+        } catch (Exception $e) {
+            DB::rollback();
+            return Response::json(array('mensaje' => "No se puede actualizar la información. Contacte al administrador de sistema. " . $e, 'error' => true, 'success' => false));
+        }
+    }
+    
+    public function postUpdatepassword(){
+        $data = Input::all();
+        $sql = "update gs_users set "        
+                . "password = md5('" .$data["password"]                
+                . "') where id = " . $data["user_id"]; 
+        
+        try {
+            DB::beginTransaction();
+            DB::update($sql);
+            DB::commit();
+            return Response::json(array('success' => true, 'mensaje' => "La contraseña ha sido actualizada con éxito."));
+        } catch (Exception $e) {
+            DB::rollback();
+            return Response::json(array('mensaje' => "No se puede actualizar la contraseña. Contacte al administrador de sistema. " . $e, 'error' => true, 'success' => false));
+        }
+    }
+    
 }

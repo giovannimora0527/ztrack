@@ -159,5 +159,60 @@ class NovedadController extends \BaseController {
        return Response::json(array('success' => true, 'vehiculosnovedad' => $results));
     }
     
+    
+    public function postNovedadnueva(){
+        $data = Input::all();
+        $sql = "insert into novedades (descripcion, user_id) values ("
+                . "'" . strtoupper($data["descripcion"])
+                . "', " . $data["user_id"]
+                . ");";        
+        try {
+            DB::beginTransaction();
+            DB::insert($sql);
+            DB::commit();
+            return Response::json(array('success' => true, 'mensaje' => "La novedad ha sido ingresada con éxito."));
+        } catch (Exception $e) {
+            DB::rollback();
+            return Response::json(array('mensaje' => "No se puede ingresar la novedad. Contacte al administrador de sistema. " . $e, 'error' => true, 'success' => false));
+        }
+    }
+    
+    public function getNovedadesadmin(){
+         $data = Input::all();
+         $sql = "select * from novedades where user_id = " . $data["user_id"];
+         $result = DB::select($sql);
+         return Response::json(array('novedadesregistradas' => $result));
+    }
+    
+    public function postUpdatenovedadadmin(){
+        $data = Input::all();
+        $sql = "update novedades set "
+                . "descripcion = '" . strtoupper($data["descripcion"])
+                . "' where novedad_id = " .$data["novedad_id"];
+        try {
+            DB::beginTransaction();
+            DB::update($sql);
+            DB::commit();
+            return Response::json(array('success' => true, 'mensaje' => "La novedad ha sido actualizada con éxito."));
+        } catch (Exception $e) {
+            DB::rollback();
+            return Response::json(array('mensaje' => "No se puede actualizar la novedad. Contacte al administrador de sistema. " . $e, 'error' => true, 'success' => false));
+        }
+    }
+    
+    public function postDeletenovedad(){
+        $data = Input::all();
+        $sql = "delete from novedades where novedad_id = " . $data["novedad_id"];
+        try {
+            DB::beginTransaction();
+            DB::delete($sql);
+            DB::commit();
+            return Response::json(array('success' => true, 'mensaje' => "La novedad ha sido eliminada con éxito."));
+        } catch (Exception $e) {
+            DB::rollback();
+            return Response::json(array('mensaje' => "No se puede eliminar la novedad. Contacte al administrador de sistema. " . $e, 'error' => true, 'success' => false));
+        }
+    }
+    
 
 }

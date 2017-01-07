@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<div class="breadcrumbs ace-save-state" id="breadcrumbs">
+    <ul class="breadcrumb">
+        <li>
+            <i class="menu icon fa fa-home"></i>
+            <a ui-sref="principal">Inicio</a>
+        </li>
+        <li class="active"><font color="#0B0B3B">{{title}}</font></li>
+    </ul><!-- /.breadcrumb -->    
+</div>
+<br><br>
+<div class="row">
+    <div class="col-xs-12">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="tabbable">
+                    <ul class="nav nav-tabs">
+                        <li ng-class="{'active' : activeTab === 1}"><a href="" ng-click="setActiveTab(1)">
+                                <i class="blue fa fa-exclamation-triangle bigger-120"></i>
+                                Registro de Novedades
+                            </a>
+                        </li>                        
+                    </ul>
+                    <div class="tab-content">
+                        <!-- Pestaña de registro de novedades -->
+                        <div ng-class="{'tab-pane active': activeTab === 1, 'tab-pane' : activeTab !== 1}">
+                            <div class="container-fluid">
+                                * Este es el modulo que le permite registrar una novedad, la cual el despachador podra visualizar para asignar a los vehículos en sus respectivas zonas de despacho.
+
+                                <div class="row col-md-8">
+                                    <br>
+                                    <table class="table table-bordered table-condensed table-responsive">
+                                        <tr>
+                                            <td>
+                                                Nombre
+                                            </td>
+                                            <td>
+                                                <input class="form-control" ng-model="novedad.nombre" />                                                
+                                            </td> 
+                                            <td align="center">
+                                                <button id="btnregistrar" type="button" class="btn btn-primary" ng-click="registrarNovedad()"><i class="pull-left bigger-130 ace-icon fa fa-arrow-right"></i>Registrar Novedad</button>                                                                
+                                            </td>
+                                        </tr>                                        
+                                    </table>
+                                </div>
+
+                                <div class="row col-md-8" align="center">
+                                    <label>Novedades registradas</label>
+                                    <table class="table table-bordered table-condensed table-responsive">
+                                        <thead>
+                                            <tr>
+                                                <th class="col-md-8">
+                                                    Nombre
+                                                </th>                                                                                   
+                                                <th class="col-md-4">
+                                                    Acciones
+                                                </th> 
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr ng-repeat="nov in novedadesregistradas">
+                                                <td>
+                                                    {{nov.descripcion}}
+                                                </td>                                               
+                                                <td align="center">
+                                                    <div class="btn-group">
+                                                        <button class="btn btn-white btn-sm btn-info btn-bold" title="Editar Novedad" data-toggle="modal" data-target="#editarNovedad" ng-click="cargarModalEditar(nov)">
+                                                            <i class="ace-icon fa fa-edit"></i>
+                                                        </button>
+                                                        <button class="btn btn-white btn-sm btn-warning btn-bold" title="Eliminar Novedad" ng-click="onconfirmdelete(nov)">
+                                                            <i class="ace-icon fa fa-trash-o bigger-120 orange"></i>
+                                                        </button>                                                              
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>                                        
+                                    </table>
+                                </div>
+                            </div> 
+                        </div>                       
+                    </div>
+                </div>
+            </div> 
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal Novedades-->
+<div id="editarNovedad" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Editar Novedad</h4>
+            </div>
+            <div class="modal-body">                 
+                    <table class="table table-bordered table-condensed table-responsive">
+                        <tr>
+                            <td>
+                                Nombre
+                            </td>
+                            <td>
+                                <input class="form-control" ng-model="novedadselect.descripcion" />                                                
+                            </td>
+                        </tr>                                        
+                    </table>
+                             
+            </div>
+            <div class="modal-footer">
+                <button id="btnregistrar" type="button" class="btn btn-primary" ng-click="updateNovedad()"><i class="pull-left bigger-130 ace-icon fa fa-arrow-right"></i>Actualizar Novedad</button>                
+                <button  id="btncerrar" type="button" class="btn btn-default" data-dismiss="modal"><i class="pull-left bigger-130 ace-icon fa fa-times"></i>Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>

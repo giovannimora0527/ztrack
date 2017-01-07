@@ -208,6 +208,16 @@ ztrack.config(['$stateProvider', '$urlRouterProvider', '$httpProvider',
                         }
                     }
                 })
+                .state('gestionnovedades', {
+                    url: '/gestion_de_novedades',
+                    templateUrl: 'html/gestionnovedades.html',
+                    controller: 'NovedadesAdminController',
+                    onEnter: function (SessionService, $state) {
+                        if (!SessionService.isLoged()) {
+                            $state.go('salir');
+                        }
+                    }
+                })
                 .state('perfil', {
                     url: '/perfil',
                     templateUrl: 'html/perfil.html',

@@ -60,15 +60,85 @@ and open the template in the editor.
                 </td>                
             </tr>
             <tr>
-                <td colspan="4" align="center">                   
-                        <button class="btn btn-primary" title="Editar" data-toggle="modal" data-target="#editarInfo" ng-click="cargarModal(user)">
-                            <i class="ace-icon fa fa-edit"></i> Editar
-                        </button> 
-                        <button class="btn btn-default" title="Cancelar" ng-click="cancelar()"> 
-                            <i class="ace-icon fa fa-trash-o"></i> Cancelar
-                        </button> 
+                <td colspan="4" align="center"> 
+                    <button class="btn btn-primary" title="Cambiar Password" data-toggle="modal" data-target="#editarPass" ng-click="cargarModalPass(user)">
+                        <i class="ace-icon fa fa-edit"></i> Cambiar Password
+                    </button>
+                    <button class="btn btn-primary" title="Editar Perfíl" data-toggle="modal" data-target="#editarInfo" ng-click="cargarModal(user)">
+                        <i class="ace-icon fa fa-edit"></i> Editar Información
+                    </button> 
+                    <button class="btn btn-default" title="Cancelar" ng-click="cancelar()"> 
+                        <i class="ace-icon fa fa-trash-o"></i> Cancelar
+                    </button> 
                 </td>
             </tr>
         </table>
     </div><!-- /.col -->
 </div><!-- /.row -->
+
+<!-- Modal Editar Perfil Info-->
+<div id="editarInfo" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Editar información del perfíl</h4>
+            </div>
+            <div class="modal-body">                 
+                <table class="table table-bordered table-condensed table-responsive">
+                    <tr>
+                        <td>
+                            Usuario
+                        </td>
+                        <td>
+                            <input class="form-control" ng-model="editinfo.usuario" />                                                
+                        </td>
+                        <td>
+                            Email
+                        </td>
+                        <td>
+                            <input class="form-control" ng-model="editinfo.email" />                                                
+                        </td>
+                    </tr>                                        
+                </table>
+
+            </div>
+            <div class="modal-footer">
+                <button id="btnregistrar" type="button" class="btn btn-primary" ng-click="actualizarDatos()"><i class="pull-left bigger-130 ace-icon fa fa-arrow-right"></i>Actualizar Información</button>                
+                <button  id="btncerrar" type="button" class="btn btn-default" data-dismiss="modal" ng-click="limpiarCampos()"><i class="pull-left bigger-130 ace-icon fa fa-times"></i>Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal Cambiar Password-->
+<div id="editarPass" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Cambiar Contraseña de Inicio de Sesión</h4>
+            </div>
+            <div class="modal-body">                 
+                <table class="table table-bordered table-condensed table-responsive">
+                    <tr>
+                        <td>
+                            Nueva Contraseña
+                        </td>
+                        <td>
+                            <input class="form-control" type="password" ng-model="info.password" />                                                
+                        </td>                        
+                    </tr>                                        
+                </table>
+
+            </div>
+            <div class="modal-footer">
+                <button id="btnregistrar" type="button" class="btn btn-primary" ng-click="updatepassword()"><i class="pull-left bigger-130 ace-icon fa fa-arrow-right"></i>Guardar</button>                
+                <button  id="btncerrar2" type="button" class="btn btn-default" data-dismiss="modal"><i class="pull-left bigger-130 ace-icon fa fa-times"></i>Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
