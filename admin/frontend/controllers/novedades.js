@@ -341,6 +341,11 @@ ztrack.controller('NovedadesController', function ($rootScope, $scope, AuthServi
                     } 
                 }); 
     }
+    
+    $scope.cerrarModalAgregar = function(){
+        $scope.novedadesselect = {};
+        $scope.selectnovedad = {};
+    };
 
     
 

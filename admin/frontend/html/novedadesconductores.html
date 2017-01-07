@@ -13,14 +13,519 @@ and open the template in the editor.
         <li class="active"><font color="#0B0B3B">{{title}}</font></li>
     </ul><!-- /.breadcrumb -->    
 </div>
-
 <br>
+
 <div class="row">
     <div class="col-xs-12">
         <div class="container-fluid">
             <div class="row">
-                 Gestion de novedades a conductores
+                <div class="tabbable">
+                    <ul class="nav nav-tabs">
+                        <li ng-class="{'active' : activeTab === 1}"><a href="" ng-click="setActiveTab(1)">
+                                <i class="blue fa fa-exclamation-triangle bigger-120"></i>
+                                Gestion de novedades a conductores
+                            </a>
+                        </li>
+                        <li ng-class="{'active' : activeTab === 2}"><a href="" ng-click="setActiveTab(2)">
+                                <i class="blue fa fa-search bigger-120"></i>
+                               Ver y Editar Novedades
+                            </a>
+                        </li>                         
+                    </ul>
+                    <div class="tab-content">
+                        <!-- Pestaña de registro de novedades -->
+                        <div ng-class="{'tab-pane active': activeTab === 1, 'tab-pane' : activeTab !== 1}">
+                            <div class="container-fluid">
+                                * Para poder reaiizar el registro de una novedad, seleccione el area de asignacion, posteriormente la ruta y clic en el boton cargar vehiculos. Puede asignar una o varias
+                                novedades a uno o varios vehículos.
+                                <br><br>
+
+                                <div class="row">
+                                    <div class="col-md-6">  
+                                        <label class="control-label border blue">Seleccione el área de asignación.</label>
+                                        <select class="form-control" ng-model="areaselect" ng-options="area.name for area in areas track by area.name" ng-change="onChangeSelectedArea()">                                        
+                                            <option value="" selected disabled>Seleccionar</option>                       
+                                        </select>
+                                    </div> 
+                                    <div class="col-md-6">  
+                                        <label class="control-label border blue">Seleccione la ruta.</label>
+                                        <select class="form-control" ng-model="rutaselect" ng-options="ruta.route_name for ruta in rutas track by ruta.route_name">                                           
+                                            <option value="" selected disabled>Seleccionar</option>                                                
+                                        </select>                                       
+                                    </div>
+                                </div> 
+                                <br>
+                                <button class="btn btn-primary" ng-click="cargarVehiculos()">Cargar Condutores</button>
+                                <br> <br>
+                                <div class="row" ng-if="hayResultados">                      
+                                    <div class="col-md-12">                                        
+                                        <table class="table table-bordered table-condensed table-responsive table-striped" >
+                                            <thead>
+                                                <tr>
+                                                    <th colspan="4">
+                                                        Resultados
+                                                    </th>
+                                                </tr>
+                                                <tr>
+                                                    <th>
+                                                        #. Vehículo  
+                                                    </th>
+                                                    <th>
+                                                        Placa
+                                                    </th>
+                                                    <th>
+                                                        Conductor  
+                                                    </th>                                                      
+                                                    <th>
+                                                        Acciones 
+                                                    </th> 
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr ng-repeat="veh in vehiculos">
+                                                    <td>
+                                                        {{veh.name}}
+                                                    </td>
+                                                    <td>
+                                                        {{veh.plate_number}}
+                                                    </td>
+                                                    <td>
+                                                        {{veh.driver_name}}
+                                                    </td>                                                    
+                                                    <td align="center">
+                                                        <div class="btn-group">
+                                                            <button class="btn btn-white btn-sm btn-info btn-bold" title="Agregar Novedad" data-toggle="modal" data-target="#editarNovedad" ng-click="cargarModal(veh)">
+                                                                <i class="ace-icon fa fa-plus"></i>
+                                                            </button>                                                              
+                                                        </div>
+                                                    </td> 
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                            </div> 
+                        </div>
+                        <!-- Pestaña de Novedades-->
+                        <div ng-class="{'tab-pane active': activeTab === 2, 'tab-pane' : activeTab !== 2}">
+                            <div class="container-fluid">
+                                <h3>
+                                    Ver Novedades
+                                </h3>
+                                * Para poder filtar es necesario elegir uno de los siguientes filtros a continuación. Para poder filtrar por vehículo es necesario seleccionar el área y posteriormente 
+                                la ruta.
+                                <br><br>
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <label class="control-label border blue">Fecha</label>                                        
+                                        <div class="input-group">
+                                            <input class="form-control date-picker" ng-model="fechafilter" id="id-fecha" type="text" data-date-format="yyyy-mm-dd" ng-change="desbloquearBtnFilter()" placeholder="yyyy-mm-dd" />
+                                            <span class="input-group-addon">
+                                                <i class="fa fa-calendar bigger-110 border blue"></i>
+                                            </span>
+                                        </div>                                        
+                                    </div>
+                                    <div class="col-md-3">  
+                                        <label class="control-label border blue">Seleccione el área.</label>
+                                        <select id="selectarea" class="form-control" ng-model="areaselect" ng-options="area.name for area in areas track by area.name" ng-change="onChangeSelectedArea()">                                        
+                                            <option value="" selected disabled>Seleccionar</option>                       
+                                        </select>
+                                    </div> 
+                                    <div class="col-md-4">  
+                                        <label class="control-label border blue">Seleccione la ruta.</label>
+                                        <div class="input-group">
+                                            <select id="selectruta" class="form-control" ng-model="rutaselect" ng-options="ruta.route_name for ruta in rutas track by ruta.route_name" ng-change="">                                           
+                                                <option value="" selected disabled>Seleccionar</option>                                                
+                                            </select>
+                                            <span class="input-group-addon">
+                                                <a href="" ng-click="cargarVehiculos()">
+                                                    <i class="fa fa-arrow-right bigger-110 border blue"></i>
+                                                </a>
+                                            </span>
+                                        </div>
+                                    </div> 
+                                    <div class="col-md-3"> 
+                                        <label class="control-label border blue">Vehículo.</label>
+                                        <select id="selectveh" class="form-control" ng-model="vehiculofilter" ng-options="veh.name for veh in vehiculos track by veh.name" onchange="bloquear()" ng-change="desbloquearBtnFilter()">                                           
+                                            <option value="" selected disabled>Seleccionar</option>                                                
+                                        </select>                                       
+                                    </div>
+                                </div><br> 
+                                <div class="row">
+                                    <div class="col-md-6">  
+                                        <button class="btn btn-default" onclick="desbloquear()" ng-click="limpiarCamposFilter()"><i class="fa fa-eraser"></i> Limpiar Campos</button>
+                                        <button ng-disabled="btnfilteractive" class="btn btn-primary" ng-click="filtrar()"><i class="fa fa-search"></i> Buscar</button>
+                                    </div> 
+                                </div>
+                                <br>
+                                <div class="row">
+                                    <div class="col-md-12">                                        
+                                        <table class="table table-condesed table-responsive table-bordered table stripped">
+                                            <thead>
+                                                <tr>
+                                                    <td>
+                                                        Vehiculo  
+                                                    </td>
+                                                    <td>
+                                                        Novedad  
+                                                    </td>                                                    
+                                                    <td>
+                                                        Fecha y Hora de Registro
+                                                    </td>
+                                                    <td>
+                                                        Acciones
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <select id="selectveh" class="form-control" ng-model="filtro.vehiculo" ng-options="veh.name for veh in vehiculosnovedad track by veh.name" onchange="bloquear()" ng-change="filtrarregistros()">                                           
+                                                            <option value="" selected disabled>Seleccionar</option>                                                
+                                                        </select>  
+                                                    </td>
+                                                    <td>
+                                                        <select class="form-control" ng-model="filtro.novedad" ng-options="nov.descripcion for nov in novedades track by nov.descripcion" ng-change="filtrarregistros()">
+                                                            <option value="" selected disabled>Seleccione una opción</option>
+                                                        </select> 
+                                                    </td>                                                    
+                                                    <td>
+                                                        <input class="form-control date-picker" ng-model="filtro.filtrofecha" id="id-fecha" type="text" data-date-format="yyyy-mm-dd" placeholder="yyyy-mm-dd" ng-change="filtrarregistros()"/>
+                                                    </td>
+                                                    <td>
+                                                        <button class="btn btn-primary" ng-click="filtrarregistros()">Filtrar</button> 
+                                                    </td>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr ng-repeat = "nov in novedadesregistradas">
+                                                    <td>
+                                                        {{nov.name}} 
+                                                    </td>
+                                                    <td>
+                                                        {{nov.descripcion}}  
+                                                    </td>                                                   
+                                                    <td>
+                                                        {{nov.fecha_registro}}
+                                                    </td>
+                                                    <td align="center">
+                                                        <div class="btn-group">
+                                                            <button class="btn btn-white btn-sm btn-info btn-bold" title="Editar Novedad" data-toggle="modal" data-target="#actualizarNovedad" ng-click="cargarModalEditar(nov)">
+                                                                <i class="ace-icon fa fa-edit"></i>
+                                                            </button>
+                                                            <button class="btn btn-white btn-sm btn-info btn-bold" title="Solucionar Novedad" data-toggle="modal" data-target="#editarSolucionNovedad" ng-click="cargarModalSolucion(nov)">
+                                                                <i class="ace-icon fa fa-check"></i>
+                                                            </button>                                                              
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div> 
+                                </div>
+                            </div> 
+                        </div>  
+                        <!-- Pestaña de TODAS LAS Novedades-->
+                        <div ng-class="{'tab-pane active': activeTab === 3, 'tab-pane' : activeTab !== 3}">
+                            <div class="container-fluid">
+                                <h3>
+                                    Ver Novedades
+                                </h3>
+                                * Seleccione los filtros a continuación de clic en el botón buscar para poder observar todas las novedades registradas en el sistema y su estado.
+                                <br><br>
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <label class="control-label border blue">Fecha</label>                                        
+                                        <div class="input-group">
+                                            <input class="form-control date-picker" ng-model="fechafilter" id="id-fecha" type="text" data-date-format="yyyy-mm-dd" ng-change="desbloquearBtnFilter()" placeholder="yyyy-mm-dd" />
+                                            <span class="input-group-addon">
+                                                <i class="fa fa-calendar bigger-110 border blue"></i>
+                                            </span>
+                                        </div>                                        
+                                    </div>
+                                    <div class="col-md-3">  
+                                        <label class="control-label border blue">Seleccione el área.</label>
+                                        <select id="selectarea" class="form-control" ng-model="areaselect" ng-options="area.name for area in areas track by area.name" ng-change="onChangeSelectedArea()">                                        
+                                            <option value="" selected disabled>Seleccionar</option>                       
+                                        </select>
+                                    </div> 
+                                    <div class="col-md-4">  
+                                        <label class="control-label border blue">Seleccione la ruta.</label>
+                                        <div class="input-group">
+                                            <select id="selectruta" class="form-control" ng-model="rutaselect" ng-options="ruta.route_name for ruta in rutas track by ruta.route_name" ng-change="">                                           
+                                                <option value="" selected disabled>Seleccionar</option>                                                
+                                            </select>
+                                            <span class="input-group-addon">
+                                                <a href="" ng-click="cargarVehiculos()">
+                                                    <i class="fa fa-arrow-right bigger-110 border blue"></i>
+                                                </a>
+                                            </span>
+                                        </div>
+                                    </div> 
+                                    <div class="col-md-3"> 
+                                        <label class="control-label border blue">Vehículo.</label>
+                                        <select id="selectveh" class="form-control" ng-model="vehiculofilter" ng-options="veh.name for veh in vehiculos track by veh.name" onchange="bloquear()" ng-change="desbloquearBtnFilter()">                                           
+                                            <option value="" selected disabled>Seleccionar</option>                                                
+                                        </select>                                       
+                                    </div>
+                                </div><br> 
+                                <div class="row">
+                                    <div class="col-md-6">  
+                                        <button class="btn btn-default" onclick="desbloquear()" ng-click="limpiarCamposFilter()"><i class="fa fa-eraser"></i> Limpiar Campos</button>
+                                        <button ng-disabled="btnfilteractive" class="btn btn-primary" ng-click="filtrar()"><i class="fa fa-search"></i> Buscar</button>
+                                    </div> 
+                                </div>
+                                <br>
+                                <div class="row">
+                                    <div class="col-md-12">                                        
+                                        <table class="table table-condesed table-responsive table-bordered table stripped">
+                                            <thead>
+                                                <tr>
+                                                    <td>
+                                                        Vehiculo  
+                                                    </td>
+                                                    <td>
+                                                        Novedad  
+                                                    </td>                                                   
+                                                    <td>
+                                                        Fecha y Hora de Registro
+                                                    </td>
+                                                    <td>
+                                                        Estado
+                                                    </td>
+                                                    <td>
+                                                        Fecha Solución
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <select id="selectveh" class="form-control" ng-model="filtro.vehiculo" ng-options="veh.name for veh in vehiculosnovedad track by veh.name" onchange="bloquear()" ng-change="filtrarregistros()">                                           
+                                                            <option value="" selected disabled>Seleccionar</option>                                                
+                                                        </select>  
+                                                    </td>
+                                                    <td>
+                                                        <select class="form-control" ng-model="filtro.novedad" ng-options="nov.descripcion for nov in novedades track by nov.descripcion" ng-change="filtrarregistros()">
+                                                            <option value="" selected disabled>Seleccione una opción</option>
+                                                        </select> 
+                                                    </td>                                                    
+                                                    <td>
+                                                        <input class="form-control date-picker" ng-model="filtro.filtrofecha" id="id-fecha" type="text" data-date-format="yyyy-mm-dd" placeholder="yyyy-mm-dd" ng-change="filtrarregistros()"/>
+                                                    </td>
+                                                    <td>
+                                                        <select class="form-control" ng-model="filtro.filtroestado" ng-change="filtrarregistros()">
+                                                            <option selected value="">Seleccione una opción</option>
+                                                            <option value="0">Pendientes</option>
+                                                            <option value="1">Solucionado</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <input class="form-control date-picker" ng-model="filtro.fechasolucion" id="id-fecha" type="text" data-date-format="yyyy-mm-dd" ng-change="filtrarregistros()" placeholder="yyyy-mm-dd" />                                                        
+                                                    </td>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr ng-repeat = "nov in novedadesregistradas">
+                                                    <td>
+                                                        {{nov.name}} 
+                                                    </td>
+                                                    <td>
+                                                        {{nov.descripcion}}  
+                                                    </td>                                                  
+                                                    <td>
+                                                        {{nov.fecha_registro}}
+                                                    </td>
+                                                    <td align="center">
+                                                        {{nov.estado}}
+                                                    </td>
+                                                    <td>
+                                                        {{nov.fecha_solucion}}
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div> 
+                                </div>
+                            </div> 
+                        </div>
+                    </div>
+                </div>
+            </div> 
+        </div>
+    </div>
+
+
+    <!-- Modal Novedades-->
+    <div id="editarNovedad" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Registrar Novedad a <font color="#B40404">{{vehiculo.name}}</font></h4>
+                </div>
+                <div class="modal-body"> 
+                    <div class="row">
+                        <div class="col-md-6">
+                            Seleccione la Novedad
+                            <div class="input-group">
+                                <select class="form-control" ng-model="selectnovedad" ng-options="nov.descripcion for nov in novedades track by nov.descripcion">
+                                    <option value="" selected disabled>Seleccione una opción</option>
+                                </select>
+                                <span class="input-group-btn">
+                                    <button class="btn btn-primary" type="button" ng-click="adicionarNovedad()">
+                                        <i class="ace-icon fa fa-arrow-right bigger-110"></i>                                                       
+                                    </button>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">                            
+                            Novedades Seleccionadas
+                            <div class="dd" id="nestable">
+                                <ol class="dd-list">
+                                    <li class="dd-item" ng-repeat="n in novedadesselect">
+                                        <div class="dd-handle">
+                                            <i class="pull-left bigger-130 ace-icon fa fa-automobile blue"></i>
+                                            Novedad: {{n.descripcion}}
+                                            <a href="" ng-click="deleteNovedad(n)"><i class="pull-right bigger-130 ace-icon fa fa-times blue"></i></a>
+                                        </div>
+                                    </li>
+                                </ol>
+                            </div>   
+                        </div>
+                    </div>                
+                </div>
+                <div class="modal-footer">
+                    <button id="btnregistrar" type="button" class="btn btn-primary" ng-click="registrarNovedad()"><i class="pull-left bigger-130 ace-icon fa fa-arrow-right"></i>Registrar Novedad</button>                
+                    <button  id="btncerrar" type="button" class="btn btn-default" data-dismiss="modal"><i class="pull-left bigger-130 ace-icon fa fa-times"></i>Cerrar</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
+
+    <!-- Modal Solucionar Novedades-->
+    <div id="editarSolucionNovedad" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Solucionar Novedad {{novedadseleccionada.descripcion}} <br>
+                        Para el vehículo {{novedadseleccionada.name}}
+                    </h4>
+                </div>
+                <div class="modal-body"> 
+                    <table class="table table-bordered table-condensed table-responsive">
+                        <tr>
+                            <td>
+                                ¿Solucionada?
+                            </td>
+                            <td>
+                                <input class="form-control" type="checkbox" ng-model="respuesta.check"/>
+                            </td>                            
+                        </tr>
+                        <tr>
+                            <td>
+                                Descripción de la solución
+                            </td>
+                            <td>
+                                <textarea class="autosize-transition form-control" ng-model="respuesta.descripcion" maxlength="150"></textarea>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button id="btnregistrar" type="button" class="btn btn-primary" ng-click="solucionarNovedad(respuesta)"><i class="pull-left bigger-130 ace-icon fa fa-arrow-right"></i>Registrar solución de la novedad</button>                
+                    <button  id="btncerrar" type="button" class="btn btn-default" data-dismiss="modal"><i class="pull-left bigger-130 ace-icon fa fa-times"></i>Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Editar Novedades-->
+    <div id="actualizarNovedad" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Actualizar Novedad</h4>
+                </div>
+                <div class="modal-body"> 
+                    <div class="row">
+                        <div class="col-md-4">
+                            Seleccione la Novedad
+                            <div class="input-group">
+                                <select class="form-control" ng-model="selectnovedad.novedad" ng-options="nov.descripcion for nov in novedades track by nov.descripcion">
+                                    <option value="" selected disabled>Seleccione una opción</option>
+                                </select>                                
+                            </div>
+                        </div> 
+                        <div class="col-md-4">
+                            Seleccione la Fecha
+                            <input class="form-control date-picker" ng-model="selectnovedad.fecha" id="idfecha" type="text" data-date-format="yyyy-mm-dd" placeholder="yyyy-mm-dd"/>
+                        </div>
+                        <div class="col-md-4">
+                            Seleccione la Hora
+                            <div class="input-group bootstrap-timepicker">
+                                <input id="horanovedad" type="timepicker" ng-model="selectnovedad.hora" class="form-control" placeholder="00:00:00"/>
+                                <span class="input-group-addon">
+                                    <i class="fa fa-clock-o bigger-110 border blue"></i>
+                                </span>
+                            </div>                            
+                        </div>
+                    </div>                
+                </div>
+                <div class="modal-footer">
+                    <button id="btnregistrar" type="button" class="btn btn-primary" ng-click="actualizarNovedad(selectnovedad)"><i class="pull-left bigger-130 ace-icon fa fa-arrow-right"></i>Actualizar Novedad</button>                
+                    <button  id="btncerrar2" type="button" class="btn btn-default" data-dismiss="modal" ng-click="cerrarModal()"><i class="pull-left bigger-130 ace-icon fa fa-times"></i>Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> 
+
+
+
+
+<script>
+    //datepicker plugin
+    //link
+    $('.date-picker').datepicker({
+        languaje: "es",
+        autoclose: true,
+        todayHighlight: true
+    })
+            //show datepicker when clicking on the icon
+            .next().on(ace.click_event, function () {
+        $(this).prev().focus();
+    });
+
+    function bloquear() {
+        document.getElementById("selectruta").disabled = true;
+        document.getElementById("selectarea").disabled = true;
+        document.getElementById("selectveh").disabled = true;
+    }
+
+    function desbloquear() {
+        document.getElementById("selectruta").disabled = false;
+        document.getElementById("selectarea").disabled = false;
+        document.getElementById("selectveh").disabled = false;
+    }
+
+</script>
+<script>
+    $('#horanovedad').timepicker({
+        minuteStep: 1,
+        showSeconds: true,
+        showMeridian: false,
+        disableFocus: true,
+        icons: {
+            up: 'fa fa-chevron-up',
+            down: 'fa fa-chevron-down'
+        }
+    }).on('focus', function () {
+        $('#horaini').timepicker('showWidget');
+    }).next().on(ace.click_event, function () {
+        $(this).prev().focus();
+    });
+</script>
+

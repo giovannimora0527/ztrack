@@ -28,9 +28,15 @@ ztrack.controller('NovedadesAdminController', function ($rootScope, $scope, Auth
             toastr.warning("El campo nombre es obligatorio", "Advertencia");
             return;
         }
+        if ($scope.novedad.tipo === undefined) {
+            toastr.warning("Debe seleccionar el tipo de novedad a asignar.", "Advertencia");
+            return;
+        }
+       
         $params = {
             descripcion: $scope.novedad.nombre,
-            user_id: localStorage['ztrack.user_id']
+            user_id: localStorage['ztrack.user_id'],
+            tipo : $scope.novedad.tipo
         };
         QueriesService.executeRequest('POST', '../laravel/public/novedades/novedadnueva', null, $params)
                 .then(function (result) {
@@ -96,7 +102,9 @@ ztrack.controller('NovedadesAdminController', function ($rootScope, $scope, Auth
                         toastr.error(result.mensaje, "Error");
                     }
                 });
-    };
+    };   
+    
+   
 
 });
 

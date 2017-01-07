@@ -22,9 +22,9 @@ and open the template in the editor.
                     <ul class="nav nav-tabs">
                         <li ng-class="{'active' : activeTab === 1}"><a href="" ng-click="setActiveTab(1)">
                                 <i class="blue fa fa-exclamation-triangle bigger-120"></i>
-                                Registro de Novedades
+                                Gestión de Novedades de Vehículos
                             </a>
-                        </li>                        
+                        </li>
                     </ul>
                     <div class="tab-content">
                         <!-- Pestaña de registro de novedades -->
@@ -32,7 +32,7 @@ and open the template in the editor.
                             <div class="container-fluid">
                                 * Este es el modulo que le permite registrar una novedad, la cual el despachador podra visualizar para asignar a los vehículos en sus respectivas zonas de despacho.
 
-                                <div class="row col-md-8">
+                                <div class="row col-md-12">
                                     <br>
                                     <table class="table table-bordered table-condensed table-responsive">
                                         <tr>
@@ -41,7 +41,17 @@ and open the template in the editor.
                                             </td>
                                             <td>
                                                 <input class="form-control" ng-model="novedad.nombre" />                                                
-                                            </td> 
+                                            </td>
+                                            <td>
+                                                Asignada a:
+                                            </td>
+                                            <td>
+                                                <select ng-model="novedad.tipo" class="form-control">
+                                                    <option value="" selected disabled>Seleccione una opción</option>
+                                                    <option value="0">Vehículo</option>
+                                                    <option value="1">Conductor</option>
+                                                </select>
+                                            </td>
                                             <td align="center">
                                                 <button id="btnregistrar" type="button" class="btn btn-primary" ng-click="registrarNovedad()"><i class="pull-left bigger-130 ace-icon fa fa-arrow-right"></i>Registrar Novedad</button>                                                                
                                             </td>

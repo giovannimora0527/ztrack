@@ -26,7 +26,7 @@ class NovedadController extends \BaseController {
 
     public function getNovedades() {
         $data = Input::all();
-        $sql = "select * from novedades where user_id = " . $data["user_id"];
+        $sql = "select * from novedades where user_id = " . $data["user_id"] . " and tipo = 0";
         $novedades = DB::select($sql);
         return Response::json(array('novedades' => $novedades));
     }
@@ -161,10 +161,11 @@ class NovedadController extends \BaseController {
 
     public function postNovedadnueva() {
         $data = Input::all();
-        $sql = "insert into novedades (descripcion, user_id) values ("
+        $sql = "insert into novedades (descripcion, user_id, tipo) values ("
                 . "'" . strtoupper($data["descripcion"])
                 . "', " . $data["user_id"]
-                . ");";
+                . ", " . $data["tipo"] . ");";
+                
         try {
             DB::beginTransaction();
             DB::insert($sql);
