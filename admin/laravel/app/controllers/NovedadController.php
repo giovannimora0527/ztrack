@@ -254,7 +254,7 @@ class NovedadController extends \BaseController {
                 $sql .= " WHERE rn.fecha_registro <= '" . $data["filtrofecha"] . " 23:59:59'";
                 $countfilter++;
             } else {
-                $sql .= " AND rn.novedad_id = <= '" . $data["filtrofecha"] . " 23:59:59'";
+                $sql .= " AND rn.novedad_id <= '" . $data["filtrofecha"] . " 23:59:59'";
                 $countfilter++;
             }
         }
@@ -273,7 +273,7 @@ class NovedadController extends \BaseController {
                     $sql .= " WHERE rn.estado = " . $data["filtroestado"];
                     $countfilter++;
                 } else {
-                    $sql .= " AND rn.estado =  " . $data["filtroestado"];
+                    $sql .= " AND rn.estado = " . $data["filtroestado"];
                     $countfilter++;
                 }
             }
@@ -424,7 +424,7 @@ class NovedadController extends \BaseController {
                 $sql .= " WHERE rn.fecha_registro <= '" . $data["filtrofecha"] . " 23:59:59'";
                 $countfilter++;
             } else {
-                $sql .= " AND rn.novedad_id = <= '" . $data["filtrofecha"] . " 23:59:59'";
+                $sql .= " AND rn.fecha_registro <= '" . $data["filtrofecha"] . " 23:59:59'";
                 $countfilter++;
             }
         }
@@ -458,7 +458,7 @@ class NovedadController extends \BaseController {
                 }            
         }
         $sql .= " and rn.despachador_id = " . $data["user_id"];
-        
+                
         try {
             DB::beginTransaction();
             $novedades = DB::select($sql);
@@ -489,7 +489,7 @@ class NovedadController extends \BaseController {
     
     public function postSolucionarnovedadconductor() {
         $data = Input::all();
-        $sql = "update novedades_conductor set "
+        $sql = "update novedades_conductores set "
                 . "estado = 1"
                 . ", descripcion = '" . strtoupper($data["descripcion"])
                 . "', fecha_solucion = (SELECT NOW())"
