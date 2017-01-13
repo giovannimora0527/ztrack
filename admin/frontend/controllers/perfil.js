@@ -16,6 +16,11 @@ ztrack.controller('PerfilController', function ($rootScope, $scope, AuthService,
                 user_id: localStorage['ztrack.despachador_id']
             };
         }
+        if (parseInt(perfil) === 2) {
+            $params = {
+                user_id: localStorage['ztrack.userLogin'],
+            };
+        }
         if (parseInt(perfil) === 1) {
             $params = {
                 user_id: localStorage['ztrack.user_id']
