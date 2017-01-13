@@ -225,9 +225,11 @@
         <script src="assets/js/ace.min.js"></script>
 
 
-
+        <script src="build/toastr/toastr.js"></script>
         <!-- inline scripts related to this page -->
         <script type="text/javascript">
+                        onLoad();
+
                         jQuery(function ($) {
                             $('.easy-pie-chart.percentage').each(function () {
                                 var $box = $(this).closest('.infobox');
@@ -370,7 +372,55 @@
                             $("#" + id).addClass("active");
                         }
                         $("#25").addClass("active");
+
+                        function toastrMsj(mensaje, titulo, $type) {
+                            var msg = mensaje;
+                            var title = titulo;
+                            toastr.options = {
+                                debug: false,
+                                closeButton: $('#closeButton').prop('checked'),
+                                newestOnTop: $('#newestOnTop').prop('checked'),
+                                progressBar: $('#progressBar').prop('checked'),
+                                rtl: $('#rtl').prop('checked'),
+                                positionClass: $('#positionGroup input:radio:checked').val() || 'toast-top-right',
+                                preventDuplicates: $('#preventDuplicates').prop('checked'),
+                                onclick: null,
+                                fadeIn: 200,
+                                fadeOut: 100,
+                                timeOut: 3000,
+                                extendedTimeOut: 3000
+                            };
+                            toastr[$type](msg, title);
+                        }
+
+                        function cerrarSesion() {                            
+                            if (window.confirm("Su sesión esta a punto de caducar ¿Desea continuar realmente?")) {
+                                return;
+                            } else {                                
+                                clear();
+                                window.location = "login.html";
+                            }
+                        }
+
+                        function clear() {
+                            delete localStorage['ztrack.user_id'];
+                            delete localStorage['ztrack.username'];
+                            delete localStorage['ztrack.token'];
+                            delete localStorage['ztrack.authenticated'];
+                            delete localStorage['ztrack.despachador_id'];
+                            delete localStorage['ztrack.perfil'];
+                            delete localStorage['ztrack.empresa_id'];
+                        }
+
+                        function onLoad() {
+                            //1000 ms = 1 sg
+                            //10 min = 600000
+                            setInterval('cerrarSesion()', 600000);
+                        }
+
         </script>
+
+
 
         <!--        <script>
                 //datepicker plugin

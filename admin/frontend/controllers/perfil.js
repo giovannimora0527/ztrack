@@ -40,11 +40,22 @@ ztrack.controller('PerfilController', function ($rootScope, $scope, AuthService,
             toastr.warning("El campo email es obligatorio", "Advertencia");
             return;
         }
-        $params = {
-            user_id: localStorage['ztrack.user_id'],
-            username: $scope.editinfo.usuario,
-            email: $scope.editinfo.email
-        };       
+        var perfil = localStorage['ztrack.perfil'];
+        if (parseInt(perfil) === 3) {
+            $params = {
+                user_id: localStorage['ztrack.despachador_id'],
+                username: $scope.editinfo.usuario,
+                email: $scope.editinfo.email
+            };
+        }
+        if (parseInt(perfil) === 1) {
+            $params = {
+                user_id: localStorage['ztrack.user_id'],
+                username: $scope.editinfo.usuario,
+                email: $scope.editinfo.email
+            };
+        }
+        
         QueriesService.executeRequest('POST', '../laravel/public/usuario/updateinfouser', $params, null)
                 .then(function (result) {
                     if (result.success) {
@@ -58,28 +69,37 @@ ztrack.controller('PerfilController', function ($rootScope, $scope, AuthService,
                     }
                 });
     };
-    
+
 
     $scope.limpiarCampos = function () {
         $scope.editinfo = {};
         $scope.info = {};
     };
-    
-    $scope.updatepassword = function(){
+
+    $scope.updatepassword = function () {
         if ($scope.info.password === undefined || $scope.info.password === "") {
             toastr.warning("El campo contraseña es obligatorio", "Advertencia");
             return;
         }
-        $params = {
-            user_id: localStorage['ztrack.user_id'],            
-            password: $scope.info.password
-        }; 
+        var perfil = localStorage['ztrack.perfil'];
+        if (parseInt(perfil) === 3) {
+            $params = {
+                user_id: localStorage['ztrack.despachador_id'],
+                password: $scope.info.password
+            };
+        }
+        if (parseInt(perfil) === 1) {
+            $params = {
+                user_id: localStorage['ztrack.user_id'],
+                password: $scope.info.password
+            };
+        }       
         QueriesService.executeRequest('POST', '../laravel/public/usuario/updatepassword', $params, null)
                 .then(function (result) {
                     if (result.success) {
                         toastr.success(result.mensaje, "OK");
                         $('#editarPass').modal('hide');
-                        $scope.limpiarCampos();                        
+                        $scope.limpiarCampos();
                     } else {
                         toastr.error(result.mensaje, "Error");
                         $scope.limpiarCampos();

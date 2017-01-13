@@ -22,10 +22,16 @@ function clean($str) {
     return mysql_real_escape_string($str);
 }
 
+function limpiarString($texto)
+{
+      $textoLimpio = ereg_replace("[^A-Za-z0-9]", "", $texto);								
+      return $textoLimpio;
+}
+
 //Captura de datos del formulario registro
 //Sanitize the POST values
 $email = strtolower($_GET['email']);
-$empresa = strtoupper($_GET['empresa']);
+$empresa = limpiarString(strtoupper($_GET['empresa']));
 $username = strtolower($_GET['username']);
 $pass1 = $_GET['pass1'];
 $active = "true";
@@ -64,10 +70,10 @@ if ($consulta) {
 // EL usuario no esta registrado en el sistema
 if ($isregister == false) {
     $date_red = date("Y-m-d");
-    $nombrezmodocolombia = "zmodocolombia_" . $empresa;
+    $nombrezmodocolombia = "zmodo_" . $empresa;
     $privilegies = '{"type":"super_admin"}';
     $privilegies = (string) ($privilegies);
-    $pass2 = "zmodocolombia_1234";
+    $pass2 = "ztrack1234";
     $pass_encrypted = md5($pass1);
     $pass_encrypted2 = md5($pass2);
     $emailcorporativo = "ztrackregistro@zmodocolombia.com";

@@ -17,7 +17,7 @@ ztrack.config(['$stateProvider', '$urlRouterProvider', '$httpProvider',
                     templateUrl: 'html/home.html',
                     controller: 'HomeController',
                     onEnter: function (SessionService, $state) {
-                        if (!SessionService.isLoged()) {
+                            if (!SessionService.isLoged()) {
                             $state.go('salir');
                         }
                     }
@@ -230,7 +230,8 @@ ztrack.config(['$stateProvider', '$urlRouterProvider', '$httpProvider',
                 })
                 .state('salir', {
                     onEnter: function (SessionService) {
-                        SessionService.destroy();  
+                        SessionService.destroy(); 
+                        sessionStorage.setItem('ztrack.authenticated', false);
                         window.location = "login.html";
                     }
                 })

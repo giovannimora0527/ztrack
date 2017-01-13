@@ -16,13 +16,15 @@ function enviarMsj($from, $title, $addressToSend, $nombreusuario, $asunto, $msjH
 //Especificamos la seguridad de la conexion, puede ser SSL, TLS o lo dejamos en blanco si no sabemos
     $correo->SMTPSecure = 'TLS';
 //Especificamos el host del servidor SMTP
-    $correo->Host = "s14-chicago.accountservergroup.com";
+    
+    //$correo->Host = "s14-chicago.accountservergroup.com";
+    $correo->Host = "smtp.gmail.com";
 //Especficiamos el puerto del servidor SMTP
     $correo->Port = 587;
 //El usuario del servidor SMTP
-    $correo->Username = "ztrackregistro@zmodocolombia.com";
+    $correo->Username = "giovannimora0527@gmail.com";
 //Contraseña del usuario
-    $correo->Password = "zcolombia";
+    $correo->Password = "nemesis_88274388";
 // Timeout para el servidor de correos. Por defecto es valor es '10'
     $correo->Timeout = 30;
 // Codificación UTF8. Obligado utilizarlo en aplicaciones en Español

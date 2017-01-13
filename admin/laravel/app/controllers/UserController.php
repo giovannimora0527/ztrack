@@ -167,7 +167,7 @@ class UserController extends \BaseController {
         $sql = "update gs_users set "        
                 . "email = '" .$data["email"]
                 . "', username = '" .$data["username"]
-                . "' where user_id = " . $data["user_id"];        
+                . "' where id = " . $data["user_id"];        
         try {
             DB::beginTransaction();
             DB::update($sql);
