@@ -156,6 +156,13 @@ class DespachadorController extends \BaseController {
     //Funcion que permite despachar vehiculos y registrarlos en la tabla despachos
     public function getDespachovehiculo() {
         $data = Input::all();
+        //Valido que el vehiculo no tenga novedades pendientes
+        $sql = "select count(*) count from registro_novedades where vehiculo_id = " . $data["object_id"] . " and estado = 0;";
+        $results = DB::select($sql);
+        if($results[0]->count > 0){
+          return Response::json(array('success' => false, 'mensaje' => "El vehiculo tiene novedades pendientes de solucionar, No se puede realizar el despacho. Intente de Nuevo."));  
+        }
+        
         $update_sql = "update gs_despacho_temporal set "
                 . "estado = 3 "
                 . "where object_id = " . $data["object_id"] . ";";

@@ -116,8 +116,9 @@ class NovedadController extends \BaseController {
                 . "estado = 1"
                 . ", descripcion = '" . strtoupper($data["descripcion"])
                 . "', fecha_solucion = (SELECT NOW())"
-                . "' where id = " . $data["id"]
+                . " where id = " . $data["id"]
         ;
+        
         try {
             DB::beginTransaction();
             DB::update($sql);
