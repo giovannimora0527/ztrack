@@ -48,6 +48,12 @@ ztrack.controller('PerfilController', function ($rootScope, $scope, AuthService,
                 email: $scope.editinfo.email
             };
         }
+        if (parseInt(perfil) === 2) {
+            $params = {
+                user_id: localStorage['ztrack.userLogin'],
+                password: $scope.info.password
+            };
+        }
         if (parseInt(perfil) === 1) {
             $params = {
                 user_id: localStorage['ztrack.user_id'],
@@ -85,6 +91,12 @@ ztrack.controller('PerfilController', function ($rootScope, $scope, AuthService,
         if (parseInt(perfil) === 3) {
             $params = {
                 user_id: localStorage['ztrack.despachador_id'],
+                password: $scope.info.password
+            };
+        }
+        if (parseInt(perfil) === 2) {
+            $params = {
+                user_id: localStorage['ztrack.userLogin'],
                 password: $scope.info.password
             };
         }
