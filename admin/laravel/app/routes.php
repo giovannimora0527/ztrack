@@ -31,9 +31,8 @@ Route::controller('despachador', 'DespachadorController');
 Route::controller('reportes', 'ReportesController');
 //Novedades
 Route::controller('novedades', 'NovedadController');
-
-//Pruebas
-Route::controller('pruebas', 'PruebasController');
+//Usuario
+Route::controller('usuario', 'UserController');
 
 Route::group(array('before' => 'authenticationFilter'), function() {
 

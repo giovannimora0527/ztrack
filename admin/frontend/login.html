@@ -258,6 +258,7 @@
         <!-- inline scripts related to this page -->
         <script type="text/javascript">
             window.onload = clear();
+            sessionStorage['ztrack.authenticated'] === false;
 
             function clear() {
                 delete localStorage['ztrack.user_id'];
@@ -267,6 +268,7 @@
                 delete localStorage['ztrack.despachador_id'];
                 delete localStorage['ztrack.perfil'];
                 delete localStorage['ztrack.empresa_id'];
+                delete sessionStorage['ztrack.authenticated'];             
             }
 
             jQuery(function ($) {
@@ -354,7 +356,8 @@
                             toastrMsj(result[0]["value"], "Error", "error");
                         } else
                         {
-                            sessionStorage.setItem('sessionId', result[0]["sessionId"]);
+                            sessionStorage.setItem('sessionId', result[0]["token"]);
+                            sessionStorage.setItem('ztrack.authenticated', true);
                             save(result[0]); // Creo Session                            
                         }
                     }
@@ -367,7 +370,8 @@
                 localStorage['ztrack.token'] = data.token;
                 localStorage['ztrack.authenticated'] = true;
                 localStorage['ztrack.perfil'] = data.perfil;
-                localStorage['ztrack.empresa_id'] = data.empresaid;                               
+                localStorage['ztrack.empresa_id'] = data.empresaid; 
+                sessionStorage.setItem('ztrack.authenticated', true);
                 if(data.perfil === "3"){                    
                    localStorage['ztrack.user_id'] = data.empresaid; 
                    localStorage['ztrack.despachador_id'] = data.userId;

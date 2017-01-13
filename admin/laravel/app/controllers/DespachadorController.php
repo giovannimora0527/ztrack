@@ -69,6 +69,14 @@ class DespachadorController extends \BaseController {
         $data = Input::all();
         $sql = "select * from gs_info_despachador where user_id = " . $data["user_id"];
         $data_despachador = DB::select($sql);
+        //Valido que el vehiculo no tenga novedades pendientes
+        $sql = "select count(*) count from registro_novedades where vehiculo_id = " . $data["vehiculo_id"] . " and estado = 0;";
+        $results = DB::select($sql);
+        if($results[0]->count > 0){
+          return Response::json(array('success' => false, 'mensaje' => "El vehiculo tiene novedades pendientes de solucionar. Intente de Nuevo."));  
+        }
+//        $hoy = date('Y-m-d', time());        
+//        $sql = "select MAX(turno) turno from gs_despacho_temporal where user_id = " . $data["user_id"] . " and hora_llegada >= " . $hoy . " 00:00:00";
         $sql = "select MAX(turno) turno from gs_despacho_temporal where user_id = " . $data["user_id"];
         $result = DB::select($sql);
         if ($result[0]->turno == null) {

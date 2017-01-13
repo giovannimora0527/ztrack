@@ -53,7 +53,7 @@ if ($result) {
                 array_push($json, $data);
             }
         } else {
-            $data = array('success' => 'false', 'value' => "NO se pudo enviar el correo. COntacte al administrador del sistema.");
+            $data = array('success' => 'false', 'value' => "NO se pudo enviar el correo. Contacte al administrador del sistema.");
             array_push($json, $data);
         }
         $jsonstring = json_encode($json);
@@ -74,6 +74,6 @@ function generarContrasena() {
     return $randomString;
 }
 
-;
+
 
 

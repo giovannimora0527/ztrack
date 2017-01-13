@@ -92,8 +92,19 @@ class UserController extends \BaseController {
      * @return Response
      */
     public function getUser() {
-        $user_id = Auth::user()->id;
-        return Response::json(array('user' => User::find($user_id)));
+        $data = Input::all();
+        $sql = "select name, username, account_expire_dt, 
+                    CASE 
+                        WHEN profile_id = 1 THEN 'Administrador'
+                        ELSE 'Despachador'
+                        END AS profile, 
+                    CASE 
+                        WHEN email = '' || null THEN 'N/A'
+                        ELSE email
+                        END AS email "
+                . " from gs_users where id = " . $data["user_id"];
+        $user = DB::select($sql);
+        return Response::json(array('user' => $user[0]));
     }
 
     public function postPassword() {
@@ -150,4 +161,39 @@ class UserController extends \BaseController {
     public function getConfigprofile(){
         
     }
+    
+    public function postUpdateinfouser(){
+        $data = Input::all();
+        $sql = "update gs_users set "        
+                . "email = '" .$data["email"]
+                . "', username = '" .$data["username"]
+                . "' where id = " . $data["user_id"];        
+        try {
+            DB::beginTransaction();
+            DB::update($sql);
+            DB::commit();
+            return Response::json(array('success' => true, 'mensaje' => "La informacion ha sido actualizada con éxito."));
+        } catch (Exception $e) {
+            DB::rollback();
+            return Response::json(array('mensaje' => "No se puede actualizar la información. Contacte al administrador de sistema. " . $e, 'error' => true, 'success' => false));
+        }
+    }
+    
+    public function postUpdatepassword(){
+        $data = Input::all();
+        $sql = "update gs_users set "        
+                . "password = md5('" .$data["password"]                
+                . "') where id = " . $data["user_id"]; 
+        
+        try {
+            DB::beginTransaction();
+            DB::update($sql);
+            DB::commit();
+            return Response::json(array('success' => true, 'mensaje' => "La contraseña ha sido actualizada con éxito."));
+        } catch (Exception $e) {
+            DB::rollback();
+            return Response::json(array('mensaje' => "No se puede actualizar la contraseña. Contacte al administrador de sistema. " . $e, 'error' => true, 'success' => false));
+        }
+    }
+    
 }
