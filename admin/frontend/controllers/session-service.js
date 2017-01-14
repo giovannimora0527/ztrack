@@ -22,6 +22,7 @@ ztrack.service('SessionService', function ($http, $state) {
     };
 
     this.save = function () {
+        localStorage.clear();
         localStorage['ztrack.user_id'] = this.user_id;
         localStorage['ztrack.username'] = this.username;
         localStorage['ztrack.token'] = this.token;

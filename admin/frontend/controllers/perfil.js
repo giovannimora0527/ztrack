@@ -16,11 +16,18 @@ ztrack.controller('PerfilController', function ($rootScope, $scope, AuthService,
                 user_id: localStorage['ztrack.despachador_id']
             };
         }
+        if (parseInt(perfil) === 2) {
+            $params = {
+                user_id: localStorage['ztrack.userlogin']
+            };
+        }
         if (parseInt(perfil) === 1) {
             $params = {
                 user_id: localStorage['ztrack.user_id']
             };
         }
+        console.log($params);
+        return;
         QueriesService.executeRequest('GET', '../laravel/public/usuario/user', null, $params)
                 .then(function (result) {
                     $scope.user = result.user;
@@ -46,6 +53,12 @@ ztrack.controller('PerfilController', function ($rootScope, $scope, AuthService,
                 user_id: localStorage['ztrack.despachador_id'],
                 username: $scope.editinfo.usuario,
                 email: $scope.editinfo.email
+            };
+        }
+        if (parseInt(perfil) === 2) {
+            $params = {
+                user_id: localStorage['ztrack.userlogin'],
+                password: $scope.info.password
             };
         }
         if (parseInt(perfil) === 1) {
@@ -85,6 +98,12 @@ ztrack.controller('PerfilController', function ($rootScope, $scope, AuthService,
         if (parseInt(perfil) === 3) {
             $params = {
                 user_id: localStorage['ztrack.despachador_id'],
+                password: $scope.info.password
+            };
+        }
+        if (parseInt(perfil) === 2) {
+            $params = {
+                user_id: localStorage['ztrack.userLogin'],
                 password: $scope.info.password
             };
         }

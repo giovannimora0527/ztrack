@@ -103,8 +103,8 @@ class UserController extends \BaseController {
                         WHEN email = '' || null THEN 'N/A'
                         ELSE email
                         END AS email "
-                . " from gs_users where id = " . $data["user_id"];
-        
+                . " from gs_users where id = " . $data["user_id"];        
+       
         $user = DB::select($sql);
         return Response::json(array('user' => $user[0]));
     }

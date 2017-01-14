@@ -553,13 +553,11 @@
 
                                 $("#1").addClass("active");
                                 
-                                function cerrarSesion() {
-                                    if (window.confirm("Su sesión esta a punto de caducar ¿Desea continuar realmente?")) {
-                                        return;
-                                    } else {
+                                function cerrarSesion() {                                    
                                         clear();
                                         window.location = "login.html";
-                                    }
+                                        localStorage.clear();
+                                        sessionStorage.clear();
                                 }
 
                                 function clear() {

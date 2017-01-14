@@ -156,6 +156,13 @@ class DespachadorController extends \BaseController {
     //Funcion que permite despachar vehiculos y registrarlos en la tabla despachos
     public function getDespachovehiculo() {
         $data = Input::all();
+        //Valido que el vehiculo no tenga novedades pendientes
+        $sql = "select count(*) count from registro_novedades where vehiculo_id = " . $data["object_id"] . " and estado = 0;";
+        $results = DB::select($sql);
+        if($results[0]->count > 0){
+          return Response::json(array('success' => false, 'mensaje' => "El vehiculo tiene novedades pendientes de solucionar, No se puede realizar el despacho. Intente de Nuevo."));          
+        }
+        
         $sql_control = "select count(*) conteo from gs_despacho_temporal where estado = 3 and object_id = " . $data["object_id"];
         $result = DB::select($sql_control);
         if($result[0]->conteo > 0){
@@ -199,7 +206,7 @@ class DespachadorController extends \BaseController {
                 . ");";
         if (isset($data["ultimvuelta"])) {
             $sql_insert = "insert into despachos(vehiculo_id, latitud, longitud, ruta_id, imei, hora_salida, estado_id, user_id, "
-                    . "numero_recorrido, ultimo_recorrido) values("
+                    . "numero_recorrido, ultimo_recorrido, ti_adicionalrecorrido) values("
                     . $data["object_id"]
                     . ", '" . $myArray[0]
                     . "', '" . $myArray[1]
@@ -210,7 +217,8 @@ class DespachadorController extends \BaseController {
                     . ", " . $info[0]->id  // Se cambia el id -> para el nuevo registro se usa el id del despachador 
                     . ", " . $num_vuelta
                     . ", 1"
-                    . ");";
+                    . ", '" .$data["tiempoestimado"]
+                    . "');";
         }
         try {
             DB::beginTransaction();

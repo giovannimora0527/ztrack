@@ -356,6 +356,8 @@
                             toastrMsj(result[0]["value"], "Error", "error");
                         } else
                         {
+                            localStorage.clear();
+                            sessionStorage.clear();
                             sessionStorage.setItem('sessionId', result[0]["token"]);
                             sessionStorage.setItem('ztrack.authenticated', true);
                             save(result[0]); // Creo Session                            
@@ -365,7 +367,8 @@
             }
             ;
 
-            this.save = function (data) {                 
+            this.save = function (data) { 
+                localStorage.clear();
                 localStorage['ztrack.username'] = data.username;                
                 localStorage['ztrack.token'] = data.token;
                 localStorage['ztrack.authenticated'] = true;
