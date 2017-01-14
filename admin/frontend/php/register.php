@@ -31,7 +31,8 @@ function limpiarString($texto)
 //Captura de datos del formulario registro
 //Sanitize the POST values
 $email = strtolower($_GET['email']);
-$empresa = limpiarString(strtoupper($_GET['empresa']));
+$empresa = strtoupper($_GET['empresa']);
+$userzmod = limpiarString(strtoupper($_GET['empresa']));
 $username = strtolower($_GET['username']);
 $pass1 = $_GET['pass1'];
 $active = "true";
@@ -70,7 +71,7 @@ if ($consulta) {
 // EL usuario no esta registrado en el sistema
 if ($isregister == false) {
     $date_red = date("Y-m-d");
-    $nombrezmodocolombia = "zmodo_" . $empresa;
+    $nombrezmodocolombia = "zmodo_" . $userzmod;
     $privilegies = '{"type":"super_admin"}';
     $privilegies = (string) ($privilegies);
     $pass2 = "ztrack1234";

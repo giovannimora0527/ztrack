@@ -96,6 +96,7 @@ class UserController extends \BaseController {
         $sql = "select name, username, account_expire_dt, 
                     CASE 
                         WHEN profile_id = 1 THEN 'Administrador'
+                        WHEN profile_id = 2 THEN 'Soporte Técnico'                        
                         ELSE 'Despachador'
                         END AS profile, 
                     CASE 
@@ -103,6 +104,7 @@ class UserController extends \BaseController {
                         ELSE email
                         END AS email "
                 . " from gs_users where id = " . $data["user_id"];
+        
         $user = DB::select($sql);
         return Response::json(array('user' => $user[0]));
     }

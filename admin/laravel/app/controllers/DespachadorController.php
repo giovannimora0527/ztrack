@@ -156,12 +156,18 @@ class DespachadorController extends \BaseController {
     //Funcion que permite despachar vehiculos y registrarlos en la tabla despachos
     public function getDespachovehiculo() {
         $data = Input::all();
+        $sql_control = "select count(*) conteo from gs_despacho_temporal where estado = 3 and object_id = " . $data["object_id"];
+        $result = DB::select($sql_control);
+        if($result[0]->conteo > 0){
+            return Response::json(array('success' => false, 'mensaje' => "El vehículo ya ha sido despachado con anterioridad."));   
+        }
+        
         $update_sql = "update gs_despacho_temporal set "
                 . "estado = 3 "
                 . "where object_id = " . $data["object_id"] . ";";
         DB::update($update_sql);
-        //Realizo la consulta para consultar el numero_recorrido
-        $sql_consult = "select max(numero_recorrido) numero_recorrido from despachos where vehiculo_id = " . $data["object_id"];
+        //Realizo la consulta para consultar el numero_recorrido        
+        $sql_consult = "select max(numero_recorrido) numero_recorrido from despachos where hora_salida >= (select CONCAT(CURDATE(), ' 00:00:00')) and vehiculo_id = " . $data["object_id"] . ";";
         $result_consulta = DB::select($sql_consult);
         $num_vuelta = 0;
         if (count($result_consulta) > 0) {
