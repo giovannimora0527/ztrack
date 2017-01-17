@@ -4,8 +4,11 @@
  * and open the template in the editor.
  */
 var ztrack = angular.module('ztrack');
-ztrack.controller('PerfilController', function ($rootScope, $scope, AuthService, SessionService, $state, QueriesService, toastr) {
+ztrack.controller('PerfilController', function ($rootScope, $scope, AuthService, SessionService, $state, QueriesService, toastr, $interval) {
     $scope.title = "Perfil de Usuario";
+    calcularTiempo($interval);
+    var tick = 0;
+    $scope.tick = 0;
 
     cargarDataPerfil();
 
@@ -26,8 +29,7 @@ ztrack.controller('PerfilController', function ($rootScope, $scope, AuthService,
                 user_id: localStorage['ztrack.user_id']
             };
         }
-        console.log($params);
-        return;
+
         QueriesService.executeRequest('GET', '../laravel/public/usuario/user', null, $params)
                 .then(function (result) {
                     $scope.user = result.user;
@@ -68,7 +70,7 @@ ztrack.controller('PerfilController', function ($rootScope, $scope, AuthService,
                 email: $scope.editinfo.email
             };
         }
-        
+
         QueriesService.executeRequest('POST', '../laravel/public/usuario/updateinfouser', $params, null)
                 .then(function (result) {
                     if (result.success) {
@@ -112,7 +114,7 @@ ztrack.controller('PerfilController', function ($rootScope, $scope, AuthService,
                 user_id: localStorage['ztrack.user_id'],
                 password: $scope.info.password
             };
-        }       
+        }
         QueriesService.executeRequest('POST', '../laravel/public/usuario/updatepassword', $params, null)
                 .then(function (result) {
                     if (result.success) {
@@ -125,6 +127,20 @@ ztrack.controller('PerfilController', function ($rootScope, $scope, AuthService,
                     }
                 });
     };
+
+    function calcularTiempo($interval) {
+        $interval(function () {
+            tick++;
+            $scope.tick = tick;
+        }, 1000, 10);
+        console.log(tick);
+    }
+
+//    $scope.$watch(function () {
+//        return new Date();
+//    }, function () {
+//        $scope.digesterRuntime = new Date();
+//    });
 
 });
 

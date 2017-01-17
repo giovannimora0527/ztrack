@@ -3,6 +3,7 @@
 header("Content-Type: application/json;charset=utf-8");
 //Start session
 session_start();
+date_default_timezone_set('America/Bogota');
 
 //Include database connection details
 require_once('connection.php');
@@ -64,9 +65,12 @@ if ($result) {
         $_SESSION['SESS_USERNAME'] = $member['username'];
         $_SESSION['SESS_EMPRESA_ID'] = $member['empresa_id'];
         $_SESSION['SESS_PERFIL_ID'] = $member['profile_id'];
-        $_SESSION['SESS_TOKEN'] = generarToken();
+        $_SESSION['SESS_TOKEN'] = generarToken();        
+        $ahora = date("H:i:s");
+        
         $data = array('success' => true, 'value' => 'Bienvenido', 'userId' => $_SESSION['SESS_MEMBER_ID'], 'nombre' => $_SESSION['SESS_EMPRESA'], 
-                          'username' => $_SESSION['SESS_USERNAME'], 'token' => $_SESSION['SESS_TOKEN'], 'perfil' => $_SESSION['SESS_PERFIL_ID'], 'empresaid' => $_SESSION['SESS_EMPRESA_ID']);       
+                          'username' => $_SESSION['SESS_USERNAME'], 'token' => $_SESSION['SESS_TOKEN'], 'perfil' => $_SESSION['SESS_PERFIL_ID'], 'empresaid' => $_SESSION['SESS_EMPRESA_ID'] , 
+                          'inicioSesion' => $ahora);       
         array_push($json, $data);
     } else {
         //Login falló

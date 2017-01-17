@@ -373,7 +373,8 @@
                 localStorage['ztrack.token'] = data.token;
                 localStorage['ztrack.authenticated'] = true;
                 localStorage['ztrack.perfil'] = data.perfil;
-                localStorage['ztrack.empresa_id'] = data.empresaid; 
+                localStorage['ztrack.empresa_id'] = data.empresaid;
+                sessionStorage['inicioSesion'] = data.inicioSesion;
                 sessionStorage.setItem('ztrack.authenticated', true);
                 if(data.perfil === "3"){                    
                    localStorage['ztrack.user_id'] = data.empresaid; 

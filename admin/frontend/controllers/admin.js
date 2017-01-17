@@ -17,7 +17,7 @@ ztrack.config(['$stateProvider', '$urlRouterProvider', '$httpProvider',
                     templateUrl: 'html/home.html',
                     controller: 'HomeController',
                     onEnter: function (SessionService, $state) {
-                            if (!SessionService.isLoged()) {
+                        if (!SessionService.isLoged()) {
                             $state.go('salir');
                         }
                     }
@@ -146,7 +146,7 @@ ztrack.config(['$stateProvider', '$urlRouterProvider', '$httpProvider',
                             $state.go('salir');
                         }
                     }
-                    
+
                 })
                 .state('consultaconductores', {
                     url: '/consultas',
@@ -230,7 +230,7 @@ ztrack.config(['$stateProvider', '$urlRouterProvider', '$httpProvider',
                 })
                 .state('salir', {
                     onEnter: function (SessionService) {
-                        SessionService.destroy(); 
+                        SessionService.destroy();
                         sessionStorage.setItem('ztrack.authenticated', false);
                         window.location = "login.html";
                     }
@@ -254,7 +254,7 @@ ztrack.config(['$stateProvider', '$urlRouterProvider', '$httpProvider',
                 $injector.invoke(function ($http, SessionService) {
                     SessionService.unauthorized();
                 });
-            }            
+            }
             if (canRecover(rejection)) {
                 return $q.reject(response);
             }
@@ -268,9 +268,11 @@ ztrack.config(['$stateProvider', '$urlRouterProvider', '$httpProvider',
 
     };
 }).
-        run(function ($rootScope, $state, SessionService, $http) {
+        run(function ($rootScope, $state, SessionService, $http, $interval) {
             $rootScope.$state = $state;
             $rootScope.url_base = "http://localhost/ztrack/";
 //          $rootScope.url_base = "http://208.11.32.127/ztrack/"; -> url del servidor - Document_Root
-            SessionService.refresh();
+            SessionService.refresh();                       
         });
+        
+ 

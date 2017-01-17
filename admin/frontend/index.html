@@ -418,7 +418,7 @@
 
         <!-- inline scripts related to this page -->
         <script type="text/javascript">
-            onLoad();
+                                onLoad();
                                 jQuery(function ($) {
                                     $('.easy-pie-chart.percentage').each(function () {
                                         var $box = $(this).closest('.infobox');
@@ -552,12 +552,12 @@
                                 }
 
                                 $("#1").addClass("active");
-                                
-                                function cerrarSesion() {                                    
-                                        clear();
-                                        window.location = "login.html";
-                                        localStorage.clear();
-                                        sessionStorage.clear();
+
+                                function cerrarSesion() {
+//                                        clear();
+//                                        window.location = "login.html";
+//                                        localStorage.clear();
+//                                        sessionStorage.clear();                                   
                                 }
 
                                 function clear() {
@@ -572,8 +572,8 @@
 
                                 function onLoad() {
                                     //1000 ms = 1 sg
-                                    //10 min = 600000
-                                    setInterval('cerrarSesion()', 600000);
+                                    //10 min = 600000                                    
+                                    setInterval('cerrarSesion()', 30000);
                                 }
 
         </script>
@@ -591,7 +591,7 @@
                                         //show datepicker when clicking on the icon
                                         .next().on(ace.click_event, function () {
                                     $(this).prev().focus();
-                                });                                
+                                });
         </script>
 
 
