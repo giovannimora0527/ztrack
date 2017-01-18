@@ -12,6 +12,7 @@ ztrack.service('SessionService', function ($http, $state) {
         }
         return true;
     };
+    
     this.destroy = function () {
         this.id = null;
         this.user_id = null;
@@ -26,28 +27,6 @@ ztrack.service('SessionService', function ($http, $state) {
         localStorage.clear();
         sessionStorage.clear();
     };
-    
-    this.validarhora = function() {
-        var h = "";
-        var m = "";
-        var s = "";
-        if (f.getHours() < 10) {
-            h = "0" + f.getHours();
-        } else {
-            h = "" + f.getHours();
-        }
-        if (f.getMinutes() < 10) {
-            m = ":0" + f.getMinutes();
-        } else {
-            m = ":" + f.getMinutes();
-        }
-        if (f.getSeconds() < 10) {
-            s = ":0" + f.getSeconds();
-        } else {
-            s = ":" + f.getSeconds();
-        }
-        cad = h + m + s;        
-    };
 
     this.save = function () {
         localStorage.clear();
@@ -56,8 +35,6 @@ ztrack.service('SessionService', function ($http, $state) {
         localStorage['ztrack.token'] = this.token;
         localStorage['ztrack.userType'] = this.userType;
         localStorage['ztrack.authenticated'] = true;
-        this.validarhora();
-        sessionStorage['inicioSesion'] = cad;
         $http.defaults.headers.common['user'] = this.user_id;
         $http.defaults.headers.common['token'] = this.token;
     };    
@@ -69,10 +46,7 @@ ztrack.service('SessionService', function ($http, $state) {
             info.user.id = localStorage['ztrack.user_id'];
             info.user.name = localStorage['ztrack.username'];
             info.token = localStorage['ztrack.token'];
-            info.user.type = localStorage['ztrack.userType'];
-            this.validarhora();
-            sessionStorage['ultimoRefresh'] = cad;
-            info.inicioSesion = cad;
+            info.user.type = localStorage['ztrack.userType']; 
         } 
     };
 
