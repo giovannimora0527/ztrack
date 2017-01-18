@@ -272,7 +272,17 @@ ztrack.config(['$stateProvider', '$urlRouterProvider', '$httpProvider',
             $rootScope.$state = $state;
             $rootScope.url_base = "http://localhost/ztrack/";
 //          $rootScope.url_base = "http://208.11.32.127/ztrack/"; -> url del servidor - Document_Root
-            SessionService.refresh();                       
+            SessionService.refresh();
+            var lastDigestRun = new Date();
+            
+            $rootScope.$watch(function detectIdle() {
+                var now = new Date();                
+                if (parseInt(now.getMinutes()) - parseInt(lastDigestRun.getMinutes()) === 20) {
+                    console.log("Hora salida: " + now);
+                    $state.go('salir'); 
+                }
+                lastDigestRun = now;
+            });            
         });
-        
+
  

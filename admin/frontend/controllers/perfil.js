@@ -6,10 +6,6 @@
 var ztrack = angular.module('ztrack');
 ztrack.controller('PerfilController', function ($rootScope, $scope, AuthService, SessionService, $state, QueriesService, toastr, $interval) {
     $scope.title = "Perfil de Usuario";
-    calcularTiempo($interval);
-    var tick = 0;
-    $scope.tick = 0;
-
     cargarDataPerfil();
 
     function cargarDataPerfil() {
@@ -128,19 +124,13 @@ ztrack.controller('PerfilController', function ($rootScope, $scope, AuthService,
                 });
     };
 
-    function calcularTiempo($interval) {
-        $interval(function () {
-            tick++;
-            $scope.tick = tick;
-        }, 1000, 10);
-        console.log(tick);
-    }
 
-//    $scope.$watch(function () {
-//        return new Date();
-//    }, function () {
-//        $scope.digesterRuntime = new Date();
-//    });
+    
+
+
+
+   
+    
 
 });
 

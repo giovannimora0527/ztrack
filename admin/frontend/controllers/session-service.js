@@ -23,6 +23,8 @@ ztrack.service('SessionService', function ($http, $state) {
         delete sessionStorage['ztrack.authenticated'];
         delete sessionStorage['sessionId'];
         delete sessionStorage['inicioSesion'];
+        localStorage.clear();
+        sessionStorage.clear();
     };
     
     this.validarhora = function() {
