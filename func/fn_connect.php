@@ -4,11 +4,12 @@
 	include ('fn_common.php');
 	include ('../tools/email.php');
 	loadLanguage($gsValues['LANGUAGE']);
+        
+        echo("Entroooooooooooooooooooooooooooooooooooooooooo");
 	
 	if(@$_POST['cmd'] == 'session_check')
 	{
-		checkUserSession();
-	
+		checkUserSession();	
 		if (checkUserSession2() == true)
 		{
 			echo 'true';
@@ -198,7 +199,7 @@
 	}
 
 	if (@$_POST['cmd'] == 'logout')
-	{
+	{            
 		//write log
 		writeLog('user_access', 'User logout');
 		
@@ -208,8 +209,9 @@
 		}
 		
 		session_unset();
-		session_destroy();
-		
+		session_destroy();		
 		echo $gsValues['URL_LOGIN'];
 	}
+        
+        
 ?>
